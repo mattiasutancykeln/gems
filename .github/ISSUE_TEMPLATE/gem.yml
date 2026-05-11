@@ -1,0 +1,39 @@
+name: Gem
+description: Drop a link to a repo, article, or paper worth keeping
+title: "[raw] "
+labels: ["stage:raw"]
+body:
+  - type: input
+    id: url
+    attributes:
+      label: URL
+      description: The link itself. One per issue.
+      placeholder: https://github.com/...
+    validations:
+      required: true
+  - type: textarea
+    id: note
+    attributes:
+      label: Why it caught your eye (optional)
+      description: One or two lines. No need to summarize — that's the LLM's job.
+      placeholder: "Looks like a cleaner way to do X."
+    validations:
+      required: false
+  - type: dropdown
+    id: source
+    attributes:
+      label: Kind
+      options:
+        - repo
+        - article
+        - paper
+        - other
+    validations:
+      required: false
+  - type: input
+    id: topic
+    attributes:
+      label: Topic hint (optional)
+      description: "agent / eval / infra / ux / research — applied as topic:* label later"
+    validations:
+      required: false
