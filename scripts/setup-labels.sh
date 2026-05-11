@@ -7,7 +7,6 @@ REPO="${REPO:-mattiasutancykeln/gems}"
 
 upsert() {
   local name="$1" color="$2" desc="$3"
-  # URL-encode the label name for the GET/PATCH path
   local enc
   enc=$(python3 -c 'import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1], safe=""))' "$name")
   if gh api "repos/$REPO/labels/$enc" >/dev/null 2>&1; then
@@ -20,10 +19,27 @@ upsert() {
   echo "  $name"
 }
 
+rename_label() {
+  # If old label exists and new doesn't, rename. Otherwise no-op.
+  local old="$1" new="$2"
+  local enc_old enc_new
+  enc_old=$(python3 -c 'import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1], safe=""))' "$old")
+  enc_new=$(python3 -c 'import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1], safe=""))' "$new")
+  if gh api "repos/$REPO/labels/$enc_old" >/dev/null 2>&1 \
+     && ! gh api "repos/$REPO/labels/$enc_new" >/dev/null 2>&1; then
+    gh api -X PATCH "repos/$REPO/labels/$enc_old" -f new_name="$new" >/dev/null
+    echo "  renamed $old → $new"
+  fi
+}
+
+# Migrate older naming.
+rename_label "stage:idea" "stage:extracted"
+
 echo "Pipeline stages:"
 upsert "stage:raw"         "ededed" "Just a URL, unvetted"
-upsert "stage:summarized"  "fbca04" "LLM has read it and posted a summary comment"
-upsert "stage:idea"        "0e8a16" "Has a written implementation sketch ready to reference"
+upsert "stage:summarized"  "fbca04" "LLM has read it and posted a TL;DR + highlights comment"
+upsert "stage:extracting"  "ff9f1c" "Extraction in progress — do not re-run extract.sh on this issue"
+upsert "stage:extracted"   "0e8a16" "Has a deep technical report citing files, line ranges, and a pinned SHA"
 
 echo "Source kind:"
 upsert "source:repo"       "c5def5" "Open source repository"
