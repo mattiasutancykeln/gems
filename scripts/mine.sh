@@ -9,11 +9,13 @@ set -euo pipefail
 REPO="${REPO:-mattiasutancykeln/gems}"
 LIMIT=50
 DRY=0
+PREP_ONLY=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --limit) LIMIT="$2"; shift 2 ;;
-    --dry-run) DRY=1; shift ;;
+    --limit)     LIMIT="$2"; shift 2 ;;
+    --dry-run)   DRY=1; shift ;;
+    --prep-only) PREP_ONLY=1; shift ;;
     *) echo "unknown arg: $1" >&2; exit 1 ;;
   esac
 done
@@ -60,7 +62,16 @@ Output ONLY the comment body in markdown. No preamble."
     continue
   fi
 
-  SUMMARY=$(claude -p "$PROMPT" 2>/dev/null || true)
+  if [[ $PREP_ONLY -eq 1 ]]; then
+    printf 'PREP_ITEM\n'
+    printf 'issue=%s\n' "$n"
+    printf 'url=%s\n' "$URL"
+    printf 'prompt=%s\n' "$PROMPT"
+    printf -- '---\n'
+    continue
+  fi
+
+  SUMMARY=$(claude -p "$PROMPT" --allowedTools WebFetch 2>/dev/null || true)
   if [[ -z "$SUMMARY" ]]; then
     echo "  claude returned empty, skipping"
     continue

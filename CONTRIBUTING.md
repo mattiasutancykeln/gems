@@ -88,7 +88,25 @@ Extract an item only if **all** of these are true:
 
 Do **not** extract speculatively. The cost is real — every extraction is N parallel LLM workers reading full source files plus a coordinator pass.
 
-### Running it
+### Running it — Claude Code workflow (preferred, no API credits)
+
+**Step 1 — prep:**
+
+```bash
+bash ~/gems/scripts/extract.sh 42 --prep-only [--workers N] [--max-files N]
+```
+
+Clones, scores, and batches files; writes batch lists and prompt templates to `.prep/` inside the cache dir; prints `PREP_READY` output. No LLM calls.
+
+**Step 2 — dispatch:**
+
+Open a Claude Code session and ask:
+
+> *"pick up the extraction prep at \<prep_dir\> for gem #42"*
+
+CC dispatches workers as Agent calls (session-billed), runs the coordinator, and posts the comment. See README for full explanation.
+
+### API credits path (advanced)
 
 ```bash
 ~/gems/scripts/extract.sh 42                       # default: 4 workers, ≤30 files

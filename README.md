@@ -104,6 +104,40 @@ Relabels `stage:summarized → stage:extracted`, retitles `[sum]` → `[ext]`.
 
 For article and paper gems where there's no code to clone, `extract.sh` falls back to a single deep-read pass: full page contents go to one extractor (no parallelism) and citations use stable anchors when available (DOI, section headings, page numbers).
 
+## Running with Claude Code (no API credits)
+
+`mine.sh` and `extract.sh` default to `claude -p`, which bills API credits per call. The Claude Code workflows below run inside a CC session — charged to your session, not the API.
+
+### Synthesis (no credits)
+
+Open a Claude Code session and ask:
+
+> *"synthesize gem #42"*
+
+CC will WebFetch the URL and post the structured four-section comment directly. No shell script needed.
+
+### Extraction (no credits)
+
+Two steps:
+
+**Step 1 — prep (shell, no claude calls):**
+
+```bash
+bash scripts/extract.sh <issue#> --prep-only [--workers N] [--max-files N]
+```
+
+This clones the repo at a pinned SHA, scores and selects files, splits them into worker batches, writes all batch lists and prompt templates to `$cache_dir/.prep/`, restores `stage:summarized`, and prints `PREP_READY` output to stdout. No LLM calls are made.
+
+**Step 2 — dispatch (Claude Code session):**
+
+Ask a CC session:
+
+> *"pick up the extraction prep at \<prep_dir\> for gem #\<N\>"*
+
+CC reads the batch lists from the prep dir, dispatches worker Agent calls (session-billed), collects their outputs, runs the coordinator, and posts the final comment to the issue. For each worker batch, the prompt is the contents of `extract_prompt_header` (from the PREP_READY output) followed by the files listed in `batch_N`, each rendered with 1-indexed line numbers in a fenced code block — exactly the format that makes `path:LINE-LINE` citations possible.
+
+**Note:** `--prep-only` always restores `stage:summarized` on exit. The CC session is responsible for flipping `stage:extracting` when it begins dispatching workers, and `stage:extracted` when it posts the final comment.
+
 ## Referencing extractions from shepherd
 
 In any shepherd issue, PR, or implementation plan, link directly:

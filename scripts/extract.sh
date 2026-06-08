@@ -21,6 +21,8 @@ REV=""
 INCLUDE=""
 FORCE=0
 ISSUE=""
+MODEL=""
+PREP_ONLY=0
 
 usage() {
   sed -n '2,15p' "$0"
@@ -33,7 +35,9 @@ while [[ $# -gt 0 ]]; do
     --max-files)  MAX_FILES="$2"; shift 2 ;;
     --rev)        REV="$2"; shift 2 ;;
     --include)    INCLUDE="$2"; shift 2 ;;
+    --model)      MODEL="$2"; shift 2 ;;
     --force)      FORCE=1; shift ;;
+    --prep-only)  PREP_ONLY=1; shift ;;
     -h|--help)    usage ;;
     -*)           echo "unknown flag: $1" >&2; exit 1 ;;
     *)            if [[ -z "$ISSUE" ]]; then ISSUE="$1"; shift; else echo "extra arg: $1" >&2; exit 1; fi ;;
@@ -41,7 +45,11 @@ while [[ $# -gt 0 ]]; do
 done
 
 [[ -z "$ISSUE" ]] && usage
-command -v claude >/dev/null || { echo "claude CLI not found on PATH" >&2; exit 1; }
+[[ "$PREP_ONLY" -eq 0 ]] && { command -v claude >/dev/null || { echo "claude CLI not found on PATH" >&2; exit 1; }; }
+
+# Build model flag array for claude -p calls; empty if no --model supplied.
+CLAUDE_MODEL_ARGS=()
+[[ -n "$MODEL" ]] && CLAUDE_MODEL_ARGS=(--model "$MODEL")
 command -v gh     >/dev/null || { echo "gh CLI not found on PATH" >&2; exit 1; }
 
 WORK=$(mktemp -d -t gems-extract.XXXXXX)
@@ -113,7 +121,7 @@ Rules:
 - Do not summarize the page generally — produce a catalog of mineable specifics.
 - Output ONLY the report markdown. No preamble.
 EOF
-    REPORT=$(claude -p < "$PROMPT_FILE")
+    REPORT=$(claude -p "${CLAUDE_MODEL_ARGS[@]}" < "$PROMPT_FILE")
     [[ -z "$REPORT" ]] && { echo "✗ claude returned empty" >&2; exit 1; }
     gh issue comment "$ISSUE" --repo "$REPO" --body "$REPORT" >/dev/null
     gh issue edit "$ISSUE" --repo "$REPO" --remove-label "stage:extracting" --add-label "stage:extracted" >/dev/null
@@ -226,6 +234,113 @@ BATCH_SIZE=$(( (NUM_PICKED + WORKERS - 1) / WORKERS ))
 [[ $BATCH_SIZE -lt 1 ]] && BATCH_SIZE=1
 split -l "$BATCH_SIZE" "$PICKED" "$WORK/batch."
 
+# ── 6b. Prep-only exit ─────────────────────────────────────────────────────
+if [[ "$PREP_ONLY" -eq 1 ]]; then
+  PREP_DIR="$CACHE/.prep"
+  mkdir -p "$PREP_DIR"
+
+  # Write extraction prompt header to file.
+  cat > "$PREP_DIR/extract-prompt-header.txt" <<EOF
+You are a code-extraction subagent reading a fixed set of files from $OWNER/$NAME pinned at commit $SHORT_SHA. Your job is to produce a *catalog of mineable specifics*, NOT a summary.
+
+Rules — these are not suggestions:
+1. Read every file end-to-end BEFORE writing anything.
+2. Every finding MUST cite \`path:LINE_START-LINE_END\`. Line numbers are 1-indexed and refer to the file as provided below.
+3. Do NOT cite a file you didn't read. Do NOT cite a line range you didn't open.
+4. Quote at most 3 lines per finding, fenced with the file's language.
+5. Skip findings you cannot cite precisely. Quality over quantity.
+6. Output ONLY the four sections below in markdown — no preamble, no closing remarks.
+
+### Implementation decisions
+Non-obvious choices that pay off. ("Why this, not the naive thing?")
+
+### Skills, prompts, tools
+Skills, prompts, tools, or agent-facing surfaces that look engineered for an LLM consumer — well-bounded action spaces, observation formatting, prompt structure, retry/guard logic.
+
+### Patterns worth porting
+Reusable structures (orchestrator/worker splits, retry policies, sandboxing, citation handling, etc.).
+
+### Open threads / weak spots
+Things flagged TODO/HACK/FIXME in code, or that obviously look fragile.
+
+Each bullet:
+- \`path/to/file.ext:L_start-L_end\` — short prose (1–2 sentences). Optional fenced quote.
+
+Repo: $OWNER/$NAME @ $SHORT_SHA
+
+---
+After this header, append a section with the following structure for each file in your batch:
+
+## Files (worker N)
+### \`path/to/file.ext\`
+\`\`\`ext
+     1  <line 1 content>
+     2  <line 2 content>
+     ...
+\`\`\`
+
+Each file's contents must have 1-indexed line numbers prepended (5-char right-justified, then two spaces, then the line content). Use the file's extension as the code fence language. This is what makes \`path:LINE_START-LINE_END\` citations possible.
+EOF
+
+  # Copy batch files into prep dir; build batch list for output.
+  BATCH_IDX=0
+  BATCH_LINES=""
+  for batch in "$WORK"/batch.*; do
+    BATCH_IDX=$((BATCH_IDX + 1))
+    cp "$batch" "$PREP_DIR/batch.$BATCH_IDX"
+    BATCH_LINES="${BATCH_LINES}batch_${BATCH_IDX}=$PREP_DIR/batch.$BATCH_IDX"$'\n'
+  done
+
+  # Write coordinator template (minus worker reports — CC fills that in).
+  {
+    cat <<EOF
+You are the coordinator for an extraction pass on $OWNER/$NAME @ $SHORT_SHA. Below are reports from $WORKERS subagents who each read a different slice of the repo. Your job is to MERGE them into a single, ranked extraction report.
+
+Rules:
+1. Preserve every citation verbatim — do not modify \`path:line\` references.
+2. Deduplicate identical or near-identical findings; merge into one bullet with both citations.
+3. Rank within each section by load-bearingness (most reusable / surprising first).
+4. Drop bullets that have no precise line citation.
+5. Add a header with the source pin and stats.
+6. Output ONLY the final report markdown.
+
+Required header:
+
+## Extraction report
+
+**Source:** \`$OWNER/$NAME\` @ \`$SHA\` (pinned $PIN_TS)
+**Workers:** $WORKERS • **Files read:** $NUM_PICKED of $TOTAL_CANDIDATES scored
+
+Then the four sections: \`### Implementation decisions\`, \`### Skills, prompts, tools\`, \`### Patterns worth porting\`, \`### Open threads / weak spots\`.
+
+After the four sections, append:
+
+### Files read by workers
+EOF
+    sed 's/^/- /' "$PICKED"
+  } > "$PREP_DIR/coord-template.txt"
+
+  # Restore stage:summarized label (CC will re-apply stage:extracting when it starts).
+  gh issue edit "$ISSUE" --repo "$REPO" --remove-label "stage:extracting" --add-label "stage:summarized" >/dev/null 2>&1 || true
+
+  # Print structured output.
+  printf 'PREP_READY\n'
+  printf 'issue=%s\n' "$ISSUE"
+  printf 'repo=%s\n' "$OWNER/$NAME"
+  printf 'sha=%s\n' "$SHA"
+  printf 'short_sha=%s\n' "$SHORT_SHA"
+  printf 'pin_ts=%s\n' "$PIN_TS"
+  printf 'cache_dir=%s\n' "$CACHE"
+  printf 'prep_dir=%s\n' "$PREP_DIR"
+  printf 'num_picked=%s\n' "$NUM_PICKED"
+  printf 'total_candidates=%s\n' "$TOTAL_CANDIDATES"
+  printf 'worker_count=%s\n' "$WORKERS"
+  printf '%s' "$BATCH_LINES"
+  printf 'extract_prompt_header=%s\n' "$PREP_DIR/extract-prompt-header.txt"
+  printf 'coord_template=%s\n' "$PREP_DIR/coord-template.txt"
+  exit 0
+fi
+
 EXTRACT_PROMPT_HEADER=$(cat <<EOF
 You are a code-extraction subagent reading a fixed set of files from $OWNER/$NAME pinned at commit $SHORT_SHA. Your job is to produce a *catalog of mineable specifics*, NOT a summary.
 
@@ -291,7 +406,7 @@ for batch in "$WORK"/batch.*; do
         fi
       done < "$batch"
     } > "$PROMPT_FILE"
-    if ! claude -p < "$PROMPT_FILE" > "$OUT" 2>"$WORK/worker.$i.err"; then
+    if ! claude -p "${CLAUDE_MODEL_ARGS[@]}" < "$PROMPT_FILE" > "$OUT" 2>"$WORK/worker.$i.err"; then
       echo "  ✗ worker $i failed (see $WORK/worker.$i.err)" >&2
       : > "$OUT"
     else
@@ -351,7 +466,7 @@ EOF
 } > "$COORD_PROMPT"
 
 echo "→ coordinator pass..."
-REPORT=$(claude -p < "$COORD_PROMPT")
+REPORT=$(claude -p "${CLAUDE_MODEL_ARGS[@]}" < "$COORD_PROMPT")
 if [[ -z "$REPORT" ]]; then
   echo "✗ coordinator returned empty" >&2
   gh issue edit "$ISSUE" --repo "$REPO" --remove-label "stage:extracting" --add-label "stage:summarized" >/dev/null
