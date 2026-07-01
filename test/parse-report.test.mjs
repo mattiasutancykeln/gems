@@ -104,3 +104,23 @@ test("bold titles strip backticks for consistency", () => {
   assert.equal(findings.length, 1);
   assert.equal(findings[0].title, "Task resumption via task_id");
 });
+
+test("fallback title: multiple citations joined by ' / ' before the em-dash don't leave punctuation as the title", () => {
+  const c = "## Extraction report\n\n**Source:** `a/b` @ `1234567` (pinned x)\n\n### Patterns worth porting\n\n- `skills/chembl/SKILL.md:3-28` / `skills/pdb/SKILL.md:3-4` / `skills/uniprot/SKILL.md:L127-139` — Anti-hallucination via the description field: models are told to defer to the field rather than guess.\n";
+  const { findings } = parseIssue(makeIssue({ comments: [c] }));
+  assert.equal(findings.length, 1);
+  const f = findings[0];
+  assert.notEqual(f.title, "/ /");
+  assert.match(f.title, /Anti-hallucination/);
+  assert.equal(f.citation, "skills/chembl/SKILL.md:3-28");
+});
+
+test("fallback title: colon inside the body after the em-dash boundary isn't mistaken for the title split", () => {
+  const c = "## Extraction report\n\n**Source:** `a/b` @ `1234567` (pinned x)\n\n### Patterns worth porting\n\n- `x/y.md:L9-69` — `description:` field deliberately exhaustive so the model never needs to guess at schema shape.\n";
+  const { findings } = parseIssue(makeIssue({ comments: [c] }));
+  assert.equal(findings.length, 1);
+  const f = findings[0];
+  assert.notEqual(f.title, "description");
+  assert.ok(f.title.length >= 3);
+  assert.equal(f.citation, "x/y.md:L9-69");
+});
