@@ -4,7 +4,7 @@ import { mkdtempSync, writeFileSync, readFileSync, existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { syncCorpus } from "../scripts/sync-corpus.mjs";
-import { makeIssue, SUM_COMMENT } from "./fixtures.mjs";
+import { makeIssue, SUM_COMMENT, EXT_COMMENT } from "./fixtures.mjs";
 
 function setup() {
   const root = mkdtempSync(join(tmpdir(), "gems-"));
@@ -33,7 +33,13 @@ test("writes complete corpus from two issues", () => {
   const jsonl = readFileSync(join(root, "corpus/findings.jsonl"), "utf8").trim().split("\n").map(JSON.parse);
   assert.equal(jsonl.length, findings.length);
   assert.ok(jsonl.every((f) => f.clusterId && f.topic && f.codeReuse && f.quality));
-  assert.deepEqual(jsonl.map((f) => f.id), [...jsonl.map((f) => f.id)].sort());  // sorted by id
+  // ordered by gem number then finding index (numeric, not lexicographic)
+  const order = jsonl.map((f) => {
+    const [, gem, idx] = f.id.match(/^g(\d+)-f(\d+)$/);
+    return [Number(gem), Number(idx)];
+  });
+  const sortedOrder = [...order].sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  assert.deepEqual(order, sortedOrder);
 
   assert.ok(existsSync(join(root, "corpus/gems.json")));
   assert.ok(existsSync(join(root, "CATALOG.md")));
@@ -58,6 +64,23 @@ test("warnings produce PARSE_WARNINGS.md", () => {
   const { warnings } = syncCorpus({ fetchIssues: () => [bad], fetchLicense, rootDir: root, log: () => {} });
   assert.equal(warnings.length, 1);
   assert.match(readFileSync(join(root, "corpus/PARSE_WARNINGS.md"), "utf8"), /no citation/);
+});
+
+test("digit boundary: gem 9 findings precede gem 10 findings (not lexicographic)", () => {
+  const root = setup();
+  const issues = [
+    makeIssue({ number: 10, comments: [SUM_COMMENT, EXT_COMMENT] }),
+    makeIssue({ number: 9, comments: [SUM_COMMENT, EXT_COMMENT] }),
+  ];
+  syncCorpus({ fetchIssues: () => issues, fetchLicense, rootDir: root, log: () => {} });
+
+  const jsonl = readFileSync(join(root, "corpus/findings.jsonl"), "utf8").trim().split("\n").map(JSON.parse);
+  const ids = jsonl.map((f) => f.id);
+  const lastNineIdx = ids.map((id, i) => (id.startsWith("g9-") ? i : -1)).filter((i) => i >= 0).at(-1);
+  const firstTenIdx = ids.findIndex((id) => id.startsWith("g10-"));
+  assert.ok(ids.some((id) => id.startsWith("g9-")));
+  assert.ok(ids.some((id) => id.startsWith("g10-")));
+  assert.ok(lastNineIdx < firstTenIdx, `expected all g9-* ids before g10-*, got order ${ids.join(",")}`);
 });
 
 test("deterministic: two runs produce byte-identical outputs", () => {
