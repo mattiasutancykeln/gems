@@ -1,0 +1,23 @@
+{
+  "HelloWorldLTY/SciAgentArena": "none",
+  "Imbad0202/academic-research-skills": "NOASSERTION",
+  "OpenHands/OpenHands": "NOASSERTION",
+  "RUC-NLPIR/Arbor": "Apache-2.0",
+  "SakanaAI/AI-Scientist-v2": "NOASSERTION",
+  "aiming-lab/AutoResearchClaw": "MIT",
+  "anthropics/claude-agent-sdk-python": "MIT",
+  "archestra-ai/archestra": "NOASSERTION",
+  "assafelovic/gpt-researcher": "Apache-2.0",
+  "crewAIInc/crewAI": "MIT",
+  "huggingface/smolagents": "Apache-2.0",
+  "lamm-mit/scienceclaw": "Apache-2.0",
+  "langchain-ai/langgraph": "MIT",
+  "latex-lsp/texlab": "GPL-3.0",
+  "microsoft/autogen": "CC-BY-4.0",
+  "mims-harvard/AutoScientists": "none",
+  "mims-harvard/ToolUniverse": "Apache-2.0",
+  "openai/openai-agents-python": "MIT",
+  "openclaw/openclaw": "NOASSERTION",
+  "snap-stanford/Biomni": "Apache-2.0",
+  "sst/opencode": "MIT"
+}

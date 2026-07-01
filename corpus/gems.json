@@ -1,0 +1,343 @@
+[
+  {
+    "number": 1,
+    "title": "opencode",
+    "url": "https://github.com/sst/opencode",
+    "repo": "sst/opencode",
+    "sha": "97e713e8aac75a0254c34d134f0608af5cb4935c",
+    "source": null,
+    "topics": [],
+    "verdict": "keep",
+    "quality": "normal",
+    "stage": "extracted",
+    "license": "MIT",
+    "codeReuse": "permissive",
+    "findingCount": 91
+  },
+  {
+    "number": 2,
+    "title": "OpenHands",
+    "url": "https://github.com/OpenHands/OpenHands",
+    "repo": "OpenHands/OpenHands",
+    "sha": null,
+    "source": null,
+    "topics": [],
+    "verdict": "promote",
+    "quality": "normal",
+    "stage": "extracted",
+    "license": "none",
+    "codeReuse": "forbidden",
+    "findingCount": 10
+  },
+  {
+    "number": 3,
+    "title": "gpt-researcher",
+    "url": "https://github.com/assafelovic/gpt-researcher",
+    "repo": "assafelovic/gpt-researcher",
+    "sha": "92bfc0388c",
+    "source": null,
+    "topics": [],
+    "verdict": "keep",
+    "quality": "normal",
+    "stage": "extracted",
+    "license": "Apache-2.0",
+    "codeReuse": "permissive",
+    "findingCount": 10
+  },
+  {
+    "number": 4,
+    "title": "pulse",
+    "url": "https://github.com/Imbad0202/academic-research-skills/pulse",
+    "repo": "Imbad0202/academic-research-skills",
+    "sha": null,
+    "source": null,
+    "topics": [],
+    "verdict": "keep",
+    "quality": "normal",
+    "stage": "extracted",
+    "license": "none",
+    "codeReuse": "forbidden",
+    "findingCount": 6
+  },
+  {
+    "number": 5,
+    "title": "ToolUniverse",
+    "url": "https://github.com/mims-harvard/ToolUniverse",
+    "repo": "mims-harvard/ToolUniverse",
+    "sha": "be6a89a3b8",
+    "source": null,
+    "topics": [],
+    "verdict": "keep",
+    "quality": "normal",
+    "stage": "extracted",
+    "license": "Apache-2.0",
+    "codeReuse": "permissive",
+    "findingCount": 5
+  },
+  {
+    "number": 6,
+    "title": "Biomni",
+    "url": "https://github.com/snap-stanford/Biomni",
+    "repo": "snap-stanford/Biomni",
+    "sha": "400c1f366b96a35ca253e13c9b06c5076af41d65",
+    "source": null,
+    "topics": [],
+    "verdict": "keep",
+    "quality": "normal",
+    "stage": "extracted",
+    "license": "Apache-2.0",
+    "codeReuse": "permissive",
+    "findingCount": 110
+  },
+  {
+    "number": 7,
+    "title": "texlab",
+    "url": "https://github.com/latex-lsp/texlab",
+    "repo": "latex-lsp/texlab",
+    "sha": null,
+    "source": null,
+    "topics": [],
+    "verdict": "keep",
+    "quality": "normal",
+    "stage": "extracted",
+    "license": "GPL-3.0",
+    "codeReuse": "ideas-only",
+    "findingCount": 4
+  },
+  {
+    "number": 8,
+    "title": "AI-Scientist-v2",
+    "url": "https://github.com/SakanaAI/AI-Scientist-v2",
+    "repo": "SakanaAI/AI-Scientist-v2",
+    "sha": "96bd51617cfdbb494a9fc283af00fe090edfae48",
+    "source": null,
+    "topics": [],
+    "verdict": "promote",
+    "quality": "normal",
+    "stage": "extracted",
+    "license": "none",
+    "codeReuse": "forbidden",
+    "findingCount": 86
+  },
+  {
+    "number": 9,
+    "title": "scienceclaw",
+    "url": "https://github.com/lamm-mit/scienceclaw",
+    "repo": "lamm-mit/scienceclaw",
+    "sha": "f4a628669d1bcf9702cf29d068716c02f1c9268f",
+    "source": null,
+    "topics": [],
+    "verdict": "keep",
+    "quality": "normal",
+    "stage": "extracted",
+    "license": "Apache-2.0",
+    "codeReuse": "permissive",
+    "findingCount": 97
+  },
+  {
+    "number": 10,
+    "title": "autogen",
+    "url": "https://github.com/microsoft/autogen",
+    "repo": "microsoft/autogen",
+    "sha": "027ecf0a379bcc1d09956d46d12d44a3ad9cee14",
+    "source": "repo",
+    "topics": [
+      "agent"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "extracted",
+    "license": "CC-BY-4.0",
+    "codeReuse": "ideas-only",
+    "findingCount": 72
+  },
+  {
+    "number": 11,
+    "title": "openclaw",
+    "url": "https://github.com/openclaw/openclaw",
+    "repo": "openclaw/openclaw",
+    "sha": "c84e52192063f598a3ec8864181941043e17223a",
+    "source": "repo",
+    "topics": [
+      "agent"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "extracted",
+    "license": "none",
+    "codeReuse": "forbidden",
+    "findingCount": 91
+  },
+  {
+    "number": 12,
+    "title": "openai-agents-python",
+    "url": "https://github.com/openai/openai-agents-python",
+    "repo": "openai/openai-agents-python",
+    "sha": "5a3028f37c74371606fd086c25ce05753d2b52de",
+    "source": "repo",
+    "topics": [
+      "agent"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "extracted",
+    "license": "MIT",
+    "codeReuse": "permissive",
+    "findingCount": 113
+  },
+  {
+    "number": 13,
+    "title": "smolagents",
+    "url": "https://github.com/huggingface/smolagents",
+    "repo": "huggingface/smolagents",
+    "sha": "e8b988d0a33ae2f0ca6e53a111fd21bc1aed42f3",
+    "source": "repo",
+    "topics": [
+      "agent"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "extracted",
+    "license": "Apache-2.0",
+    "codeReuse": "permissive",
+    "findingCount": 64
+  },
+  {
+    "number": 14,
+    "title": "claude-agent-sdk-python",
+    "url": "https://github.com/anthropics/claude-agent-sdk-python",
+    "repo": "anthropics/claude-agent-sdk-python",
+    "sha": "7c37e3478448f9166493581cbd9e5a53b39a3a89",
+    "source": "repo",
+    "topics": [
+      "agent"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "extracted",
+    "license": "MIT",
+    "codeReuse": "permissive",
+    "findingCount": 57
+  },
+  {
+    "number": 15,
+    "title": "langgraph",
+    "url": "https://github.com/langchain-ai/langgraph",
+    "repo": "langchain-ai/langgraph",
+    "sha": "d57a74f950b87bfb9cb51240cc8dccf34b5edfaa",
+    "source": "repo",
+    "topics": [
+      "agent"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "extracted",
+    "license": "MIT",
+    "codeReuse": "permissive",
+    "findingCount": 66
+  },
+  {
+    "number": 16,
+    "title": "crewAI",
+    "url": "https://github.com/crewAIInc/crewAI",
+    "repo": "crewAIInc/crewAI",
+    "sha": "da8fe8c7157bf93db67be70357c214047adb6c10",
+    "source": "repo",
+    "topics": [
+      "agent"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "extracted",
+    "license": "MIT",
+    "codeReuse": "permissive",
+    "findingCount": 72
+  },
+  {
+    "number": 17,
+    "title": "archestra",
+    "url": "https://github.com/archestra-ai/archestra",
+    "repo": "archestra-ai/archestra",
+    "sha": null,
+    "source": null,
+    "topics": [],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "none",
+    "codeReuse": "forbidden",
+    "findingCount": 0
+  },
+  {
+    "number": 18,
+    "title": "Arbor",
+    "url": "https://github.com/RUC-NLPIR/Arbor",
+    "repo": "RUC-NLPIR/Arbor",
+    "sha": "964b8466f226225e9cf23174d96e0349c105b02a",
+    "source": "repo",
+    "topics": [
+      "agent",
+      "research"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "extracted",
+    "license": "Apache-2.0",
+    "codeReuse": "permissive",
+    "findingCount": 73
+  },
+  {
+    "number": 19,
+    "title": "AutoResearchClaw",
+    "url": "https://github.com/aiming-lab/AutoResearchClaw",
+    "repo": "aiming-lab/AutoResearchClaw",
+    "sha": "ea77ec19fefe9198ac1364d2cdb4f9e928cf0705",
+    "source": "repo",
+    "topics": [
+      "agent",
+      "research"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "extracted",
+    "license": "MIT",
+    "codeReuse": "permissive",
+    "findingCount": 86
+  },
+  {
+    "number": 20,
+    "title": "AutoScientists — self-organizing agent teams for long-running science",
+    "url": "https://arxiv.org/abs/2605.28655",
+    "repo": "mims-harvard/AutoScientists",
+    "sha": "c71a92343b9a488ed10134be805845b9473ad18f",
+    "source": "paper",
+    "topics": [
+      "agent",
+      "research"
+    ],
+    "verdict": "promote",
+    "quality": "high",
+    "stage": "extracted",
+    "license": "none",
+    "codeReuse": "forbidden",
+    "findingCount": 62
+  },
+  {
+    "number": 21,
+    "title": "SciAgentArena — benchmarking AI agents on scientific challenges across scales",
+    "url": "https://arxiv.org/abs/2606.12736",
+    "repo": "HelloWorldLTY/SciAgentArena",
+    "sha": "ce27b8cdaad4dc5d5ff35a20e0b97cb35cad9f57",
+    "source": "paper",
+    "topics": [
+      "eval",
+      "research"
+    ],
+    "verdict": "keep",
+    "quality": "high",
+    "stage": "extracted",
+    "license": "none",
+    "codeReuse": "forbidden",
+    "findingCount": 89
+  }
+]
