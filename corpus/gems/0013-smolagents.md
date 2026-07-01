@@ -146,7 +146,7 @@
 
 `src/smolagents/prompts/code_agent.yaml:120-144` @ e8b988d
 
-`src/smolagents/prompts/code_agent.yaml:120-144` — Initial plan prompt performs a 3-phase fact survey: facts given → facts to lookup (with location hints) → facts to derive (logical reasoning). Prevents the agent from solving before gathering requirements.
+`src/smolagents/prompts/code_agent.yaml:120-144` — Initial plan prompt performs a 3-phase fact survey: facts given facts to lookup (with location hints) facts to derive (logical reasoning). Prevents the agent from solving before gathering requirements.
 
 <a id="g13-f020"></a>
 ### Update plan prompt annotates remaining_steps (L195) to constrain re-planning. However, no built-in mechanism enforces…
@@ -188,7 +188,7 @@
 
 `src/smolagents/tools.py:289-290` @ e8b988d
 
-`src/smolagents/tools.py:289-290` — LLM-facing tool contract: `name: description\n    Takes inputs: {inputs}\n    Returns an output of type: {output_type}`. Minimal; no execution details exposed.
+`src/smolagents/tools.py:289-290` — LLM-facing tool contract: `name: description\n Takes inputs: {inputs}\n Returns an output of type: {output_type}`. Minimal; no execution details exposed.
 
 <a id="g13-f026"></a>
 ### Tool code prompt embeds docstring with args + returns documentation; if output_schema exists, JSON schema is included…
@@ -323,7 +323,7 @@
 
 `src/smolagents/local_python_executor.py:825-918` @ e8b988d
 
-`src/smolagents/local_python_executor.py:825-918` — **Layered function lookup with close-match suggestions.** `evaluate_call` dispatch: state → static_tools → custom_tools → ERRORS, with `difflib` close-match suggestions for LLM debugging of typos.
+`src/smolagents/local_python_executor.py:825-918` — **Layered function lookup with close-match suggestions.** `evaluate_call` dispatch: state static_tools custom_tools ERRORS, with `difflib` close-match suggestions for LLM debugging of typos.
 
 <a id="g13-f045"></a>
 ### AST visitor with in_method context flag

@@ -100,11 +100,11 @@ Other takes: [gem #10](0010-autogen.md#g10-f044), [gem #18](0018-arbor.md#g18-f0
 `skills/metabolism/SKILL.md:L8-13` — Continuous knowledge-metabolism loop caps topic files at 200 lines and compresses older content (preserving citations); a 5-day sliding search window + dedup against `processed_ids` implements bounded incremental ingestion.
 
 <a id="g9-f013"></a>
-### run.py must emit [RESULT] tagged lines; unverified values get ⚠️ UNVERIFIED tags, enforcing a no-fabrication contract…
+### run.py must emit [RESULT] tagged lines; unverified values get UNVERIFIED tags, enforcing a no-fabrication contract…
 
 `skills/research-implement/SKILL.md:L22-L24` @ f4a6286
 
-`skills/research-implement/SKILL.md:L22-L24` — `run.py` must emit `[RESULT]` tagged lines; unverified values get `⚠️ UNVERIFIED` tags, enforcing a no-fabrication contract at the script-output boundary.
+`skills/research-implement/SKILL.md:L22-L24` — `run.py` must emit `[RESULT]` tagged lines; unverified values get ` UNVERIFIED` tags, enforcing a no-fabrication contract at the script-output boundary.
 
 <a id="g9-f014"></a>
 ### Training budget fixed at exactly 5 minutes wall-clock (~12 experiments/hour); metric is val_bpb (vocab-size-independe…
@@ -139,7 +139,7 @@ Other takes: [gem #10](0010-autogen.md#g10-f044), [gem #18](0018-arbor.md#g18-f0
 
 `skills/hypothesis-generation/SKILL.md:167-232` @ f4a6286
 
-`skills/hypothesis-generation/SKILL.md:167-232` — LaTeX constraint: main text ≤ 4 pages; each `tcolorbox` hypothesis block ≤ 0.6 pages with `\newpage` before each box; overflow → appendices; XeLaTeX/LuaLaTeX required.
+`skills/hypothesis-generation/SKILL.md:167-232` — LaTeX constraint: main text ≤ 4 pages; each `tcolorbox` hypothesis block ≤ 0.6 pages with `\newpage` before each box; overflow appendices; XeLaTeX/LuaLaTeX required.
 
 <a id="g9-f019"></a>
 ### Mandatory PDF-to-image conversion for presentation reviews
@@ -149,18 +149,18 @@ Other takes: [gem #10](0010-autogen.md#g10-f044), [gem #18](0018-arbor.md#g18-f0
 `skills/peer-review/SKILL.md:391-414` — Mandatory PDF-to-image conversion for presentation reviews: direct PDF reading is forbidden; agent must run `pdf_to_images.py` first.
 
 <a id="g9-f020"></a>
-### PDF→PNG at 200 dpi, then proportional down-scale of any page over max_dim=1000 px before saving.
+### PDFPNG at 200 dpi, then proportional down-scale of any page over max_dim=1000 px before saving.
 
 `skills/document-skills/pdf/scripts/convert_pdf_to_images.py:10-24` @ f4a6286
 
-`skills/document-skills/pdf/scripts/convert_pdf_to_images.py:10-24` — PDF→PNG at 200 dpi, then proportional down-scale of any page over `max_dim=1000` px before saving.
+`skills/document-skills/pdf/scripts/convert_pdf_to_images.py:10-24` — PDFPNG at 200 dpi, then proportional down-scale of any page over `max_dim=1000` px before saving.
 
 <a id="g9-f021"></a>
-### Four-level metabolite ID confidence system (L1 authentic standard MS+RT → L4 unknown) mirroring Metabolomics Standard…
+### Four-level metabolite ID confidence system (L1 authentic standard MS+RT L4 unknown) mirroring Metabolomics Standard…
 
 `skills/metabolomics-analysis/SKILL.md:L206-L212` @ f4a6286
 
-`skills/metabolomics-analysis/SKILL.md:L206-L212` — Four-level metabolite ID confidence system (L1 authentic standard MS+RT → L4 unknown) mirroring Metabolomics Standards Initiative levels.
+`skills/metabolomics-analysis/SKILL.md:L206-L212` — Four-level metabolite ID confidence system (L1 authentic standard MS+RT L4 unknown) mirroring Metabolomics Standards Initiative levels.
 
 <a id="g9-f022"></a>
 ### Composite Feasibility Score (0–100)
@@ -204,14 +204,14 @@ Other takes: [gem #10](0010-autogen.md#g10-f044), [gem #18](0018-arbor.md#g18-f0
 
 `openclaw-skill-pack/skills/scienceclaw-investigate/SKILL.md:L58-63` @ f4a6286
 
-`openclaw-skill-pack/skills/scienceclaw-investigate/SKILL.md:L58-63` — Investigation pipeline: LLM selects from 300+ skill catalog → 2–5 parallel agents run tools → one refinement cycle fills evidence gaps → synthesis posted to Infinite. Gap-fill tools scoped to `pubmed, uniprot, pubchem, chembl, tdc, pdb, blast, arxiv`.
+`openclaw-skill-pack/skills/scienceclaw-investigate/SKILL.md:L58-63` — Investigation pipeline: LLM selects from 300+ skill catalog 2–5 parallel agents run tools one refinement cycle fills evidence gaps synthesis posted to Infinite. Gap-fill tools scoped to `pubmed, uniprot, pubchem, chembl, tdc, pdb, blast, arxiv`.
 
 <a id="g9-f028"></a>
-### File-type → skill mapping
+### File-type skill mapping
 
 `openclaw-skill-pack/skills/scienceclaw-local-files/SKILL.md:L120-132` @ f4a6286
 
-`openclaw-skill-pack/skills/scienceclaw-local-files/SKILL.md:L120-132` — File-type → skill mapping: PDF→`markitdown,pubmed,literature-review`; protein FASTA→`blast,uniprot,esm,biopython,pubmed,pdb`; CSV with SMILES→`rdkit,datamol,pubchem,tdc,pubmed`; omics CSV→`scanpy,pydeseq2,pubmed,gene-database`. SMILES tools forbidden when no SMILES present.
+`openclaw-skill-pack/skills/scienceclaw-local-files/SKILL.md:L120-132` — File-type skill mapping: PDF`markitdown,pubmed,literature-review`; protein FASTA`blast,uniprot,esm,biopython,pubmed,pdb`; CSV with SMILES`rdkit,datamol,pubchem,tdc,pubmed`; omics CSV`scanpy,pydeseq2,pubmed,gene-database`. SMILES tools forbidden when no SMILES present.
 
 <a id="g9-f029"></a>
 ### Ten research dimensions each with explicit ToolUniverse tool chains (identity via EFO/UMLS/ICD; genetics via ClinVar/…
@@ -242,11 +242,11 @@ Other takes: [gem #10](0010-autogen.md#g10-f044), [gem #18](0018-arbor.md#g18-f0
 `skills/gene-enrichment/SKILL.md:L9-69` — `description:` field deliberately exhaustive for routing (220+ Enrichr libraries, 40+ ToolUniverse tools, 5 organisms); ten mandatory core principles precede any code including report-first, T1–T4 evidence grading, and end completeness checklist.
 
 <a id="g9-f033"></a>
-### Eight-step hypothesis workflow (understand → literature → synthesise → 3–5 competing hypotheses → evaluate on 7 axes …
+### Eight-step hypothesis workflow (understand literature synthesise 3–5 competing hypotheses evaluate on 7 axes …
 
 `skills/hypothesis-generation/SKILL.md:91-135` @ f4a6286
 
-`skills/hypothesis-generation/SKILL.md:91-135` — Eight-step hypothesis workflow (understand → literature → synthesise → 3–5 competing hypotheses → evaluate on 7 axes → design experiments → predictions → LaTeX). Every report must inject ≥1–2 AI-generated schematics via `scientific-schematics` as a blocking invariant.
+`skills/hypothesis-generation/SKILL.md:91-135` — Eight-step hypothesis workflow (understand literature synthesise 3–5 competing hypotheses evaluate on 7 axes design experiments predictions LaTeX). Every report must inject ≥1–2 AI-generated schematics via `scientific-schematics` as a blocking invariant.
 
 <a id="g9-f034"></a>
 ### "Phase 0
@@ -260,7 +260,7 @@ Other takes: [gem #10](0010-autogen.md#g10-f044), [gem #18](0018-arbor.md#g18-f0
 
 `skills/drug-drug-interaction/SKILL.md:44-78` @ f4a6286
 
-`skills/drug-drug-interaction/SKILL.md:44-78` — Report-first DDI workflow: create file with 9 section headers as `[Analyzing...]` before data collection; bidirectional analysis mandatory; 15-criterion completion checklist (evidence grades ★★★/★★☆/★☆☆, 0–100 risk score) before "Ready for Clinical Use".
+`skills/drug-drug-interaction/SKILL.md:44-78` — Report-first DDI workflow: create file with 9 section headers as `[Analyzing...]` before data collection; bidirectional analysis mandatory; 15-criterion completion checklist (evidence grades //, 0–100 risk score) before "Ready for Clinical Use".
 
 <a id="g9-f036"></a>
 ### ScholarEval 8-dimension framework, each on a 5-point scale; scoring uses contextual multipliers by stage/venue/type ( ).
@@ -274,14 +274,14 @@ Other takes: [gem #10](0010-autogen.md#g10-f044), [gem #18](0018-arbor.md#g18-f0
 
 `skills/clinical-guidelines/SKILL.md:L65-78` @ f4a6286
 
-`skills/clinical-guidelines/SKILL.md:L65-78` — Routing table: cardiology→`AHA_ACC_search_guidelines`; pharmacogenomics→`CPIC_get_gene_drug_pairs`; 12+ sources, 41 tools.
+`skills/clinical-guidelines/SKILL.md:L65-78` — Routing table: cardiology`AHA_ACC_search_guidelines`; pharmacogenomics`CPIC_get_gene_drug_pairs`; 12+ sources, 41 tools.
 
 <a id="g9-f038"></a>
-### Perplexity model selection guide; research-lookup uses complexity scoring (each reasoning keyword +3 pts; ≥3 → reason…
+### Perplexity model selection guide; research-lookup uses complexity scoring (each reasoning keyword +3 pts; ≥3 reason…
 
 `skills/perplexity-search/SKILL.md:L92-103` @ f4a6286
 
-`skills/perplexity-search/SKILL.md:L92-103` / `skills/research-lookup/SKILL.md:L147-165` — Perplexity model selection guide; research-lookup uses complexity scoring (each reasoning keyword +3 pts; ≥3 → reasoning model).
+`skills/perplexity-search/SKILL.md:L92-103` / `skills/research-lookup/SKILL.md:L147-165` — Perplexity model selection guide; research-lookup uses complexity scoring (each reasoning keyword +3 pts; ≥3 reasoning model).
 
 <a id="g9-f039"></a>
 ### Mandatory-disagreement rule (each member MUST disagree with ≥1 other member on something substantive) as a structural…
@@ -302,7 +302,7 @@ Other takes: [gem #10](0010-autogen.md#g10-f044), [gem #18](0018-arbor.md#g18-f0
 
 `skills/literature-deep-research/SKILL.md:L14-54` @ f4a6286
 
-`skills/literature-deep-research/SKILL.md:L14-54` — Four-phase workflow: clarify → target disambiguation (Ensembl/UniProt IDs, naming collisions) → literature search with citation-network expansion → progressive report synthesis. "English-first queries" mandatory.
+`skills/literature-deep-research/SKILL.md:L14-54` — Four-phase workflow: clarify target disambiguation (Ensembl/UniProt IDs, naming collisions) literature search with citation-network expansion progressive report synthesis. "English-first queries" mandatory.
 
 <a id="g9-f042"></a>
 ### Five domain-aware prompt builders inject DOMAIN_PERSONAS keyed on biology/chemistry/materials/general; PATTERN_EXPLAN…
@@ -360,7 +360,7 @@ Other takes: [gem #10](0010-autogen.md#g10-f044), [gem #18](0018-arbor.md#g18-f0
 
 `skills/epigenomics/scripts/run.py:L1-82` @ f4a6286
 
-`skills/epigenomics/scripts/run.py:L1-82` — ToolUniverse runner pattern (single `WORKFLOW` constant + `tu.load_tools()` + `tu.run({"name":...})`): zero-boilerplate CLI tool for any named workflow; includes clean `--no-cache` → `use_cache=not args.no_cache` idiom.
+`skills/epigenomics/scripts/run.py:L1-82` — ToolUniverse runner pattern (single `WORKFLOW` constant + `tu.load_tools()` + `tu.run({"name":...})`): zero-boilerplate CLI tool for any named workflow; includes clean `--no-cache` `use_cache=not args.no_cache` idiom.
 
 <a id="g9-f050"></a>
 ### to_serializable() recursive JSON-safe coercion ( str(obj) fallback) as a universal guard before json.dumps on heterog…
@@ -426,11 +426,11 @@ Negative-prompt "When NOT To Use" guard at the top of every computation-only ski
 `skills/protein-design-workflow/SKILL.md:L74-122` — Full pipeline via `subprocess.run(..., check=True)`; each stage writes to a subdirectory of `output_dir/` read by the next — simple, auditable, crash-detectable.
 
 <a id="g9-f059"></a>
-### Artifact lifecycle (create → cache → load → stream) with lineage via ln.track() / ln.finish() ; artifact.view_lineage…
+### Artifact lifecycle (create cache load stream) with lineage via ln.track() / ln.finish() ; artifact.view_lineage…
 
 `skills/lamindb/SKILL.md:L42-54` @ f4a6286
 
-`skills/lamindb/SKILL.md:L42-54` / `references/core-concepts.md:L1-76` — Artifact lifecycle (create → cache → load → stream) with lineage via `ln.track()`/`ln.finish()`; `artifact.view_lineage()` DAG; Django-style double-underscore provenance queries.
+`skills/lamindb/SKILL.md:L42-54` / `references/core-concepts.md:L1-76` — Artifact lifecycle (create cache load stream) with lineage via `ln.track()`/`ln.finish()`; `artifact.view_lineage()` DAG; Django-style double-underscore provenance queries.
 
 <a id="g9-f060"></a>
 ### Collision-aware literature search
@@ -451,7 +451,7 @@ Negative-prompt "When NOT To Use" guard at the top of every computation-only ski
 
 `skills/clinical-reports/scripts/compliance_checker.py:14-43` @ f4a6286
 
-`skills/clinical-reports/scripts/compliance_checker.py:14-43` — Declarative regex-based compliance checker: regulation→check→pattern dict drives both iteration and output labeling.
+`skills/clinical-reports/scripts/compliance_checker.py:14-43` — Declarative regex-based compliance checker: regulationcheckpattern dict drives both iteration and output labeling.
 
 <a id="g9-f063"></a>
 ### Capability proof at agent registration
@@ -472,7 +472,7 @@ Negative-prompt "When NOT To Use" guard at the top of every computation-only ski
 
 `skills/alphafold/SKILL.md:L96-108` @ f4a6286
 
-`skills/alphafold/SKILL.md:L96-108` — Self-consistency validation loop: RFdiffusion backbone → ProteinMPNN sequences → AF2 prediction → TM-score/RMSD; TM-score > 0.8 = pass.
+`skills/alphafold/SKILL.md:L96-108` — Self-consistency validation loop: RFdiffusion backbone ProteinMPNN sequences AF2 prediction TM-score/RMSD; TM-score > 0.8 = pass.
 
 <a id="g9-f066"></a>
 ### Output-file naming contract + citation template requiring PRR, 95% CI, case count, serious/fatal counts, tagged FAERS…
@@ -507,7 +507,7 @@ Negative-prompt "When NOT To Use" guard at the top of every computation-only ski
 
 `skills/dask/references/schedulers.md:279-293` @ f4a6286
 
-`skills/dask/references/schedulers.md:279-293` — Decision matrix: numeric/Pandas→threads, pure Python→processes, debugging→synchronous, multi-machine→cluster.
+`skills/dask/references/schedulers.md:279-293` — Decision matrix: numeric/Pandasthreads, pure Pythonprocesses, debuggingsynchronous, multi-machinecluster.
 
 <a id="g9-f071"></a>
 ### SLURM self-submission as structured JSON output so the orchestrating agent can poll or set a dependency rather than s…

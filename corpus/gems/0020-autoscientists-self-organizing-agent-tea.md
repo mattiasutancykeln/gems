@@ -123,7 +123,7 @@
 
 `runbook.md:30-64` @ c71a923
 
-`runbook.md:30-64 @ AutoScientists@c71a923` — Three-state orchestrator boot: (A) template with no `WORKSPACE_ID` → run `launch.py` then proceed; (B) existing ablation → read `teams/roster.md` to determine phase; (C) interruption resume → read `logs/sessions.jsonl` + `logs/experiments.jsonl`, release stale claims, re-enter loop. Discriminant is `WORKSPACE_ID` existence plus roster content, not a separate state file.
+`runbook.md:30-64 @ AutoScientists@c71a923` — Three-state orchestrator boot: (A) template with no `WORKSPACE_ID` run `launch.py` then proceed; (B) existing ablation read `teams/roster.md` to determine phase; (C) interruption resume read `logs/sessions.jsonl` + `logs/experiments.jsonl`, release stale claims, re-enter loop. Discriminant is `WORKSPACE_ID` existence plus roster content, not a separate state file.
 
 <a id="g20-f017"></a>
 ### @ AutoScientists@c71a923
@@ -167,7 +167,7 @@
 
 `system/reference/AGENT-SETUP.md:108-123` @ c71a923
 
-`system/reference/AGENT-SETUP.md:108-123 @ AutoScientists@c71a923` — Boot sequence is 5 self-discovered steps: BOOT (read credentials + role), ORIENT (roster → team + workspace IDs → LIST → role doc), EXECUTE (role protocol), RECORD (actions.md + workspace agent status), EXIT (`<promise>` tag). No step is hardcoded in the launch prompt — the agent discovers all context from local files and API.
+`system/reference/AGENT-SETUP.md:108-123 @ AutoScientists@c71a923` — Boot sequence is 5 self-discovered steps: BOOT (read credentials + role), ORIENT (roster team + workspace IDs LIST role doc), EXECUTE (role protocol), RECORD (actions.md + workspace agent status), EXIT (`<promise>` tag). No step is hardcoded in the launch prompt — the agent discovers all context from local files and API.
 
 <a id="g20-f023"></a>
 ### @ AutoScientists@c71a923
@@ -265,7 +265,7 @@
 
 `system/templates/ROLE-GPU.md:685-724` @ c71a923
 
-`system/templates/ROLE-GPU.md:685-724 @ AutoScientists@c71a923` — Atomic two-phase queue mutation: claim release and `pending → completed` move happen in a single read-modify-PUT. The prior pattern (release only) left stale rows that analysts spent multiple turns pruning. Generalizes: any operation updating two fields of a shared YAML file atomically must be a single read-modify-PUT, not two PATCHes.
+`system/templates/ROLE-GPU.md:685-724 @ AutoScientists@c71a923` — Atomic two-phase queue mutation: claim release and `pending completed` move happen in a single read-modify-PUT. The prior pattern (release only) left stale rows that analysts spent multiple turns pruning. Generalizes: any operation updating two fields of a shared YAML file atomically must be a single read-modify-PUT, not two PATCHes.
 
 <a id="g20-f037"></a>
 ### @ AutoScientists@c71a923
@@ -288,7 +288,7 @@
 
 `system/templates/HEARTBEAT.md:100-165` @ c71a923
 
-`system/templates/HEARTBEAT.md:100-165 @ AutoScientists@c71a923` — **Sentinel-driven session recovery.** Writing `result_latest.json` with `status/pid/posted_to_workshop` before training starts gives a clean resume path after any crash. The PID + artifact-presence promotion logic (`running` → `complete` → `posted`) handles ungraceful kills without orchestrator intervention. Directly portable to Halmos agent runs where a long compute step may outlive the orchestrator session.
+`system/templates/HEARTBEAT.md:100-165 @ AutoScientists@c71a923` — **Sentinel-driven session recovery.** Writing `result_latest.json` with `status/pid/posted_to_workshop` before training starts gives a clean resume path after any crash. The PID + artifact-presence promotion logic (`running` `complete` `posted`) handles ungraceful kills without orchestrator intervention. Directly portable to Halmos agent runs where a long compute step may outlive the orchestrator session.
 
 <a id="g20-f040"></a>
 ### Filesystem-first, two-tier agent identity

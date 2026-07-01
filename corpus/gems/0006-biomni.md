@@ -175,11 +175,11 @@
 `biomni/agent/__init__.py:L1` — The agent package surface is deliberately thin: only `A1` is re-exported, insulating downstream callers from internal class proliferation and making the agent surface easy to version.
 
 <a id="g6-f024"></a>
-### CNVkit discovery walks PATH → biomni_e1 conda env → bio_env_py310 → error , so the tool self-locates in managed envir…
+### CNVkit discovery walks PATH biomni_e1 conda env bio_env_py310 error , so the tool self-locates in managed envir…
 
 `biomni/tool/cancer_biology.py:L1034-1066` @ 400c1f3
 
-`biomni/tool/cancer_biology.py:L1034-1066` — CNVkit discovery walks `PATH → biomni_e1 conda env → bio_env_py310 → error`, so the tool self-locates in managed environments without requiring PATH setup from the caller.
+`biomni/tool/cancer_biology.py:L1034-1066` — CNVkit discovery walks `PATH biomni_e1 conda env bio_env_py310 error`, so the tool self-locates in managed environments without requiring PATH setup from the caller.
 
 <a id="g6-f025"></a>
 ### Jupyter notebook cells are stripped to only import lines containing "pylabrobot" , capped at 20 lines per cell, keepi…
@@ -191,11 +191,11 @@
 ## Skills, prompts, tools
 
 <a id="g6-f026"></a>
-### The main system prompt mandates a numbered checklist plan ( [ ] / [✓] / [✗] ) updated after every step, giving the LL…
+### The main system prompt mandates a numbered checklist plan ( [ ] / [] / [] ) updated after every step, giving the LL…
 
 `biomni/agent/a1.py:L1098-L1143` @ 400c1f3
 
-`biomni/agent/a1.py:L1098-L1143` — The main system prompt mandates a numbered checklist plan (`[ ]` / `[✓]` / `[✗]`) updated after every step, giving the LLM a built-in scratchpad for tracking multi-step state without extra state machinery.
+`biomni/agent/a1.py:L1098-L1143` — The main system prompt mandates a numbered checklist plan (`[ ]` / `[]` / `[]`) updated after every step, giving the LLM a built-in scratchpad for tracking multi-step state without extra state machinery.
 
 <a id="g6-f027"></a>
 ### Three execution modes are specified inline
@@ -209,7 +209,7 @@
 
 `biomni/agent/a1.py:L1162-L1210` @ 400c1f3
 
-`biomni/agent/a1.py:L1162-L1210` — Custom resources (tools, data, software, know-how docs) are injected into a highlighted `PRIORITY CUSTOM RESOURCES` block above the standard environment section, with emoji labels (`🔧`, `📊`, `⚙️`, `📚`) so the LLM treats them as higher-priority.
+`biomni/agent/a1.py:L1162-L1210` — Custom resources (tools, data, software, know-how docs) are injected into a highlighted `PRIORITY CUSTOM RESOURCES` block above the standard environment section, with emoji labels (``, ``, ``, ``) so the LLM treats them as higher-priority.
 
 <a id="g6-f029"></a>
 ### Two parallel system prompt variants share the same template
@@ -372,7 +372,7 @@
 
 `biomni/agent/a1.py:L350-L587` @ 400c1f3
 
-`biomni/agent/a1.py:L350-L587` — **Dynamic MCP tool registration**: YAML config drives discovery → auto-generated `inputSchema`-based schemas → synthetic `types.ModuleType` per server → registered in both `tool_registry` and `module2api`. Full lifecycle with enable/disable and automatic schema inference.
+`biomni/agent/a1.py:L350-L587` — **Dynamic MCP tool registration**: YAML config drives discovery auto-generated `inputSchema`-based schemas synthetic `types.ModuleType` per server registered in both `tool_registry` and `module2api`. Full lifecycle with enable/disable and automatic schema inference.
 
 <a id="g6-f052"></a>
 ### Self-critic test-time scaling node
@@ -475,14 +475,14 @@
 
 `biomni/tool/literature.py:L324-329` @ 400c1f3
 
-`biomni/tool/literature.py:L324-329` — **Semantic HTML extraction**: `main → article → body` fallback chain, then strip `script/style/nav/header/footer/aside/iframe` before paragraph extraction. Portable web-scraping signal-to-noise pattern.
+`biomni/tool/literature.py:L324-329` — **Semantic HTML extraction**: `main article body` fallback chain, then strip `script/style/nav/header/footer/aside/iframe` before paragraph extraction. Portable web-scraping signal-to-noise pattern.
 
 <a id="g6-f067"></a>
 ### Lazy model download with structured fallback
 
 `biomni/tool/bioimaging.py:L278-425` @ 400c1f3
 
-`biomni/tool/bioimaging.py:L278-425` — **Lazy model download with structured fallback**: check PATH → probe conda envs via subprocess → auto-download with browser headers → verify weight file presence. Reusable for any tool requiring large pretrained weights that may not be pre-installed.
+`biomni/tool/bioimaging.py:L278-425` — **Lazy model download with structured fallback**: check PATH probe conda envs via subprocess auto-download with browser headers verify weight file presence. Reusable for any tool requiring large pretrained weights that may not be pre-installed.
 
 <a id="g6-f068"></a>
 ### Normalized Hill-function ODE framework
@@ -543,21 +543,21 @@ All `tool_description/*.py` files — **Uniform typed manifest schema**: `{descr
 
 `biomni/tool/schema_db/geo.pkl:L18-L31` @ 400c1f3
 
-`biomni/tool/schema_db/geo.pkl:L18-L31` — **Two-level entry-type registry**: `"GEO Series" → "gse"`, database name → Entrez db string in a single dict. Store human-readable label → API identifier mappings in schema payloads so the model works with natural-language labels while the tool layer resolves them to API tokens.
+`biomni/tool/schema_db/geo.pkl:L18-L31` — **Two-level entry-type registry**: `"GEO Series" "gse"`, database name Entrez db string in a single dict. Store human-readable label API identifier mappings in schema payloads so the model works with natural-language labels while the tool layer resolves them to API tokens.
 
 <a id="g6-f077"></a>
 ### Module docstring as output-format contract
 
 `biomni/tool/glycoengineering.py:1-6` @ 400c1f3
 
-`biomni/tool/glycoengineering.py:1-6` / `biomni/tool/glycoengineering.py:97-112` — **Module docstring as output-format contract**: declare the output format ("research-log style strings") at the module level; individual tools follow the pattern: heading → metadata line → capped candidate list → referral to authoritative external tool.
+`biomni/tool/glycoengineering.py:1-6` / `biomni/tool/glycoengineering.py:97-112` — **Module docstring as output-format contract**: declare the output format ("research-log style strings") at the module level; individual tools follow the pattern: heading metadata line capped candidate list referral to authoritative external tool.
 
 <a id="g6-f078"></a>
 ### Commercial-mode license filter
 
 `biomni/agent/a1.py:L876-L896` @ 400c1f3
 
-`biomni/agent/a1.py:L876-L896` — **Commercial-mode license filter**: metadata field (`❌` emoji or "Non-Commercial" string) in know-how documents is checked at configure time, not query time—cheap, deterministic, no LLM involvement.
+`biomni/agent/a1.py:L876-L896` — **Commercial-mode license filter**: metadata field (`` emoji or "Non-Commercial" string) in know-how documents is checked at configure time, not query time—cheap, deterministic, no LLM involvement.
 
 <a id="g6-f079"></a>
 ### Deprecated-but-supported dual input path

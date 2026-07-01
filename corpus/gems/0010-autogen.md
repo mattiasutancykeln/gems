@@ -374,7 +374,7 @@ Other takes: [gem #9](0009-scienceclaw.md#g9-f007), [gem #18](0018-arbor.md#g18-
 
 `python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_base_group_chat.py:794-834` @ 027ecf0
 
-**Component-based config serialization** (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_base_group_chat.py:794-834` + `_society_of_mind_agent.py:282-302`): Agents, teams, termination conditions, and message factories implement `dump_component()` → config and `load_component(config)` → instance. Enables JSON persistence with full type safety across all orchestration primitives.
+**Component-based config serialization** (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_base_group_chat.py:794-834` + `_society_of_mind_agent.py:282-302`): Agents, teams, termination conditions, and message factories implement `dump_component()` config and `load_component(config)` instance. Enables JSON persistence with full type safety across all orchestration primitives.
 
 <a id="g10-f052"></a>
 ### Candidate filtering before LLM speaker selection
@@ -384,11 +384,11 @@ Other takes: [gem #9](0009-scienceclaw.md#g9-f007), [gem #18](0018-arbor.md#g18-
 **Candidate filtering before LLM speaker selection** (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_selector_group_chat.py:180-199`): Optional custom candidate function runs before model-based selection. Fallback logic filters previous speaker unless `allow_repeated_speaker=True`. Ensures speaker pool is controlled before LLM sees it.
 
 <a id="g10-f053"></a>
-### State as flat agent-name → state dict
+### State as flat agent-name state dict
 
 `python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_magentic_one/_magentic_one_orchestrator.py:225-245` @ 027ecf0
 
-**State as flat agent-name → state dict** (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_magentic_one/_magentic_one_orchestrator.py:225-245`): Orchestrator state captures message thread, turn count, task, facts, plan, round count, stall count. Flat structure simplifies restore logic and avoids index fragility when participant order changes.
+**State as flat agent-name state dict** (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_magentic_one/_magentic_one_orchestrator.py:225-245`): Orchestrator state captures message thread, turn count, task, facts, plan, round count, stall count. Flat structure simplifies restore logic and avoids index fragility when participant order changes.
 
 <a id="g10-f054"></a>
 ### Explicit publish-message pattern for audit

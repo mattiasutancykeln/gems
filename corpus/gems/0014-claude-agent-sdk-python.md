@@ -302,7 +302,7 @@
 
 `src/claude_agent_sdk/_internal/sessions.py:931-1020` @ 7c37e34
 
-**Conversation chain from uuid/parentUuid links:** Index → find terminals → pick best leaf by type + position → walk `parentUuid` backward → reverse; `logicalParentUuid` skip prevents post-compaction duplication (`src/claude_agent_sdk/_internal/sessions.py:931-1020`).
+**Conversation chain from uuid/parentUuid links:** Index find terminals pick best leaf by type + position walk `parentUuid` backward reverse; `logicalParentUuid` skip prevents post-compaction duplication (`src/claude_agent_sdk/_internal/sessions.py:931-1020`).
 
 <a id="g14-f042"></a>
 ### JSON message buffer with speculative parsing

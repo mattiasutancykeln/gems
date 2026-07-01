@@ -153,7 +153,7 @@
 
 `src/executor/prompts.py:248-401` @ 964b846
 
-`src/executor/prompts.py:248-401` — Experiment workflow section: 7-step UNDERSTAND → BASELINE → PLAN → IMPLEMENT → VERIFY → DEBUG/ADAPT → REPORT workflow. Key separation: "The idea's direction is non-negotiable" vs "Implementation choices are yours." Executors report their implementation choices in a dedicated section.
+`src/executor/prompts.py:248-401` — Experiment workflow section: 7-step UNDERSTAND BASELINE PLAN IMPLEMENT VERIFY DEBUG/ADAPT REPORT workflow. Key separation: "The idea's direction is non-negotiable" vs "Implementation choices are yours." Executors report their implementation choices in a dedicated section.
 
 <a id="g18-f021"></a>
 ### build_search_user_prompt
@@ -283,7 +283,7 @@ Other takes: [gem #9](0009-scienceclaw.md#g9-f007), [gem #10](0010-autogen.md#g1
 
 `src/coordinator/tools/executor_run.py:460-688` @ 964b846
 
-`src/coordinator/tools/executor_run.py:460-688` — Full executor lifecycle as a single `_run_single_executor` coroutine: validate → create worktree → snapshot protected paths → run agent under `asyncio.wait_for` → tamper check → finalize/remove worktree → LLM-parse report → update tree → propagate insights → emit events → save artifacts → format summary. Each step is isolated; failures in optional steps (hooks, propagation, artifact save) are caught and logged without aborting the rest.
+`src/coordinator/tools/executor_run.py:460-688` — Full executor lifecycle as a single `_run_single_executor` coroutine: validate create worktree snapshot protected paths run agent under `asyncio.wait_for` tamper check finalize/remove worktree LLM-parse report update tree propagate insights emit events save artifacts format summary. Each step is isolated; failures in optional steps (hooks, propagation, artifact save) are caught and logged without aborting the rest.
 
 <a id="g18-f039"></a>
 ### Per-experiment artifact persistence
