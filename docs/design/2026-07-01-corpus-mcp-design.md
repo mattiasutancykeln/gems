@@ -102,13 +102,35 @@ const server = new McpServer({ name: "gems", version: "1.0.0" });
 server.registerTool("gems_query",
   { title: "Search gems", description: "…",
     inputSchema: { q: z.string(), topic: z.string().optional(), k: z.number().int().min(1).optional() } },
-  async ({ q, topic, k = 10 }) => ({ content: [{ type: "text", text: JSON.stringify(hits) }] })
+  async ({ q, topic, k = 10 }) => ({ content: [{ type: "text", text: renderHits(hits) }] })  // Markdown, see below
 );
 await server.connect(new StdioServerTransport());
 ```
 - **`inputSchema` is a Zod raw shape**, not JSON Schema (SDK requirement). `zod` is a peer dep → **two runtime deps total: `@modelcontextprotocol/sdk` + `zod`.** No API keys, no build.
 - **stdout is protocol-only.** All logging via `console.error` (stderr). This is the primary stdio footgun.
-- Tool results returned as `{ content: [{ type: "text", text: JSON.stringify(...) }] }` so the calling agent gets structured JSON.
+- On startup, a one-line stderr banner with corpus stats: `gems: 21 gems · 412 findings · 37 clusters · corpus @ <path>`.
+
+**Agent UX — the three surfaces that ARE the UI:**
+
+1. **Tool descriptions** (how the model picks a verb). Each description states intent + when-to-use in the first sentence, e.g. `gems_ground`: *"Find cited evidence from mined open-source repos/papers that supports or informs a specific technical claim or decision. Use when about to choose an approach and you want prior art with exact file:line citations and license-safety. For broad ideation use gems_inspire; for plain search use gems_query."* All three cross-reference each other so the model never guesses.
+
+2. **Result rendering** — formatted Markdown, not a raw JSON dump. The consumer is an LLM (and a human reading the transcript): compact, citation-first, license-visible blocks:
+
+   ```markdown
+   ### 1. Budget-before-validity check   ⭐ high · pattern
+   SciAgentArena (gem #21) · topics: eval, infra
+   `evaluations/dd/scorers/oracle_budget.py:147-153` @ ce27b8c
+   ⚠ License: none — **ideas only, do not copy code**
+   Budget check runs before validity so over-budget runs are zeroed …
+
+   ▼ 3 takes on "budget-gated verification" — compare:
+     2. Oracle-budget PMO curve — SciAgentArena #21 · `…py:1297-1310`
+     3. Multi-seed noise gate — AutoScientists #20 · `ROLE-GPU.md:916-927` · ✅ MIT
+   ```
+
+   Cluster variants render *nested under a compare header* (never dropped); license appears as icon **and** words on every hit; each block ends with the gem issue URL for drill-down.
+
+3. **Empty & error states** — always actionable: no hits → *"No findings for 'X'. Available topics: agent, eval, infra, ux, research. Broaden with gems_query({q}) without filters, or submit this as a new gem: <issue-form URL>."* Missing corpus / missing deps → stderr explains the exact fix (`npm install`, or `GEMS_CORPUS=` path).
 
 Retriever behind a small interface (`search(query, filters) → Hit[]`) so an embedding backend can drop in later without changing tool code.
 
@@ -153,12 +175,31 @@ Retriever behind a small interface (`search(query, filters) → Hit[]`) so an em
 
 **Corpus regeneration (CI, no contributor effort):** a GitHub Action runs `sync-corpus` whenever a gem is labeled `stage:extracted` (and on a manual dispatch), then commits the updated `corpus/` + `CATALOG.md` with the repo's `GITHUB_TOKEN`. Contributors never touch `corpus/` files — they post the extraction comment; the bot folds it in and the MCP stays fresh.
 
-### 6. Presentation
+### 6. Presentation (the GitHub page IS the UI)
 
-- **README** rewritten for three audiences: scout (add a link), human (Highlights + `CATALOG.md`), agent (install MCP, three verbs).
-- **`CATALOG.md`** generated from `gems.json`: table of gems with topic, source, license/codeReuse, finding count, verdict.
-- Highlights = top `quality:high` findings, generated.
-- CONTRIBUTING keeps the pipeline reference + the new "help extract" path.
+**Experience principles** (apply to README, CATALOG, gem pages, MCP output alike):
+- **Show a real gem within the first screen** — the value prop is demonstrated by one rendered finding, not described.
+- Every surface answers three questions in order: **use it → contribute → why it exists.**
+- **Citations always visible** (`path:line @ sha`), **license always icon + words** (✅ permissive / 💡 ideas-only / 🚫 forbidden — never color/icon alone).
+- Each audience gets a ≤3-step path; steps are copy-pasteable commands or single links.
+
+**README** (rewritten top-to-bottom, in this order):
+1. **Hero** — one line: *"A mined, cited, searchable corpus of the best implementation patterns from open-source agent/research repos — queryable by your coding agent over MCP."* Badges: gem count · finding count · MIT. Then **one real finding** rendered exactly as the MCP returns it (the §3 block) — instant "aha".
+2. **Use it in 60 seconds** — three explicit doors:
+   - 🤖 *Agents:* `git clone … && npm install && claude` → approve trust prompt → `gems_inspire` / `gems_ground` / `gems_query` (one-line description each). Alt: the `claude mcp add --scope user` one-liner.
+   - 🧑 *Humans:* browse **[CATALOG.md]** or the per-gem pages in `corpus/gems/`.
+   - 💎 *Have a link?* → **Submit a gem** (issue-form deep link). One sentence: a URL and a note is all it takes.
+3. **How it works** — the pipeline diagram (`raw → summarized → extracted → corpus → MCP`), five lines max.
+4. **Contribute** — the two-rung ladder: submit (zero setup) and **help extract** (Claude Code + tokens; link straight to the `help wanted` queue and the CONTRIBUTING recipe).
+5. **Why** — three sentences: ideas are cheap to lose, extraction is expensive to redo, agents should stand on mined + cited prior art. Link the design doc.
+
+**`CATALOG.md`** (generated): opens with **Highlights** — the top `quality:high` cross-gem clusters ("3 implementations of budget-gated verification: #20, #21, #8") — because clusters, not single gems, are the most interesting browse unit. Then the full table, quality-first: `# · gem · source · topics · findings · license (icon+word) · verdict · issue link`.
+
+**Gem pages** (`corpus/gems/NNNN-slug.md`, generated): metadata header table (source URL, pinned SHA, license/codeReuse, topics, finding count, issue backlink) → TL;DR → findings grouped by category with stable anchors (`#g21-f007`) so MCP hits deep-link. Findings in multi-gem clusters get a **"≈ other takes"** cross-link line to sibling variants in other gems — the corpus browses like a small wiki, not a pile of reports.
+
+**Issue form (`gem.yml`)**: two fields only — URL (required) + "why it caught your eye" (optional, placeholder `cleaner take on sandboxed exec…`). Dropdown for source kind, `stage:raw` auto-applied. Zero-friction is the design goal; everything else is the pipeline's job.
+
+**CONTRIBUTING**: keeps the pipeline reference; adds the "help extract" recipe as a numbered copy-paste block (claim → prep → dispatch in CC → post comment → CI folds it in). A contributor should succeed on first read without asking anything.
 
 ## Deliverables
 
