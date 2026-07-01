@@ -117,18 +117,18 @@ await server.connect(new StdioServerTransport());
 2. **Result rendering** — formatted Markdown, not a raw JSON dump. The consumer is an LLM (and a human reading the transcript): compact, citation-first, license-visible blocks:
 
    ```markdown
-   ### 1. Budget-before-validity check   ⭐ high · pattern
+   ### 1. Budget-before-validity check   [high] pattern
    SciAgentArena (gem #21) · topics: eval, infra
    `evaluations/dd/scorers/oracle_budget.py:147-153` @ ce27b8c
-   ⚠ License: none — **ideas only, do not copy code**
+   License: none — **IDEAS ONLY, do not copy code**
    Budget check runs before validity so over-budget runs are zeroed …
 
-   ▼ 3 takes on "budget-gated verification" — compare:
+   3 takes on "budget-gated verification" — compare:
      2. Oracle-budget PMO curve — SciAgentArena #21 · `…py:1297-1310`
-     3. Multi-seed noise gate — AutoScientists #20 · `ROLE-GPU.md:916-927` · ✅ MIT
+     3. Multi-seed noise gate — AutoScientists #20 · `ROLE-GPU.md:916-927` · MIT (permissive)
    ```
 
-   Cluster variants render *nested under a compare header* (never dropped); license appears as icon **and** words on every hit; each block ends with the gem issue URL for drill-down.
+   Cluster variants render *nested under a compare header* (never dropped); license appears **spelled out in words** on every hit; each block ends with the gem issue URL for drill-down. **No emojis anywhere** — plain text and ASCII markers only (`[high]`, `(permissive)`); an ASCII-moji like `\(oOo)/` is permitted sparingly where a human-facing page wants warmth.
 
 3. **Empty & error states** — always actionable: no hits → *"No findings for 'X'. Available topics: agent, eval, infra, ux, research. Broaden with gems_query({q}) without filters, or submit this as a new gem: <issue-form URL>."* Missing corpus / missing deps → stderr explains the exact fix (`npm install`, or `GEMS_CORPUS=` path).
 
@@ -180,20 +180,21 @@ Retriever behind a small interface (`search(query, filters) → Hit[]`) so an em
 **Experience principles** (apply to README, CATALOG, gem pages, MCP output alike):
 - **Show a real gem within the first screen** — the value prop is demonstrated by one rendered finding, not described.
 - Every surface answers three questions in order: **use it → contribute → why it exists.**
-- **Citations always visible** (`path:line @ sha`), **license always icon + words** (✅ permissive / 💡 ideas-only / 🚫 forbidden — never color/icon alone).
+- **Citations always visible** (`path:line @ sha`), **license always spelled out in words** (`permissive` / `ideas-only` / `FORBIDDEN`) — never conveyed by symbol or color alone.
+- **No emojis on any GitHub-facing surface** (README, CATALOG, gem pages, issue templates, MCP output). ASCII markers (`[high]`, `(permissive)`, `->`) do the work; an ASCII-moji like `\(oOo)/` is allowed sparingly for warmth.
 - Each audience gets a ≤3-step path; steps are copy-pasteable commands or single links.
 
 **README** (rewritten top-to-bottom, in this order):
 1. **Hero** — one line: *"A mined, cited, searchable corpus of the best implementation patterns from open-source agent/research repos — queryable by your coding agent over MCP."* Badges: gem count · finding count · MIT. Then **one real finding** rendered exactly as the MCP returns it (the §3 block) — instant "aha".
 2. **Use it in 60 seconds** — three explicit doors:
-   - 🤖 *Agents:* `git clone … && npm install && claude` → approve trust prompt → `gems_inspire` / `gems_ground` / `gems_query` (one-line description each). Alt: the `claude mcp add --scope user` one-liner.
-   - 🧑 *Humans:* browse **[CATALOG.md]** or the per-gem pages in `corpus/gems/`.
-   - 💎 *Have a link?* → **Submit a gem** (issue-form deep link). One sentence: a URL and a note is all it takes.
+   - **Agents:** `git clone … && npm install && claude` → approve trust prompt → `gems_inspire` / `gems_ground` / `gems_query` (one-line description each). Alt: the `claude mcp add --scope user` one-liner.
+   - **Humans:** browse **[CATALOG.md]** or the per-gem pages in `corpus/gems/`.
+   - **Have a link?** → **Submit a gem** (issue-form deep link). One sentence: a URL and a note is all it takes.
 3. **How it works** — the pipeline diagram (`raw → summarized → extracted → corpus → MCP`), five lines max.
 4. **Contribute** — the two-rung ladder: submit (zero setup) and **help extract** (Claude Code + tokens; link straight to the `help wanted` queue and the CONTRIBUTING recipe).
 5. **Why** — three sentences: ideas are cheap to lose, extraction is expensive to redo, agents should stand on mined + cited prior art. Link the design doc.
 
-**`CATALOG.md`** (generated): opens with **Highlights** — the top `quality:high` cross-gem clusters ("3 implementations of budget-gated verification: #20, #21, #8") — because clusters, not single gems, are the most interesting browse unit. Then the full table, quality-first: `# · gem · source · topics · findings · license (icon+word) · verdict · issue link`.
+**`CATALOG.md`** (generated): opens with **Highlights** — the top `quality:high` cross-gem clusters ("3 implementations of budget-gated verification: #20, #21, #8") — because clusters, not single gems, are the most interesting browse unit. Then the full table, quality-first: `# · gem · source · topics · findings · license (word) · verdict · issue link`.
 
 **Gem pages** (`corpus/gems/NNNN-slug.md`, generated): metadata header table (source URL, pinned SHA, license/codeReuse, topics, finding count, issue backlink) → TL;DR → findings grouped by category with stable anchors (`#g21-f007`) so MCP hits deep-link. Findings in multi-gem clusters get a **"≈ other takes"** cross-link line to sibling variants in other gems — the corpus browses like a small wiki, not a pile of reports.
 
