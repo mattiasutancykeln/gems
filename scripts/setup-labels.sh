@@ -58,4 +58,8 @@ upsert "quality:high"      "b60205" "Promoted gem — surface first when ravagin
 upsert "status:claimed"    "1d76db" "Someone is actively building from this"
 upsert "status:built"      "0e8a16" "Landed in shepherd — closing comment links the PR"
 
+echo "Extraction queue:"
+upsert "help wanted"           "008672" "Extraction queue: claim it, burn tokens, post the report"
+upsert "good first extraction" "7057ff" "Small repo, clean structure - good first extraction"
+
 echo "Done."

@@ -2,6 +2,16 @@
 
 This is an idea inbox, not a polished project. Friction kills it. The bar for adding a link is "I clicked on it and it looked interesting." Everything else gets triaged later.
 
+## Help extract
+
+The highest-value contribution: turn a summarized gem into a cited extraction report. You need the `gh` CLI and a Claude Code session (the tokens are yours to burn).
+
+1. Pick a gem from the [extraction queue](https://github.com/mattiasutancykeln/gems/issues?q=is%3Aopen+label%3A%22help+wanted%22) (or any open `stage:summarized` gem).
+2. Claim it so nobody double-spends: comment `claiming` on the issue and add the `status:claimed` label.
+3. Prep (shell, no LLM calls): `bash scripts/extract.sh <issue#> --prep-only`
+4. In a Claude Code session: *"pick up the extraction prep at <prep_dir> for gem #<issue#>"* - workers read the batches, the coordinator merges, and the session posts the report comment.
+5. The report must follow the citation contract below (`path:LINE-LINE @ owner/repo@SHA`). The maintainer flips the label to `stage:extracted`; CI regenerates `corpus/` automatically - you never edit corpus files.
+
 ## Three workflows, three roles
 
 | Role | When | What you do |

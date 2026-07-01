@@ -1,5 +1,5 @@
 name: Gem
-description: Drop a link to a repo, article, or paper worth keeping
+description: Drop a link worth mining - a repo, paper, or article with substantive technique
 title: "[raw] "
 labels: ["stage:raw"]
 body:
@@ -7,33 +7,17 @@ body:
     id: url
     attributes:
       label: URL
-      description: The link itself. One per issue.
-      placeholder: https://github.com/...
+      placeholder: "https://github.com/owner/repo…"
     validations:
       required: true
-  - type: textarea
+  - type: input
     id: note
     attributes:
       label: Why it caught your eye (optional)
-      description: One or two lines. No need to summarize — that's the LLM's job.
-      placeholder: "Looks like a cleaner way to do X."
-    validations:
-      required: false
+      placeholder: "cleaner take on sandboxed exec…"
   - type: dropdown
-    id: source
+    id: kind
     attributes:
       label: Kind
-      options:
-        - repo
-        - article
-        - paper
-        - other
-    validations:
-      required: false
-  - type: input
-    id: topic
-    attributes:
-      label: Topic hint (optional)
-      description: "agent / eval / infra / ux / research — applied as topic:* label later"
-    validations:
-      required: false
+      options: [repo, paper, article, other]
+      default: 0
