@@ -73,3 +73,34 @@ test("warning on citation-less bullet in a code section", () => {
   assert.equal(warnings.length, 1);
   assert.match(warnings[0], /no citation/i);
 });
+
+test("fallback title strips citation/backticks before splitting (citation-first bullet)", () => {
+  const c = "## Extraction report\n\n**Source:** `a/b` @ `1234567` (pinned x)\n\n### Patterns worth porting\n\n- `core/skill_executor.py:40-58` — Path-traversal guard: resolves and checks prefix before exec.\n";
+  const { findings } = parseIssue(makeIssue({ comments: [c] }));
+  assert.equal(findings.length, 1);
+  assert.equal(findings[0].title, "Path-traversal guard");
+  assert.equal(findings[0].citation, "core/skill_executor.py:40-58");
+});
+
+test("GitHub-style L-prefixed line anchors are captured verbatim", () => {
+  const c = "## Extraction report\n\n**Source:** `a/b` @ `1234567` (pinned x)\n\n### Patterns worth porting\n\n- **UniProt lookup schema**: `skills/uniprot/SKILL.md:L127-139` — Defines the query shape.\n";
+  const { findings } = parseIssue(makeIssue({ comments: [c] }));
+  assert.equal(findings.length, 1);
+  assert.equal(findings[0].citation, "skills/uniprot/SKILL.md:L127-139");
+});
+
+test("citation-like string inside a URL does not produce a spurious citation", () => {
+  const c = "## Extraction report\n\n**Source:** `a/b` @ `1234567` (pinned x)\n\n### Patterns worth porting\n\n- See https://github.com/o/r/blob/main/src/file.ts:12-34 for context, no real citation here.\n";
+  const { findings, warnings } = parseIssue(makeIssue({ comments: [c] }));
+  assert.equal(findings.length, 1);
+  assert.equal(findings[0].citation, null);
+  assert.equal(warnings.length, 1);
+  assert.match(warnings[0], /no citation/i);
+});
+
+test("bold titles strip backticks for consistency", () => {
+  const c = "## Extraction report\n\n**Source:** `a/b` @ `1234567` (pinned x)\n\n### Patterns worth porting\n\n- **Task resumption via `task_id`**: `daemon/loop.py:5-25` — Resumes from last checkpoint.\n";
+  const { findings } = parseIssue(makeIssue({ comments: [c] }));
+  assert.equal(findings.length, 1);
+  assert.equal(findings[0].title, "Task resumption via task_id");
+});
