@@ -49,3 +49,14 @@ test("short texts do not crash (fewer tokens than shingle size)", () => {
   assert.equal(out.length, 1);
   assert.ok(out[0].clusterId);
 });
+
+test("findings that differ only by a shared citation path do not cluster", () => {
+  const a = mk("g1-f001", 1, "Retry budget exhaustion",
+    "the worker gives up retrying after the budget is exhausted and logs a terminal failure " +
+    "see `same/long/path/file.py:1-2`");
+  const b = mk("g2-f001", 2, "Config schema validation gap",
+    "incoming configuration payloads skip schema validation before being applied to the runtime " +
+    "see `same/long/path/file.py:1-2`");
+  const out = clusterFindings([a, b]);
+  assert.notEqual(out[0].clusterId, out[1].clusterId);
+});
