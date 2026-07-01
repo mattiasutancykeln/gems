@@ -281,7 +281,7 @@
 
 `task.py:1257-1307` @ da8fe8c
 
-`task.py:1257-1307` — **Per-index retry tracking**: guardrails in an array retain independent retry state via `dict[index] count`; on failure, re-execute agent with error context as conversation turn, not full restart.
+`task.py:1257-1307` — **Per-index retry tracking**: guardrails in an array retain independent retry state via `dict[index] -> count`; on failure, re-execute agent with error context as conversation turn, not full restart.
 
 <a id="g16-f039"></a>
 ### Checkpoint + context restoration
@@ -395,7 +395,7 @@
 
 `crew.py:614` @ da8fe8c
 
-`crew.py:614` — TODO in config validator: "Improve typing" for Json union; currently raw JSON string dict conversion.
+`crew.py:614` — TODO in config validator: "Improve typing" for Json union; currently raw JSON string -> dict conversion.
 
 <a id="g16-f055"></a>
 ### CrewAgentExecutor marked deprecated with migration warning to AgentExecutor ; unclear removal timeline or backward-co…

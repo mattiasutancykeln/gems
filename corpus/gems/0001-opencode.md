@@ -293,7 +293,7 @@
 
 `packages/opencode/src/session/reminders.ts:11-13` @ 97e713e
 
-**Three prompt files injected conditionally**: `packages/opencode/src/session/reminders.ts:11-13` — PROMPT_PLAN (for plan agent, non-experimental mode), BUILD_SWITCH (after plan build agent transition), PLAN_MODE (experimental plan mode, with template string interpolation of file path state).
+**Three prompt files injected conditionally**: `packages/opencode/src/session/reminders.ts:11-13` — PROMPT_PLAN (for plan agent, non-experimental mode), BUILD_SWITCH (after plan -> build agent transition), PLAN_MODE (experimental plan mode, with template string interpolation of file path state).
 
 <a id="g1-f041"></a>
 ### Parallel concurrent file and HTTP fetch for system instructions

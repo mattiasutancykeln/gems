@@ -288,7 +288,7 @@
 
 `libs/langgraph/langgraph/pregel/_runner.py:114-133` @ d57a74f
 
-**Callback-driven write persistence ordering** (`libs/langgraph/langgraph/pregel/_runner.py:114-133`, `574-613`): futures register done_callback that calls `commit()`, which appends writes and invokes `put_writes`. Ordering: execution callback persistence stream notification. Avoids explicit queue polling.
+**Callback-driven write persistence ordering** (`libs/langgraph/langgraph/pregel/_runner.py:114-133`, `574-613`): futures register done_callback that calls `commit()`, which appends writes and invokes `put_writes`. Ordering: execution -> callback -> persistence -> stream notification. Avoids explicit queue polling.
 
 <a id="g15-f040"></a>
 ### Semaphore-gated concurrency without queues
@@ -316,7 +316,7 @@
 
 `libs/langgraph/langgraph/channels/last_value.py:81-151` @ d57a74f
 
-**Two-phase visibility for handoff** (`libs/langgraph/langgraph/channels/last_value.py:81-151`): write finish consume separates state mutation from child visibility, enabling structured parent-child handoff without race conditions.
+**Two-phase visibility for handoff** (`libs/langgraph/langgraph/channels/last_value.py:81-151`): write -> finish -> consume separates state mutation from child visibility, enabling structured parent-child handoff without race conditions.
 
 <a id="g15-f044"></a>
 ### State snapshot as parent visibility window

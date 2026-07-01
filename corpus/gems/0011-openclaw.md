@@ -46,7 +46,7 @@
 
 `src/agents/subagent-capabilities.ts:161-175` @ c84e521
 
-`src/agents/subagent-capabilities.ts:161-175` — Role/scope derived from depth: `resolveSubagentRoleForDepth()` maps depth ≤0 "main", depth <maxSpawnDepth "orchestrator", else "leaf"; `controlScope` is "children" for non-leaf roles. Explicit stored overrides replace fallback behavior; no separate role table needed.
+`src/agents/subagent-capabilities.ts:161-175` — Role/scope derived from depth: `resolveSubagentRoleForDepth()` maps depth ≤0 -> "main", depth <maxSpawnDepth -> "orchestrator", else -> "leaf"; `controlScope` is "children" for non-leaf roles. Explicit stored overrides replace fallback behavior; no separate role table needed.
 
 <a id="g11-f006"></a>
 ### (also )
@@ -67,7 +67,7 @@
 
 `src/agents/subagent-registry-lifecycle.ts:881-890` @ c84e521
 
-`src/agents/subagent-registry-lifecycle.ts:881-890` — Cleanup decision tree: branches on active-descendant count, expiry age, and retry budget defer (wait for descendants), retry (with backoff), or give-up (suspend or fail). Defer sets `wakeOnDescendantSettle = true`; sweep checks this flag when descendant count drops.
+`src/agents/subagent-registry-lifecycle.ts:881-890` — Cleanup decision tree: branches on active-descendant count, expiry age, and retry budget -> defer (wait for descendants), retry (with backoff), or give-up (suspend or fail). Defer sets `wakeOnDescendantSettle = true`; sweep checks this flag when descendant count drops.
 
 <a id="g11-f009"></a>
 ### Resume retry backoff
@@ -102,7 +102,7 @@
 
 `src/agents/subagent-announce-dispatch.ts:62-132` @ c84e521
 
-`src/agents/subagent-announce-dispatch.ts:62-132` — Phased delivery strategy: steer-primary direct-primary steer-fallback. Prioritizes external direct delivery over orchestrator steering for completed tasks, with phase-evidence recording for observability.
+`src/agents/subagent-announce-dispatch.ts:62-132` — Phased delivery strategy: steer-primary -> direct-primary -> steer-fallback. Prioritizes external direct delivery over orchestrator steering for completed tasks, with phase-evidence recording for observability.
 
 <a id="g11-f014"></a>
 ### Wake continuation
@@ -133,11 +133,11 @@
 `src/agents/subagent-run-timeout.ts:13-28` — Timer-safe deadline calculation: setTimeout bounds (32-bit signed int) checked separately from ms durations; Finite, Safe-Integer, and positive conditions validated independently. Deadline = `startedAt + durationMs`, falling back to `createdAt` if `startedAt` is absent.
 
 <a id="g11-f018"></a>
-### Output capture outcome delivery cleanup pipeline with signal-aware cancellation
+### Output capture -> outcome -> delivery -> cleanup pipeline with signal-aware cancellation
 
 `src/agents/subagent-announce.ts:233-260` @ c84e521
 
-`src/agents/subagent-announce.ts:233-260` — Output capture outcome delivery cleanup pipeline with signal-aware cancellation: each stage is best-effort; errors are caught to prevent stage failures from blocking downstream cleanup. Silent-token filtering allows child to signal "no update needed" without orphaning session state.
+`src/agents/subagent-announce.ts:233-260` — Output capture -> outcome -> delivery -> cleanup pipeline with signal-aware cancellation: each stage is best-effort; errors are caught to prevent stage failures from blocking downstream cleanup. Silent-token filtering allows child to signal "no update needed" without orphaning session state.
 
 <a id="g11-f019"></a>
 ### Exponential backoff retry strategy (3 max retries, 2× multiplier) for orphan recovery, with fallback to finalizeInter…
@@ -165,7 +165,7 @@
 
 `src/agents/subagent-spawn.ts:408-462` @ c84e521
 
-`src/agents/subagent-spawn.ts:408-462` — Thinking-level cascade: explicit override requester's persistent setting requester's agent config default model thinking. Prevents deep-reasoning regressions in spawned children.
+`src/agents/subagent-spawn.ts:408-462` — Thinking-level cascade: explicit override -> requester's persistent setting -> requester's agent config -> default model thinking. Prevents deep-reasoning regressions in spawned children.
 
 <a id="g11-f023"></a>
 ### Mode resolution enforces thread-binding
@@ -331,11 +331,11 @@
 `src/agents/subagent-yield-output.ts:88-110` — `isSessionsYieldToolResult()` uses explicit tool-name matching and adjacency heuristics (yield status in details/payload) as fallback when providers omit tool names on result messages.
 
 <a id="g11-f046"></a>
-### Token count formatting uses k/m suffixes with rounding heuristics (999.5 k 1 m, not "1000k") to keep display compact.
+### Token count formatting uses k/m suffixes with rounding heuristics (999.5 k -> 1 m, not "1000k") to keep display compact.
 
 `src/shared/subagents-format.ts:5-25` @ c84e521
 
-`src/shared/subagents-format.ts:5-25` — Token count formatting uses k/m suffixes with rounding heuristics (999.5 k 1 m, not "1000k") to keep display compact.
+`src/shared/subagents-format.ts:5-25` — Token count formatting uses k/m suffixes with rounding heuristics (999.5 k -> 1 m, not "1000k") to keep display compact.
 
 ## Patterns worth porting
 
@@ -358,7 +358,7 @@
 
 `src/agents/subagent-spawn.ts:686-703` @ c84e521
 
-`src/agents/subagent-spawn.ts:686-703` (also `src/agents/subagent-spawn.ts:1592-1653`) — Cascading cleanup on failure: context-engine rollback attachment directory optional lifecycle hooks session deletion. Each step is best-effort; a later cleanup failure does not hide the original error.
+`src/agents/subagent-spawn.ts:686-703` (also `src/agents/subagent-spawn.ts:1592-1653`) — Cascading cleanup on failure: context-engine rollback -> attachment directory -> optional lifecycle hooks -> session deletion. Each step is best-effort; a later cleanup failure does not hide the original error.
 
 <a id="g11-f050"></a>
 ### Attachments validated and materialized to disk before calling the gateway; receipt persisted in the registry. Allows …

@@ -14,11 +14,11 @@
 ## Implementation decisions
 
 <a id="g21-f001"></a>
-### Four-stage score waterfall — executability validity correctness strategic_success — is the universal run record…
+### Four-stage score waterfall — executability -> validity -> correctness -> strategic_success — is the universal run record…
 
 `evaluations/dd/runners/batch_runner.py:180-231` @ ce27b8c
 
-**Four-stage score waterfall — executability validity correctness strategic_success — is the universal run record schema.** Each gate hard-shorts on failure: timeout or non-zero exit forces `executability=0` and early return; the scorer owns validity and correctness entirely; `strategic_success` is populated only for C3 optimizer tasks. The uniform four-key dict enables cross-category aggregation without special-case code at the collector layer. 
+**Four-stage score waterfall — executability -> validity -> correctness -> strategic_success — is the universal run record schema.** Each gate hard-shorts on failure: timeout or non-zero exit forces `executability=0` and early return; the scorer owns validity and correctness entirely; `strategic_success` is populated only for C3 optimizer tasks. The uniform four-key dict enables cross-category aggregation without special-case code at the collector layer. 
 `evaluations/dd/runners/batch_runner.py:180-231 @ SciAgentArena@ce27b8c`; `evaluations/dd/README.md:9-12 @ SciAgentArena@ce27b8c`
 
 <a id="g21-f002"></a>
@@ -34,7 +34,7 @@
 
 `evaluations/dd/tasks_batch/C1_chemical_data_preprocessing/tech_01_hard_TPSA.json:2-18` @ ce27b8c
 
-**Task JSON uses a six-key schema — `id`, `type`, `prompt`, `input`, `constraints`, `scoring_logic` — with `constraints.output_format` as the sole runner routing key.** Runner selection is a pure function of `output_format`: `notebook_variables` or `matplotlib_figure` `notebook_runner`; `oracle_stream` `design_runner`; everything else `batch_runner`. Adding a new execution mode requires only a new `output_format` value and a new runner; neither the dispatcher nor any existing task JSON changes. 
+**Task JSON uses a six-key schema — `id`, `type`, `prompt`, `input`, `constraints`, `scoring_logic` — with `constraints.output_format` as the sole runner routing key.** Runner selection is a pure function of `output_format`: `notebook_variables` or `matplotlib_figure` -> `notebook_runner`; `oracle_stream` -> `design_runner`; everything else -> `batch_runner`. Adding a new execution mode requires only a new `output_format` value and a new runner; neither the dispatcher nor any existing task JSON changes. 
 `evaluations/dd/tasks_batch/C1_chemical_data_preprocessing/tech_01_hard_TPSA.json:2-18 @ SciAgentArena@ce27b8c`; `evaluations/dd/registry.py:73-86 @ SciAgentArena@ce27b8c`; `evaluations/dd/README.md:87-101 @ SciAgentArena@ce27b8c`
 
 <a id="g21-f004"></a>
@@ -208,7 +208,7 @@
 
 `evaluations/dd/scorers/oracle_regulator.py:893-923` @ ce27b8c
 
-**Enzyme hierarchy scoring applies partial credit at three levels: exact enzyme = 1.0, predicted parent = 0.5, predicted child of GT = 1.0, wrong family = 0.** Metabolic soft-spot match determines the floor; enzyme score determines the ceiling. No soft-spot 0 regardless of enzyme. 
+**Enzyme hierarchy scoring applies partial credit at three levels: exact enzyme = 1.0, predicted parent = 0.5, predicted child of GT = 1.0, wrong family = 0.** Metabolic soft-spot match determines the floor; enzyme score determines the ceiling. No soft-spot -> 0 regardless of enzyme. 
 `evaluations/dd/scorers/oracle_regulator.py:893-923 @ SciAgentArena@ce27b8c`; `evaluations/dd/scorers/oracle_regulator.py:1159-1163 @ SciAgentArena@ce27b8c`
 
 <a id="g21-f026"></a>

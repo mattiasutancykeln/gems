@@ -18,7 +18,7 @@
 
 `ai_scientist/treesearch/agent_manager.py:L143-L167` @ 96bd516
 
-**Two-level stage loop with hard-wired goals.** `ai_scientist/treesearch/agent_manager.py:L143-L167` — Four named main stages (`initial_implementation baseline_tuning creative_research ablation_studies`) with pre-written goal strings injected into the LLM context; outer loop drives stage transitions, inner loop drives sub-stage goals. Stage-1 failure is treated as fatal (`self.current_stage = None`, `L419-L429`) rather than advancing a broken baseline. Stage-3 uses execution time as a proxy for experiment scale: if the best node runs in less than half the timeout budget, it injects a feedback string pushing the agent to scale up (`L512-L530`).
+**Two-level stage loop with hard-wired goals.** `ai_scientist/treesearch/agent_manager.py:L143-L167` — Four named main stages (`initial_implementation -> baseline_tuning -> creative_research -> ablation_studies`) with pre-written goal strings injected into the LLM context; outer loop drives stage transitions, inner loop drives sub-stage goals. Stage-1 failure is treated as fatal (`self.current_stage = None`, `L419-L429`) rather than advancing a broken baseline. Stage-3 uses execution time as a proxy for experiment scale: if the best node runs in less than half the timeout budget, it injects a feedback string pushing the agent to scale up (`L512-L530`).
 
 <a id="g8-f002"></a>
 ### Per-stage iteration budgets + single wall-clock hard kill
@@ -49,11 +49,11 @@
 **Pickle checkpoint after every main-stage completion.** `ai_scientist/treesearch/agent_manager.py:L249-L272` — Saved to `logs/<run_name>/stage_<name>/checkpoint.pkl`; resumability is first-class. Best node deep-copied with `parent`/`children` reset (`L544-L549`) before forwarding to the next stage, preventing cross-stage tree contamination.
 
 <a id="g8-f006"></a>
-### Anthropic backend silently swaps systemuser when only a system message is provided
+### Anthropic backend silently swaps system<->user when only a system message is provided
 
 `ai_scientist/treesearch/backend/backend_anthropic.py:L39-L41` @ 96bd516
 
-**Anthropic backend silently swaps systemuser when only a system message is provided.** `ai_scientist/treesearch/backend/backend_anthropic.py:L39-L41` — Satisfies Anthropic's requirement for at least one user message without requiring callers to know.
+**Anthropic backend silently swaps system<->user when only a system message is provided.** `ai_scientist/treesearch/backend/backend_anthropic.py:L39-L41` — Satisfies Anthropic's requirement for at least one user message without requiring callers to know.
 
 <a id="g8-f007"></a>
 ### Circular-reference serialization handled in two places with the same technique
@@ -88,7 +88,7 @@
 
 `ai_scientist/perform_llm_review.py:L257-L288` @ 96bd516
 
-**Three-tier PDF extraction cascade.** `ai_scientist/perform_llm_review.py:L257-L288` — `pymupdf4llm` (best markdown) `pymupdf` `pypdf`, each with a minimum-size guard; most capable extractor tried first.
+**Three-tier PDF extraction cascade.** `ai_scientist/perform_llm_review.py:L257-L288` — `pymupdf4llm` (best markdown) -> `pymupdf` -> `pypdf`, each with a minimum-size guard; most capable extractor tried first.
 
 <a id="g8-f012"></a>
 ### Citation deduplication is title-based, not key-based
@@ -109,7 +109,7 @@
 
 `ai_scientist/treesearch/journal.py:L158-L168` @ 96bd516
 
-**`stage_name` property infers node phase from parent chain, not a stored field.** `ai_scientist/treesearch/journal.py:L158-L168` — `parent is None` draft; `parent.is_buggy` debug; else improve. State machine transitions encoded in graph topology.
+**`stage_name` property infers node phase from parent chain, not a stored field.** `ai_scientist/treesearch/journal.py:L158-L168` — `parent is None` -> draft; `parent.is_buggy` -> debug; else -> improve. State machine transitions encoded in graph topology.
 
 <a id="g8-f015"></a>
 ### Package list shuffled before prompt injection
@@ -144,7 +144,7 @@
 
 `ai_scientist/treesearch/log_summarization.py:L299-L351` @ 96bd516
 
-**`log_summarization` processes all four stages in parallel with `ThreadPoolExecutor`.** `ai_scientist/treesearch/log_summarization.py:L299-L351` — Stage-indexed dispatch: `idx in [1,2]` multi-seed extraction, `idx==3` ablations, `idx==0` LLM summarization.
+**`log_summarization` processes all four stages in parallel with `ThreadPoolExecutor`.** `ai_scientist/treesearch/log_summarization.py:L299-L351` — Stage-indexed dispatch: `idx in [1,2]` -> multi-seed extraction, `idx==3` -> ablations, `idx==0` -> LLM summarization.
 
 <a id="g8-f020"></a>
 ### torch.compile silently falls back to eager
@@ -209,7 +209,7 @@
 
 `ai_scientist/treesearch/bfts_utils.py:L7-L42` @ 96bd516
 
-**`idea_to_markdown` serializer.** `ai_scientist/treesearch/bfts_utils.py:L7-L42` — Dict keys `##` headers, lists bullets, nested dicts `###` subsections, optional code file appended as fenced Python block under `## Code To Potentially Use`.
+**`idea_to_markdown` serializer.** `ai_scientist/treesearch/bfts_utils.py:L7-L42` — Dict keys -> `##` headers, lists -> bullets, nested dicts -> `###` subsections, optional code file appended as fenced Python block under `## Code To Potentially Use`.
 
 <a id="g8-f029"></a>
 ### preview_json uses genson.SchemaBuilder to infer JSON schema rather than dumping raw data
@@ -351,7 +351,7 @@
 
 `ai_scientist/treesearch/parallel_agent.py:L1931-L2051` @ 96bd516
 
-**`_select_parallel_nodes` switches dispatch strategy by stage name prefix.** `ai_scientist/treesearch/parallel_agent.py:L1931-L2051` — `"2_"` one policy, `"4_"` another, else default; `processed_trees` set ensures parallel workers target different search trees. Clean extension point without subclassing. Tree-diversity tracking falls back to next-best node when best tree is already dispatched.
+**`_select_parallel_nodes` switches dispatch strategy by stage name prefix.** `ai_scientist/treesearch/parallel_agent.py:L1931-L2051` — `"2_"` -> one policy, `"4_"` -> another, else default; `processed_trees` set ensures parallel workers target different search trees. Clean extension point without subclassing. Tree-diversity tracking falls back to next-best node when best tree is already dispatched.
 
 <a id="g8-f049"></a>
 ### Ensemble + meta-review: math aggregation then LLM synthesis
@@ -365,7 +365,7 @@
 
 `ai_scientist/treesearch/utils/response.py:L55-L76` @ 96bd516
 
-**Two-stage code extraction with validate-then-format ordering.** `ai_scientist/treesearch/utils/response.py:L55-L76` — Fenced blocks full-text fallback, syntax validation before Black formatting (`L86-L90`); prevents Black from mangling unparseable fragments.
+**Two-stage code extraction with validate-then-format ordering.** `ai_scientist/treesearch/utils/response.py:L55-L76` — Fenced blocks -> full-text fallback, syntax validation before Black formatting (`L86-L90`); prevents Black from mangling unparseable fragments.
 
 <a id="g8-f051"></a>
 ### Filesystem-as-state for stage completion detection
@@ -428,7 +428,7 @@
 
 `ai_scientist/treesearch/utils/__init__.py:L79-L93` @ 96bd516
 
-**Zip-within-zip flattening + zip extraction path collision handling.** `ai_scientist/treesearch/utils/__init__.py:L79-L93` — If extracted zip contains exactly one child with same name as zip, child is hoisted; handles common `foo.zip foo/foo/` `foo/` pattern.
+**Zip-within-zip flattening + zip extraction path collision handling.** `ai_scientist/treesearch/utils/__init__.py:L79-L93` — If extracted zip contains exactly one child with same name as zip, child is hoisted; handles common `foo.zip -> foo/foo/` -> `foo/` pattern.
 
 <a id="g8-f060"></a>
 ### ollama/ prefix transparently routes to localhost:11434

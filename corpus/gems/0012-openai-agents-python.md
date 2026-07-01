@@ -270,7 +270,7 @@
 
 `src/agents/agent_tool_input.py:79-108` @ 5a3028f
 
-`src/agents/agent_tool_input.py:79-108` — **Declarative structured tool input resolution**: Optional `StructuredInputSchemaInfo` (summary | json_schema) and optional async `input_builder`. Fallback chain guarantees success: custom builder default markdown builder JSON dump.
+`src/agents/agent_tool_input.py:79-108` — **Declarative structured tool input resolution**: Optional `StructuredInputSchemaInfo` (summary | json_schema) and optional async `input_builder`. Fallback chain guarantees success: custom builder -> default markdown builder -> JSON dump.
 
 <a id="g12-f038"></a>
 ### Two-phase structured tool output validation
@@ -526,7 +526,7 @@
 
 `src/agents/run_context.py:178-227` @ 5a3028f
 
-`src/agents/run_context.py:178-227` — **Multi-key approval resolution**: Approval keys chain from lookup_key namespace-qualified name bare name, allowing approval to migrate as tool wiring evolves. Separate `approved` (bool or list[call_id]) and `rejected` (bool or list[call_id]) fields let permanent and per-call policies coexist. Precedence: permanent > per-call.
+`src/agents/run_context.py:178-227` — **Multi-key approval resolution**: Approval keys chain from lookup_key -> namespace-qualified name -> bare name, allowing approval to migrate as tool wiring evolves. Separate `approved` (bool or list[call_id]) and `rejected` (bool or list[call_id]) fields let permanent and per-call policies coexist. Precedence: permanent > per-call.
 
 <a id="g12-f074"></a>
 ### Item type union as single source of truth
