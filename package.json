@@ -1,0 +1,17 @@
+{
+  "name": "gems",
+  "version": "1.0.0",
+  "description": "A mined, cited, searchable corpus of implementation patterns from open-source agent/research repos - queryable over MCP",
+  "type": "module",
+  "license": "MIT",
+  "private": true,
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "test": "node --test",
+    "sync": "node scripts/sync-corpus.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^3.25.0"
+  }
+}
