@@ -6,6 +6,7 @@ import { parseIssue } from "../lib/parse-report.mjs";
 import { clusterFindings } from "../lib/cluster.mjs";
 import { codeReuseFor } from "../lib/license-map.mjs";
 import { renderGemPage, renderCatalog, gemPageName, setGemTitles, injectStats } from "../lib/pages.mjs";
+import { stripEmoji } from "../lib/sanitize.mjs";
 
 const REPO = "mattiasutancykeln/gems";
 
@@ -33,9 +34,10 @@ export function syncCorpus({ fetchIssues, fetchLicense, rootDir, log = console.e
     }
     if (license === "NOASSERTION") license = "none";
     const codeReuse = codeReuseFor(license === "none" ? null : license);
-    const gem = { ...parsed.gem, license, codeReuse, findingCount: parsed.findings.length };
+    const gem = { ...parsed.gem, title: stripEmoji(parsed.gem.title), license, codeReuse, findingCount: parsed.findings.length };
     gems.push(gem);
-    for (const f of parsed.findings) findings.push({ ...f, topic: gem.topics, license, codeReuse, quality: gem.quality });
+    for (const f of parsed.findings)
+      findings.push({ ...f, title: stripEmoji(f.title), text: stripEmoji(f.text), topic: gem.topics, license, codeReuse, quality: gem.quality });
   }
 
   findings = clusterFindings(findings);

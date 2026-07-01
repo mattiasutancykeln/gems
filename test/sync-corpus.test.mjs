@@ -91,3 +91,24 @@ test("deterministic: two runs produce byte-identical outputs", () => {
   run();
   assert.equal(readFileSync(join(root, "corpus/findings.jsonl"), "utf8"), first);
 });
+
+test("strips upstream-quoted emoji from finding title/text before it reaches findings.jsonl", () => {
+  const root = setup();
+  const emojiExt = EXT_COMMENT.replace(
+    "**Single-flight cache**: `src/cache.ts:84-112` — Dedupes concurrent fetches with a 30s grace window before re-fetch.",
+    "**\u{1F527} Single-flight cache**: `src/cache.ts:84-112` — \u{1F527} Dedupes concurrent fetches with a 30s grace window before re-fetch.",
+  );
+  const issue = makeIssue({ comments: [SUM_COMMENT, emojiExt] });
+  syncCorpus({ fetchIssues: () => [issue], fetchLicense, rootDir: root, log: () => {} });
+
+  const raw = readFileSync(join(root, "corpus/findings.jsonl"), "utf8");
+  const EMOJI_RE = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{2190}-\u{21FF}\u{FE0F}\u{200D}\u{2139}]/gu;
+  assert.equal(EMOJI_RE.test(raw), false, `expected no emoji codepoints in findings.jsonl, got: ${raw}`);
+
+  const findings = raw.trim().split("\n").map(JSON.parse);
+  const cache = findings.find((f) => f.id === "g42-f001");
+  assert.equal(cache.title, "Single-flight cache");
+  assert.match(cache.text, /Single-flight cache/);
+  assert.match(cache.text, /Dedupes concurrent fetches with a 30s grace window before re-fetch\./);
+  assert.equal(cache.text.includes("\u{1F527}"), false);
+});
