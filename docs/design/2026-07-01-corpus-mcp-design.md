@@ -15,7 +15,7 @@
 ## Goals
 
 1. Materialize gem content into a **committed, versioned, searchable corpus** whose atomic unit is the *finding*.
-2. Ship an **MCP server** exposing three agent verbs: `gems_inspire`, `gems_ground`, `gems_query`.
+2. Ship an **MCP server** exposing three agent verbs: `gems_inspire`, `gems_ground`, `gems_query`. Top-k retrieval that **never dedups** (both variants of a near-duplicate surface) and **groups cross-gem clusters** so alternative implementations of the same pattern show up together.
 3. Make the repo **open and low-friction to contribute to**: anyone submits gems (zero setup); anyone with Claude Code helps extract (burn tokens) via a discoverable queue.
 4. **Audit and flag** every source repo's license so agents know what code they may reuse.
 5. Presentation: a README and catalog that serve scout, human browser, and agent.
@@ -64,11 +64,15 @@ Issues stay the source of truth. `corpus/` is **derived and committed** so it tr
   "citation":"evaluations/dd/scorers/oracle_budget.py:147-153",
   "category":"pattern", "topic":["eval","infra"],
   "license":"none", "codeReuse":"forbidden",
+  "clusterId":"c042", "clusterLabel":"budget-gated verification",
   "title":"Budget-before-validity check", "text":"…", "quality":"high" }
 ```
 
 - `category` ∈ `impl-decision | skill-prompt-tool | pattern | weak-spot` (maps to the four report sections).
 - `codeReuse` ∈ `permissive | ideas-only | forbidden`, derived from `license` (see §4).
+- `clusterId` / `clusterLabel` — cross-gem cluster of "same pattern, different gem" (see §2, computed at sync).
+
+**Retrieval invariant — never dedup.** Each finding is an independent hit. Two near-identical implementations from two gems both surface; the retriever never collapses them. Clustering *groups* variants for comparison; it never removes them.
 
 **`gems/NNNN-slug.md`** — the materialized issue (summary + full extraction report) for human browsing and deep-linking.
 
@@ -79,21 +83,39 @@ Idempotent Node script, the only writer of `corpus/`:
 1. `gh issue list/view` all issues + comments (works read-only on the public repo).
 2. **Parse** each `[ext]` report deterministically: split on the four `###` section headers, split each into bullet findings, extract `path:line-range` citation + title + text per bullet. `[sum]`-only gems contribute a gem record + coarse findings from their Highlights.
 3. **License audit**: `gh api repos/{owner}/{repo}/license` per distinct source repo → `license`; derive `codeReuse`. Cache results in `corpus/.licenses.json` to avoid rate limits.
-4. Write `gems.json`, `findings.jsonl`, `gems/*.md`, `CATALOG.md`. Correct stage-label/title mismatches (e.g. `[sum]`-titled but `stage:extracted`) as a warning in output.
+4. **Cluster** (lexical, zero-dep): shingle each finding's `title + text` (k-word shingles), MinHash → LSH/Jaccard-threshold union-find to group near-duplicate findings across gems. Assign `clusterId`; `clusterLabel` = the shortest/highest-`quality` title in the cluster. Singletons get their own id. Deterministic (fixed hash seed), no embeddings, no network. Catches "same implementation, slightly different" (variants share API names, file/function terms); misses pure paraphrases — acceptable, and upgradable to embedding-precomputed clusters later without touching the runtime.
+5. Write `gems.json`, `findings.jsonl`, `gems/*.md`, `CATALOG.md`. Correct stage-label/title mismatches (e.g. `[sum]`-titled but `stage:extracted`) as a warning in output.
 
 Deterministic output (stable ordering, no timestamps in body) so CI diffs are clean.
 
 ### 3. `mcp/server.mjs` (MCP server)
 
-Node stdio server on `@modelcontextprotocol/sdk`. On start, loads `findings.jsonl` + `gems.json` into memory and builds a hand-rolled BM25 index over `title + text`. Corpus path resolves from `GEMS_CORPUS` env, else `../corpus` relative to the server file.
+Plain-ESM `.mjs` (no build step) on `@modelcontextprotocol/sdk@^1.29.0` (verified current; Node ≥18, we run 22). On start, loads `findings.jsonl` + `gems.json` into memory and builds a hand-rolled BM25 index over `title + text`. Corpus path resolves from `GEMS_CORPUS` env, else `../corpus` relative to the server file.
 
-Retriever is behind a small interface (`search(query, filters) → Hit[]`) so an embeddings backend could be added later without changing tool code.
+Verified API shape (SDK 1.29.0):
+```js
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { z } from "zod";
+
+const server = new McpServer({ name: "gems", version: "1.0.0" });
+server.registerTool("gems_query",
+  { title: "Search gems", description: "…",
+    inputSchema: { q: z.string(), topic: z.string().optional(), k: z.number().int().min(1).optional() } },
+  async ({ q, topic, k = 10 }) => ({ content: [{ type: "text", text: JSON.stringify(hits) }] })
+);
+await server.connect(new StdioServerTransport());
+```
+- **`inputSchema` is a Zod raw shape**, not JSON Schema (SDK requirement). `zod` is a peer dep → **two runtime deps total: `@modelcontextprotocol/sdk` + `zod`.** No API keys, no build.
+- **stdout is protocol-only.** All logging via `console.error` (stderr). This is the primary stdio footgun.
+- Tool results returned as `{ content: [{ type: "text", text: JSON.stringify(...) }] }` so the calling agent gets structured JSON.
+
+Retriever behind a small interface (`search(query, filters) → Hit[]`) so an embedding backend can drop in later without changing tool code.
 
 **Tools:**
 
 - `gems_query({ q, topic?, category?, license?, codeReuse?, quality?, k=10 })`
-  → ranked findings: `{ id, title, gem, repo, citation, category, topic, license, codeReuse, snippet, score }`.
-  Plain BM25 + metadata filter.
+  → ranked findings: `{ id, title, gem, repo, citation, category, topic, license, codeReuse, clusterId, snippet, score }`. Plain BM25 + metadata filter. Never dedups.
 
 - `gems_ground({ claim, topic?, k=6 })`
   → precision-ranked findings that inform `claim`, each with citation `path:line @ sha` **and a `reuseNote`** derived from `codeReuse` (e.g. *"ideas-only — do not copy code verbatim"*). Convergent: fewer, higher-confidence, license-aware.
@@ -101,8 +123,13 @@ Retriever is behind a small interface (`search(query, filters) → Hit[]`) so an
 - `gems_inspire({ topic?, k=5 })`
   → quality-weighted, **gem-diverse** sample (prefer one finding per distinct gem) for divergent ideation. Breadth over precision.
 
-Ships with a Claude Code plugin manifest (`.mcp.json` + `.claude-plugin/`) so install is one line:
-`claude mcp add gems -- node /path/to/gems/mcp/server.mjs`.
+**Cluster grouping (all three tools):** results carry `clusterId`. When ≥2 returned findings share a `clusterId`, they're grouped under their `clusterLabel` with a one-line note ("N variants across gems — compare"), so the agent sees the alternative implementations side by side. Grouping reorders/annotates; it never removes a hit.
+
+**Distribution** (verified against Claude Code 2.1.198):
+- **Primary:** committed `.mcp.json` at repo root → `git clone && npm install && claude` → workspace-trust prompt → tools live. Uses `${CLAUDE_PROJECT_DIR}/mcp/server.mjs` so cwd-independent.
+- **Alternative:** `claude mcp add gems -- node /path/to/gems/mcp/server.mjs` (`--scope user` to get it everywhere).
+- **Optional:** `.claude-plugin/plugin.json` bundling the server via `${CLAUDE_PLUGIN_ROOT}` for `/plugin install` — nice-to-have, not the primary path.
+- `npm install` (sdk + zod) is a real prerequisite; the README states it. (`node_modules/` not committed.)
 
 ### 4. License audit
 
@@ -135,9 +162,9 @@ Ships with a Claude Code plugin manifest (`.mcp.json` + `.claude-plugin/`) so in
 
 ## Deliverables
 
-`LICENSE` · `corpus/` · `scripts/sync-corpus.mjs` · `mcp/server.mjs` + plugin manifest · `.github/workflows/sync-corpus.yml` · rewritten `README.md` · generated `CATALOG.md` · CONTRIBUTING "help extract" + queue labels.
+`LICENSE` · `corpus/` · `scripts/sync-corpus.mjs` · `mcp/server.mjs` · `.mcp.json` (+ optional `.claude-plugin/plugin.json`) · `package.json` · `.github/workflows/sync-corpus.yml` · rewritten `README.md` · generated `CATALOG.md` · CONTRIBUTING "help extract" + queue labels.
 
-Runtime: Node, one runtime dep (`@modelcontextprotocol/sdk`). No API keys, offline, deterministic.
+Runtime: Node ≥18 (verified against 22.19.0), two runtime deps: `@modelcontextprotocol/sdk@^1.29.0` + `zod@^3.25 || ^4`. No API keys, no build step, offline, deterministic. Install prerequisite: `npm install`.
 
 ## Risks / open threads
 
@@ -145,3 +172,5 @@ Runtime: Node, one runtime dep (`@modelcontextprotocol/sdk`). No API keys, offli
 - **License API rate limits / missing license files:** cache in `.licenses.json`; treat missing/unknown as `forbidden` (fail safe).
 - **CI commit perms:** the Action commits with `GITHUB_TOKEN` to the same repo (standard, no SSH/PAT needed). Concurrency guard so overlapping label events don't race.
 - **BM25 lexical-only:** synonyms missed; acceptable now, retriever interface leaves an embeddings backend as a later drop-in.
+- **Lexical clustering misses paraphrases:** MinHash groups findings that share terms, not pure "same idea, different words" pairs. Precomputed `clusterId` lets an embedding-based clustering pass replace the lexical one at sync time later, with no runtime change.
+- **`npm install` prerequisite:** the committed `.mcp.json` runs `node mcp/server.mjs`, which needs `sdk` + `zod` installed. If a user skips `npm install` the server fails to start; README makes it step 1 and the server prints a clear stderr hint on missing-module.
