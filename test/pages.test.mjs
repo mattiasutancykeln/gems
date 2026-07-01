@@ -24,7 +24,7 @@ test("gem page: metadata, anchors, cross-gem takes, no emojis", () => {
   assert.match(md, /\| Source \| https:\/\/arxiv\.org/);
   assert.match(md, /\| License \| none \(forbidden\) \|/);
   assert.match(md, /<a id="g21-f001"><\/a>/);
-  assert.match(md, /Other takes: \[gem #20\]\(0020-autoscientists\.md\)/);
+  assert.match(md, /Other takes: \[gem #20\]\(0020-autoscientists\.md#g20-f001\)/);
   assert.match(md, /issues\/21/);
   assert.doesNotMatch(md, /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u);
 });
