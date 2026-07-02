@@ -48,6 +48,11 @@ test("writes complete corpus from two issues", () => {
   assert.ok(existsSync(join(root, "corpus/.licenses.json")));
   assert.equal(warnings.length, 0);
   assert.ok(!existsSync(join(root, "corpus/PARSE_WARNINGS.md")));
+
+  assert.ok(existsSync(join(root, "corpus/INDEX.md")));
+  assert.ok(readFileSync(join(root, "corpus/INDEX.md"), "utf8").length > 0);
+  assert.ok(existsSync(join(root, "corpus/by-topic.md")));
+  assert.ok(readFileSync(join(root, "corpus/by-topic.md"), "utf8").length > 0);
 });
 
 test("license cache: cached repos are not re-fetched", () => {

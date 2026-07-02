@@ -31,7 +31,7 @@ Five tools appear: `gems_query` (targeted search), `gems_ground` (cited evidence
 claude mcp add --scope user gems -- node /path/to/gems/mcp/server.mjs
 ```
 
-**Humans:** browse [CATALOG.md](CATALOG.md) - highlights first, full table below - or the per-gem pages in [corpus/gems/](corpus/gems/).
+**Humans:** browse [CATALOG.md](CATALOG.md), the [faceted index](corpus/INDEX.md), or the per-gem pages in [corpus/gems/](corpus/gems/).
 
 **Have a link?** [Submit a gem](https://github.com/mattiasutancykeln/gems/issues/new?template=gem.yml) - a URL and one sentence is all it takes. \(oOo)/
 

@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { parseIssue } from "../lib/parse-report.mjs";
 import { clusterFindings } from "../lib/cluster.mjs";
 import { codeReuseFor } from "../lib/license-map.mjs";
-import { renderGemPage, renderCatalog, gemPageName, setGemTitles, injectStats } from "../lib/pages.mjs";
+import { renderGemPage, renderCatalog, renderIndexPages, gemPageName, setGemTitles, injectStats } from "../lib/pages.mjs";
 import { stripEmoji } from "../lib/sanitize.mjs";
 
 const REPO = "mattiasutancykeln/gems";
@@ -53,6 +53,10 @@ export function syncCorpus({ fetchIssues, fetchLicense, rootDir, log = console.e
   for (const gem of gems)
     writeFileSync(join(pagesDir, gemPageName(gem)), renderGemPage(gem, findings.filter((f) => f.gem === gem.number), findings));
   writeFileSync(join(rootDir, "CATALOG.md"), renderCatalog(gems, findings));
+
+  const indexPages = renderIndexPages(gems, findings);
+  for (const [filename, content] of Object.entries(indexPages))
+    writeFileSync(join(corpusDir, filename), content);
 
   const warnPath = join(corpusDir, "PARSE_WARNINGS.md");
   if (warnings.length)
