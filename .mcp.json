@@ -3,7 +3,7 @@
     "gems": {
       "type": "stdio",
       "command": "node",
-      "args": ["${CLAUDE_PROJECT_DIR}/mcp/server.mjs"]
+      "args": ["mcp/server.mjs"]
     }
   }
 }
