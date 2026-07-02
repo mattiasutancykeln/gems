@@ -140,3 +140,41 @@ test("fallback title: colon inside the body after the em-dash boundary isn't mis
   assert.ok(f.title.length >= 3);
   assert.equal(f.citation, "x/y.md:L9-69");
 });
+
+test("fallback title: citation-first bullet with a pinned-SHA attribution suffix doesn't leak into the title", () => {
+  const c = "## Extraction report\n\n**Source:** `AutoScientists/AutoScientists` @ `c71a9231234567890abcdef1234567890abcdef` (pinned x)\n\n### Patterns worth porting\n\n- `system/templates/HEARTBEAT.md:100-165 @ AutoScientists@c71a923` — result_latest.json is written before training starts, updated after, flipped to posted.\n";
+  const { findings } = parseIssue(makeIssue({ comments: [c] }));
+  assert.equal(findings.length, 1);
+  const f = findings[0];
+  assert.ok(f.title.startsWith("result_latest.json is written before training starts"),
+    `expected prose title, got: ${f.title}`);
+  assert.equal(f.citation, "system/templates/HEARTBEAT.md:100-165");
+  assert.ok(!f.text.includes("@ AutoScientists@c71a923"),
+    `expected attribution suffix stripped from text, got: ${f.text}`);
+});
+
+test("fallback title: multi-citation bullet with attribution suffixes doesn't leave a dangling 'and' as the title", () => {
+  const c = "## Extraction report\n\n**Source:** `AutoScientists/AutoScientists` @ `c71a9231234567890abcdef1234567890abcdef` (pinned x)\n\n### Patterns worth porting\n\n- `launch.py:643-678 @ AutoScientists@c71a923` and `system/reference/AGENT-SETUP.md:164-177 @ AutoScientists@c71a923` — HEARTBEAT.md is assembled once at launch and never reloaded.\n";
+  const { findings } = parseIssue(makeIssue({ comments: [c] }));
+  assert.equal(findings.length, 1);
+  const f = findings[0];
+  assert.ok(f.title.startsWith("HEARTBEAT.md is assembled once at launch"),
+    `expected prose title, got: ${f.title}`);
+  assert.deepEqual(f.citations, ["launch.py:643-678", "system/reference/AGENT-SETUP.md:164-177"]);
+  assert.ok(!f.title.includes("@"), `title should not contain "@", got: ${f.title}`);
+  assert.ok(!f.title.includes(" and @"), `title should not contain " and @", got: ${f.title}`);
+});
+
+test("no finding title is left as a bare attribution artifact", () => {
+  const cases = [
+    "## Extraction report\n\n**Source:** `AutoScientists/AutoScientists` @ `c71a9231234567890abcdef1234567890abcdef` (pinned x)\n\n### Patterns worth porting\n\n- `system/templates/HEARTBEAT.md:100-165 @ AutoScientists@c71a923` — result_latest.json is written before training starts, updated after, flipped to posted.\n",
+    "## Extraction report\n\n**Source:** `AutoScientists/AutoScientists` @ `c71a9231234567890abcdef1234567890abcdef` (pinned x)\n\n### Patterns worth porting\n\n- `launch.py:643-678 @ AutoScientists@c71a923` and `system/reference/AGENT-SETUP.md:164-177 @ AutoScientists@c71a923` — HEARTBEAT.md is assembled once at launch and never reloaded.\n",
+  ];
+  for (const c of cases) {
+    const { findings } = parseIssue(makeIssue({ comments: [c] }));
+    for (const f of findings) {
+      assert.doesNotMatch(f.title, /^@/, `title starts with "@": ${f.title}`);
+      assert.doesNotMatch(f.title, /@ \S+@[0-9a-f]{6}/, `title contains a raw attribution: ${f.title}`);
+    }
+  }
+});
