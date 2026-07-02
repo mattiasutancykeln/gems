@@ -7,11 +7,11 @@ A mined, cited, searchable corpus of the best implementation patterns from open-
 Every finding is anchored to an exact `path:line-range @ sha` citation and carries a license flag so your agent knows whether it may copy code or only adopt the idea. Example hit, exactly as the MCP returns it:
 
 ```markdown
-### 1. Network blocking is advisory only (AGENT4S_NO_NETWORK=1); no OS-level isolation applied   [high] weak-spot
+### 1. Re-evaluate oracle at scoring time; never trust agent-reported scores   [high] pattern
 SciAgentArena — benchmarking AI agents on scientific challenges across scales (gem #21) · topics: eval, research
-`evaluations/dd/runners/batch_runner.py:64-67` @ ce27b8c
+`evaluations/dd/scorers/guacamol_goal_scorer.py:73-74` @ ce27b8c
 License: none - FORBIDDEN to copy code, adopt the idea only
-**Network blocking is advisory only (`AGENT4S_NO_NETWORK=1`); no OS-level isolation applied.** A motivated agent can call the network freely. For evals over untrusted generated code, a real sandbox (bubblewrap, network namespace, or WASM execution) is required.…
+**Re-evaluate oracle at scoring time; never trust agent-reported scores.** The design runner re-runs the TDC oracle on every candidate from the stream. Agent cannot fabricate oracle scores in the stream. Essential for any eval where the agent controls the scoring data.…
 -> https://github.com/mattiasutancykeln/gems/issues/21
 ```
 
