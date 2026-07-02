@@ -99,6 +99,36 @@ test("by-topic hub: multi-topic finding counted in each topic shard, links to sh
   assert.match(pages["by-topic/untagged.md"], /Untagged finding/);
 });
 
+test("by-topic hub/shards: case-variant topic labels merge into one shard instead of overwriting", () => {
+  setGemTitles(idxGems);
+  const caseVariantFindings = [
+    { id: "g21-f010", gem: 21, repo: "HelloWorldLTY/SciAgentArena", sha: "s", citation: "a.py:1-2",
+      category: "pattern", topic: ["Agent"], license: "none", codeReuse: "forbidden",
+      quality: "high", clusterId: "c010", clusterLabel: "case a", title: "Upper-case topic finding", text: "t" },
+    { id: "g20-f010", gem: 20, repo: "mims-harvard/AutoScientists", sha: "s", citation: null,
+      category: "pattern", topic: ["agent"], license: "none", codeReuse: "forbidden",
+      quality: "high", clusterId: "c011", clusterLabel: "case b", title: "Lower-case topic finding", text: "t" },
+  ];
+  const pages = renderIndexPages(idxGems, caseVariantFindings);
+  const keys = Object.keys(pages);
+
+  // (a) exactly one by-topic/agent.md shard - no case-collision file
+  const agentShardKeys = keys.filter((k) => k.startsWith("by-topic/") && k.toLowerCase() === "by-topic/agent.md");
+  assert.equal(agentShardKeys.length, 1, "expected exactly one merged agent shard");
+  assert.ok(keys.includes("by-topic/agent.md"));
+
+  // (b) the shard contains findings from BOTH labels - neither dropped
+  const shard = pages["by-topic/agent.md"];
+  assert.match(shard, /Upper-case topic finding/);
+  assert.match(shard, /Lower-case topic finding/);
+
+  // (c) the hub has a single entry linking to it with the merged count
+  const hub = pages["by-topic.md"];
+  const hubMatches = [...hub.matchAll(/\(by-topic\/agent\.md\)/g)];
+  assert.equal(hubMatches.length, 1, "expected a single hub entry for the merged shard");
+  assert.match(hub, /\(by-topic\/agent\.md\) \(2\)/);
+});
+
 test("by-topic shard: finding links use ../gems/ (one directory deeper than corpus root)", () => {
   setGemTitles(idxGems);
   const shard = renderIndexPages(idxGems, idxFindings)["by-topic/agent.md"];
