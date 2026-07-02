@@ -80,6 +80,11 @@ test("low-confidence banner fires when the top hit covers less than half the que
   const strongHit = hit("g21-f009", 21, "c044", { matched: 3, queryTermCount: 4 });
   const mdStrong = renderHits([strongHit], { gemsByNumber });
   assert.doesNotMatch(mdStrong, /weak matches/);
+
+  // long claims (gems_ground) naturally cover few terms - the banner must NOT fire there
+  const longClaimHit = hit("g21-f010", 21, "c045", { matched: 3, queryTermCount: 9 });
+  const mdLong = renderHits([longClaimHit], { gemsByNumber });
+  assert.doesNotMatch(mdLong, /weak matches/);
 });
 
 test("no banner or term-match note when matched/queryTermCount are absent (gems_get, gems_inspire path)", () => {
