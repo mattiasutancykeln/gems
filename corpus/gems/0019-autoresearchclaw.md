@@ -14,35 +14,35 @@
 ## Implementation decisions
 
 <a id="g19-f001"></a>
-### Each skill card carries trigger-keywords and applicable-stages in YAML frontmatter; the harness injects only skills m…
+### Each skill card carries trigger-keywords and applicable-stages in YAML frontmatter
 
 `researchclaw/skills/builtin/tooling/data-loading/SKILL.md:6-7` @ ea77ec1
 
 `researchclaw/skills/builtin/tooling/data-loading/SKILL.md:6-7` + `researchclaw/skills/builtin/experiment/systematic-review/SKILL.md:6` — Each skill card carries `trigger-keywords` and `applicable-stages` in YAML frontmatter; the harness injects only skills matching the current stage number and task keywords, keeping context lean. Two independent workers confirmed the same mechanism across tooling and experiment skills.
 
 <a id="g19-f002"></a>
-### Pipeline blocks at Step 0 if target or assumptions are undefined, enforcing formulation-first discipline before any c…
+### Pipeline blocks at Step 0 if target or assumptions are undefined, enforcing…
 
 `external/agents/stat_research_agent/skills/stat-research-orchestrator/SKILL.md:54` @ ea77ec1
 
 `external/agents/stat_research_agent/skills/stat-research-orchestrator/SKILL.md:54` — Pipeline blocks at Step 0 if target or assumptions are undefined, enforcing formulation-first discipline before any code is written — an explicit guard against the common failure of code-first research pipelines.
 
 <a id="g19-f003"></a>
-### The MFA orchestrator never re-runs completed steps (idempotency via progress-file PASS status) and never executes FBA…
+### The MFA orchestrator never re-runs completed steps (idempotency via progress-file PASS…
 
 `external/agents/Biology-Agent/skills/mfa-pipeline-orchestrator/SKILL.md:96-101` @ ea77ec1
 
 `external/agents/Biology-Agent/skills/mfa-pipeline-orchestrator/SKILL.md:96-101` — The MFA orchestrator never re-runs completed steps (idempotency via progress-file PASS status) and never executes FBA itself — all computation is strictly delegated to sub-agents.
 
 <a id="g19-f004"></a>
-### BenchmarkPlan.to_prompt_block() serialises the plan as a fenced markdown block (benchmarks, baselines, ready-to-use c…
+### BenchmarkPlan.to_prompt_block() serialises the plan as a fenced markdown block…
 
 `researchclaw/agents/benchmark_agent/orchestrator.py:108-155` @ ea77ec1
 
 `researchclaw/agents/benchmark_agent/orchestrator.py:108-155` — `BenchmarkPlan.to_prompt_block()` serialises the plan as a fenced markdown block (benchmarks, baselines, ready-to-use code snippets) for direct injection into downstream code-generation prompts, avoiding re-parsing JSON mid-pipeline.
 
 <a id="g19-f005"></a>
-### Final claim verdicts use PASS/WARN/FAIL where FAIL specifically means the evidence chain is broken (missing formulati…
+### Final claim verdicts use PASS/WARN/FAIL where FAIL specifically means the evidence chain…
 
 `external/agents/stat_research_agent/skills/stat-result-validator/SKILL.md:124-130` @ ea77ec1
 
@@ -56,35 +56,35 @@
 `external/agents/stat_research_agent/skills/statistical-problem-formulation/SKILL.md:108-111` — Formulation quality bar is operationalised as: another researcher could implement or analyse the problem without guessing target, assumptions, or success criteria — a reproducibility-anchored definition rather than a subjective "good enough."
 
 <a id="g19-f007"></a>
-### Boundary reactions ( EX_ , DM_ , SK_ , BIOMASS ) are explicitly excluded from mass-balance errors and demoted to warn…
+### Boundary reactions ( EX_ , DM_ , SK_ , BIOMASS ) are explicitly excluded from mass-balance errors and demoted to warnings because they are intentionally open
 
 `external/agents/Biology-Agent/skills/gsmm-validator/SKILL.md:54-64` @ ea77ec1
 
 `external/agents/Biology-Agent/skills/gsmm-validator/SKILL.md:54-64` — Boundary reactions (`EX_`, `DM_`, `SK_`, `BIOMASS`) are explicitly excluded from mass-balance errors and demoted to warnings because they are intentionally open; conflating them with stoichiometric errors would flood the report and mask real problems.
 
 <a id="g19-f008"></a>
-### pFBA is positioned after standard FBA and explained as a two-stage solve (maximise growth, then minimise total flux) …
+### pFBA is positioned after standard FBA and explained as a two-stage solve (maximise…
 
 `external/agents/Biology-Agent/skills/fba-simulator/SKILL.md:63-67` @ ea77ec1
 
 `external/agents/Biology-Agent/skills/fba-simulator/SKILL.md:63-67` — pFBA is positioned after standard FBA and explained as a two-stage solve (maximise growth, then minimise total flux) to avoid biologically unrealistic high-flux split cycles — the rationale is embedded in the skill so the agent understands when to prefer pFBA over FBA.
 
 <a id="g19-f009"></a>
-### Feasibility gate scores candidate studies on five criteria (model availability, runtime, interpretability, output ric…
+### Feasibility gate scores candidate studies on five criteria (model availability, runtime,…
 
 `external/agents/Biology-Agent/skills/metabolic-study-planner/SKILL.md:152-165` @ ea77ec1
 
 `external/agents/Biology-Agent/skills/metabolic-study-planner/SKILL.md:152-165` — Feasibility gate scores candidate studies on five criteria (model availability, runtime, interpretability, output richness, reproducibility) and rejects any plan scoring below 18/25 before a single line of code is generated.
 
 <a id="g19-f010"></a>
-### The COBRApy context manager for temporary perturbations is documented as the canonical pattern for non-destructive mo…
+### The COBRApy context manager for temporary perturbations is documented as the canonical pattern for non-destructive model mutation
 
 `external/agents/Biology-Agent/skills/gsmm-builder/references/cobra_reference.md:113-120` @ ea77ec1
 
 `external/agents/Biology-Agent/skills/gsmm-builder/references/cobra_reference.md:113-120` — The COBRApy context manager for temporary perturbations is documented as the canonical pattern for non-destructive model mutation; this prevents any single knockout experiment from corrupting shared model state across a batch simulation loop.
 
 <a id="g19-f011"></a>
-### Theory is a required pipeline stage even when no theorem is provable; the report must label claims as proven, heurist…
+### Theory is a required pipeline stage even when no theorem is provable
 
 `external/agents/stat_research_agent/skills/stat-research-orchestrator/SKILL.md:88-91` @ ea77ec1
 
@@ -98,28 +98,28 @@
 `researchclaw/agents/benchmark_agent/orchestrator.py:49` — `max_iterations: int = 2` caps the Acquirer-Validator retry loop explicitly in config, not in orchestrator logic, so callers can tune it per budget.
 
 <a id="g19-f013"></a>
-### Double gene deletion is capped at the first 50 genes with a comment "adjust as needed", acknowledging the O(n^2) comp…
+### Double gene deletion is capped at the first 50 genes with a comment "adjust as needed", acknowledging the O(n^2) compute cost
 
 `external/agents/Biology-Agent/skills/flux-analyzer/SKILL.md:68-73` @ ea77ec1
 
 `external/agents/Biology-Agent/skills/flux-analyzer/SKILL.md:68-73` — Double gene deletion is capped at the first 50 genes with a comment "adjust as needed", acknowledging the O(n^2) compute cost; the cap is a default guard, not a hardcoded limit.
 
 <a id="g19-f014"></a>
-### GitHub repo search results are filtered to stars >= 10 before deeper analysis, cutting noise with a hardcoded quality…
+### GitHub repo search results are filtered to stars >= 10 before deeper analysis, cutting…
 
 `researchclaw/agents/code_searcher/agent.py:180-185` @ ea77ec1
 
 `researchclaw/agents/code_searcher/agent.py:180-185` — GitHub repo search results are filtered to `stars >= 10` before deeper analysis, cutting noise with a hardcoded quality threshold.
 
 <a id="g19-f015"></a>
-### On Critic retry, only failed figures are replaced in final_rendered ; previously-passed figures are preserved via set…
+### On Critic retry, only failed figures are replaced in final_rendered
 
 `researchclaw/agents/figure_agent/orchestrator.py:386-395` @ ea77ec1
 
 `researchclaw/agents/figure_agent/orchestrator.py:386-395` — On Critic retry, only failed figures are replaced in `final_rendered`; previously-passed figures are preserved via set-difference on `figure_id`, avoiding redundant re-renders.
 
 <a id="g19-f016"></a>
-### trigger-keywords is a flat comma-separated string (not a list), consistent across all skills; the consuming router sp…
+### trigger-keywords is a flat comma-separated string (not a list), consistent across all skills
 
 `researchclaw/skills/builtin/experiment/meta-analysis/SKILL.md:6` @ ea77ec1
 
@@ -133,14 +133,14 @@
 `researchclaw/skills/builtin/experiment/experimental-design/SKILL.md:8` — `priority: "2"` (the lowest seen across the batch) deliberately makes experimental-design a fallback, not a first-hit; higher-priority domain skills fire first, then experimental-design fills methodology gaps.
 
 <a id="g19-f018"></a>
-### Each skill cites exactly one or two canonical papers in references rather than a bibliography; this bounds the LLM's …
+### Each skill cites exactly one or two canonical papers in references rather than a bibliography
 
 `researchclaw/skills/builtin/domain/nlp-alignment/SKILL.md:11` @ ea77ec1
 
 `researchclaw/skills/builtin/domain/nlp-alignment/SKILL.md:11` — Each skill cites exactly one or two canonical papers in `references` rather than a bibliography; this bounds the LLM's source surface to vetted literature and prevents hallucinated citations.
 
 <a id="g19-f019"></a>
-### Literature-search skill names concrete databases ("Semantic Scholar, arXiv, OpenAlex") rather than "search the litera…
+### Literature-search skill names concrete databases ("Semantic Scholar, arXiv, OpenAlex")…
 
 `researchclaw/skills/builtin/experiment/systematic-review/SKILL.md:20` @ ea77ec1
 
@@ -149,168 +149,168 @@
 ## Skills, prompts, tools
 
 <a id="g19-f020"></a>
-### Defines a comprehensive YAML handoff schema ( topic_id , observed_data , data_model , target , assumptions , claims ,…
+### Defines a comprehensive YAML handoff schema ( topic_id , observed_data , data_model ,…
 
 `external/agents/stat_research_agent/skills/statistical-problem-formulation/SKILL.md:37-69` @ ea77ec1
 
 `external/agents/stat_research_agent/skills/statistical-problem-formulation/SKILL.md:37-69` — Defines a comprehensive YAML handoff schema (`topic_id`, `observed_data`, `data_model`, `target`, `assumptions`, `claims`, `evaluation_criteria`, `theory_targets`, `blocking_ambiguities`) for structured context passing between sub-agents — all fields typed with controlled vocabularies.
 
 <a id="g19-f021"></a>
-### Full per-step progress file templates with PASS/FAIL status headers and required subsections enumerated
+### Full per-step progress file templates with PASS/FAIL status headers and required…
 
 `external/agents/stat_research_agent/skills/stat-research-orchestrator/SKILL.md:157-282` @ ea77ec1
 
 `external/agents/stat_research_agent/skills/stat-research-orchestrator/SKILL.md:157-282` — Full per-step progress file templates with PASS/FAIL status headers and required subsections enumerated — each template makes step completion mechanically verifiable by the orchestrator.
 
 <a id="g19-f022"></a>
-### Per-stage guidance block ( hypothesis_gen , experiment_design , code_generation , result_analysis , paper writing) te…
+### Per-stage guidance block ( hypothesis_gen , experiment_design , code_generation ,…
 
 `external/agents/Biology-Agent/skills/metabolic-study-planner/SKILL.md:216-229` @ ea77ec1
 
 `external/agents/Biology-Agent/skills/metabolic-study-planner/SKILL.md:216-229` — Per-stage guidance block (`hypothesis_gen`, `experiment_design`, `code_generation`, `result_analysis`, paper writing) tells the agent exactly how to adapt its behaviour depending on which AutoResearchClaw pipeline stage is active — a lightweight stage-aware prompt slot.
 
 <a id="g19-f023"></a>
-### Four study archetypes (Knockout Strategy, Nutrient-Condition Phase Map, Essentiality/Drug-Target, Benchmark) each def…
+### Four study archetypes (Knockout Strategy, Nutrient-Condition Phase Map, Essentiality/Drug-Target, Benchmark) each define a concrete plan, required metrics, and a paper-claim format string
 
 `external/agents/Biology-Agent/skills/metabolic-study-planner/SKILL.md:63-152` @ ea77ec1
 
 `external/agents/Biology-Agent/skills/metabolic-study-planner/SKILL.md:63-152` — Four study archetypes (Knockout Strategy, Nutrient-Condition Phase Map, Essentiality/Drug-Target, Benchmark) each define a concrete plan, required metrics, and a paper-claim format string; this gives the LLM a bounded action space for study design rather than free-form generation.
 
 <a id="g19-f024"></a>
-### Eight-step validation workflow with explicit ERROR/WARNING severity tiers and a final JSON report artifact ( validati…
+### Eight-step validation workflow with explicit ERROR/WARNING severity tiers and a final JSON report artifact ( validation_report.json ) acts as a structured gate before any flux analysis
 
 `external/agents/Biology-Agent/skills/gsmm-validator/SKILL.md:27-222` @ ea77ec1
 
 `external/agents/Biology-Agent/skills/gsmm-validator/SKILL.md:27-222` — Eight-step validation workflow with explicit ERROR/WARNING severity tiers and a final JSON report artifact (`validation_report.json`) acts as a structured gate before any flux analysis; the report schema is defined inline for the agent to produce without ambiguity.
 
 <a id="g19-f025"></a>
-### PlannerAgent._generate_plan() system prompt gives an explicit JSON contract (9 required fields per figure), enumerate…
+### PlannerAgent._generate_plan() system prompt gives an explicit JSON contract (9 required fields per figure), enumerates all valid chart types, states hard bounds ( min_figures / max_figures ), and names section slots
 
 `researchclaw/agents/figure_agent/planner.py:248-273` @ ea77ec1
 
 `researchclaw/agents/figure_agent/planner.py:248-273` — `PlannerAgent._generate_plan()` system prompt gives an explicit JSON contract (9 required fields per figure), enumerates all valid chart types, states hard bounds (`min_figures`/`max_figures`), and names section slots. Tight action space reduces hallucination.
 
 <a id="g19-f026"></a>
-### The method_to_claim_map YAML anchors each proposed method to specific claims, expected evidence, and theory targets
+### The method_to_claim_map YAML anchors each proposed method to specific claims, expected…
 
 `external/agents/stat_research_agent/skills/statistical-method-design/SKILL.md:49-55` @ ea77ec1
 
 `external/agents/stat_research_agent/skills/statistical-method-design/SKILL.md:49-55` — The `method_to_claim_map` YAML anchors each proposed method to specific claims, expected evidence, and theory targets — a machine-readable traceability artifact for downstream validators.
 
 <a id="g19-f027"></a>
-### Row-oriented JSON evidence schema ( claim_id , method , baseline , condition , metric , value , status ) normalises e…
+### Row-oriented JSON evidence schema ( claim_id , method , baseline , condition , metric ,…
 
 `external/agents/stat_research_agent/skills/statistical-experimental-evaluation/SKILL.md:51-66` @ ea77ec1
 
 `external/agents/stat_research_agent/skills/statistical-experimental-evaluation/SKILL.md:51-66` — Row-oriented JSON evidence schema (`claim_id`, `method`, `baseline`, `condition`, `metric`, `value`, `status`) normalises experiment outputs into claim-mapped rows for automated validation.
 
 <a id="g19-f028"></a>
-### claim_verdicts.json requires dual-source traceability per verdict: both theory_support (citing the proposition and as…
+### claim_verdicts.json requires dual-source traceability per verdict: both theory_support…
 
 `external/agents/stat_research_agent/skills/statistical-experimental-evaluation/SKILL.md:68-81` @ ea77ec1
 
 `external/agents/stat_research_agent/skills/statistical-experimental-evaluation/SKILL.md:68-81` — `claim_verdicts.json` requires dual-source traceability per verdict: both `theory_support` (citing the proposition and assumptions) and `experimental_support` (citing conditions and metrics), plus explicit limitations.
 
 <a id="g19-f029"></a>
-### Standard theorem template with four required sections (Proposition, Proof Sketch, Interpretation, Limitations) and a …
+### Standard theorem template with four required sections (Proposition, Proof Sketch,…
 
 `external/agents/stat_research_agent/skills/statistical-theory-analysis/SKILL.md:36-51` @ ea77ec1
 
 `external/agents/stat_research_agent/skills/statistical-theory-analysis/SKILL.md:36-51` — Standard theorem template with four required sections (Proposition, Proof Sketch, Interpretation, Limitations) and a rule that every theoretical claim must produce at least one empirical prediction when possible.
 
 <a id="g19-f030"></a>
-### + +
+### Full SKILL.md frontmatter schema across both external agents and builtin skills: name , description , metadata.category , trigger-keywords , applicable-stages , priority , version , author , references
 
 `external/agents/Biology-Agent/skills/metabolic-study-planner/SKILL.md:10-13` @ ea77ec1
 
 `external/agents/Biology-Agent/skills/metabolic-study-planner/SKILL.md:10-13` + `researchclaw/skills/builtin/tooling/data-loading/SKILL.md:1-12` + `researchclaw/skills/builtin/experiment/systematic-review/SKILL.md:1-8` — Full SKILL.md frontmatter schema across both external agents and builtin skills: `name`, `description`, `metadata.category`, `trigger-keywords`, `applicable-stages`, `priority`, `version`, `author`, `references`; description written as an imperative for LLM consumption ("Use when...").
 
 <a id="g19-f031"></a>
-### The required study_card.md template (Research Question, Hypothesis, Model, Conditions, Analyses, Metrics, Figures, Ri…
+### The required study_card.md template (Research Question, Hypothesis, Model, Conditions, Analyses, Metrics, Figures, Risks) is a mandatory pre-code planning artifact
 
 `external/agents/Biology-Agent/skills/metabolic-study-planner/SKILL.md:169-214` @ ea77ec1
 
 `external/agents/Biology-Agent/skills/metabolic-study-planner/SKILL.md:169-214` — The required `study_card.md` template (Research Question, Hypothesis, Model, Conditions, Analyses, Metrics, Figures, Risks) is a mandatory pre-code planning artifact; it forces structured reasoning before any simulator skill is invoked.
 
 <a id="g19-f032"></a>
-### code-template block inside YAML frontmatter delivers a copy-paste-ready AMP training loop (scaler, autocast, step) di…
+### code-template block inside YAML frontmatter delivers a copy-paste-ready AMP training loop…
 
 `researchclaw/skills/builtin/tooling/mixed-precision/SKILL.md:12-21` @ ea77ec1
 
 `researchclaw/skills/builtin/tooling/mixed-precision/SKILL.md:12-21` — `code-template` block inside YAML frontmatter delivers a copy-paste-ready AMP training loop (scaler, autocast, step) directly as structured metadata, not prose — LLM consumers can extract and emit it verbatim without additional reasoning.
 
 <a id="g19-f033"></a>
-### MFA progress files for steps 1-3 each carry structured fields (model ID, reaction/metabolite/gene counts, WT growth r…
+### MFA progress files for steps 1-3 each carry structured fields (model ID,…
 
 `external/agents/Biology-Agent/skills/mfa-pipeline-orchestrator/SKILL.md:64-93` @ ea77ec1
 
 `external/agents/Biology-Agent/skills/mfa-pipeline-orchestrator/SKILL.md:64-93` — MFA progress files for steps 1-3 each carry structured fields (model ID, reaction/metabolite/gene counts, WT growth rate, essential gene count, key file paths) that the orchestrator reads to parameterise the next sub-agent.
 
 <a id="g19-f034"></a>
-### The stat agent exposes a linear six-skill chain (orchestrator to formulation to method design to theory analysis to e…
+### The stat agent exposes a linear six-skill chain (orchestrator to formulation to method design to theory analysis to experimental evaluation to validator) with each skill name matching a canonical research phase
 
 `external/agents/stat_research_agent/skills/README.md:7-26` @ ea77ec1
 
 `external/agents/stat_research_agent/skills/README.md:7-26` — The stat agent exposes a linear six-skill chain (orchestrator to formulation to method design to theory analysis to experimental evaluation to validator) with each skill name matching a canonical research phase; the README is the sole routing document, keeping the orchestrator's decision surface minimal.
 
 <a id="g19-f035"></a>
-### Canonical output file naming table ( fba_fluxes.csv , pfba_fluxes.csv , fva_result.csv , etc.) with one file per simu…
+### Canonical output file naming table ( fba_fluxes.csv , pfba_fluxes.csv , fva_result.csv , etc.) with one file per simulation type
 
 `external/agents/Biology-Agent/skills/fba-simulator/SKILL.md:233-244` @ ea77ec1
 
 `external/agents/Biology-Agent/skills/fba-simulator/SKILL.md:233-244` — Canonical output file naming table (`fba_fluxes.csv`, `pfba_fluxes.csv`, `fva_result.csv`, etc.) with one file per simulation type; downstream skills read these exact names, making inter-skill hand-offs deterministic.
 
 <a id="g19-f036"></a>
-### CodeSearchResult.to_prompt_context() provides a single stable injection point: upstream agents call this one method t…
+### CodeSearchResult.to_prompt_context() provides a single stable injection point: upstream…
 
 `researchclaw/agents/code_searcher/agent.py:43-47` @ ea77ec1
 
 `researchclaw/agents/code_searcher/agent.py:43-47` — `CodeSearchResult.to_prompt_context()` provides a single stable injection point: upstream agents call this one method to get a formatted context block for code-gen prompts, decoupling search result shape from prompt assembly.
 
 <a id="g19-f037"></a>
-### User prompt injects domain detection result, data availability flags ( has_training_history , has_ablation , has_mult…
+### User prompt injects domain detection result, data availability flags (…
 
 `researchclaw/agents/figure_agent/planner.py:275-290` @ ea77ec1
 
 `researchclaw/agents/figure_agent/planner.py:275-290` — User prompt injects domain detection result, data availability flags (`has_training_history`, `has_ablation`, `has_multiple_seeds`), and the pre-computed domain chart matrix suggestions, grounding the LLM in concrete data signals before plan generation.
 
 <a id="g19-f038"></a>
-### "Common pitfalls" subsection names three concrete failure modes with vocabulary an agent can match against observed o…
+### "Common pitfalls" subsection names three concrete failure modes with vocabulary an agent can match against observed outputs (reward hacking, mode collapse, catastrophic forgetting)
 
 `researchclaw/skills/builtin/domain/nlp-alignment/SKILL.md:28-31` @ ea77ec1
 
 `researchclaw/skills/builtin/domain/nlp-alignment/SKILL.md:28-31` — "Common pitfalls" subsection names three concrete failure modes with vocabulary an agent can match against observed outputs (reward hacking, mode collapse, catastrophic forgetting); structured as anti-pattern recognition, not just advice.
 
 <a id="g19-f039"></a>
-### Training recipe gives per-algorithm hyperparameter tuples (PPO clip=0.2, SAC tau=0.005) alongside implementation note…
+### Training recipe gives per-algorithm hyperparameter tuples (PPO clip=0.2, SAC tau=0.005) alongside implementation notes
 
 `researchclaw/skills/builtin/domain/rl-policy-optimization/SKILL.md:21-26` @ ea77ec1
 
 `researchclaw/skills/builtin/domain/rl-policy-optimization/SKILL.md:21-26` — Training recipe gives per-algorithm hyperparameter tuples (PPO clip=0.2, SAC tau=0.005) alongside implementation notes; machine-readable density allows code generation without additional reasoning.
 
 <a id="g19-f040"></a>
-### Parameter-efficient methods block provides concrete hyperparameter ranges (LoRA r=8-64, alpha=16-128, prefix tokens 1…
+### Parameter-efficient methods block provides concrete hyperparameter ranges (LoRA r=8-64,…
 
 `researchclaw/skills/builtin/domain/nlp-pretraining/SKILL.md:23-26` @ ea77ec1
 
 `researchclaw/skills/builtin/domain/nlp-pretraining/SKILL.md:23-26` — Parameter-efficient methods block provides concrete hyperparameter ranges (LoRA r=8-64, alpha=16-128, prefix tokens 10-20) that an agent can use directly in generated training code without further lookup.
 
 <a id="g19-f041"></a>
-### Uses ALL-CAPS imperatives ("ALWAYS", "EACH") as emphasis tokens for LLM attention, distinguishing must-have constrain…
+### Uses ALL-CAPS imperatives ("ALWAYS", "EACH") as emphasis tokens for LLM attention,…
 
 `researchclaw/skills/builtin/experiment/experimental-design/SKILL.md:15-16` @ ea77ec1
 
 `researchclaw/skills/builtin/experiment/experimental-design/SKILL.md:15-16` — Uses ALL-CAPS imperatives ("ALWAYS", "EACH") as emphasis tokens for LLM attention, distinguishing must-have constraints from optional guidance.
 
 <a id="g19-f042"></a>
-### Benchmark numbers are baked into the skill content (COCO ~37 mAP for Faster R-CNN R50, ~51 for DINO Swin-L) so the ag…
+### Benchmark numbers are baked into the skill content (COCO ~37 mAP for Faster R-CNN R50,…
 
 `researchclaw/skills/builtin/domain/cv-detection/SKILL.md:27-30` @ ea77ec1
 
 `researchclaw/skills/builtin/domain/cv-detection/SKILL.md:27-30` — Benchmark numbers are baked into the skill content (COCO ~37 mAP for Faster R-CNN R50, ~51 for DINO Swin-L) so the agent can sanity-check generated results against known baselines without a search step.
 
 <a id="g19-f043"></a>
-### OptGP sampler (Markov-chain Monte Carlo in the flux cone) with thinning=100 is the prescribed method for flux samplin…
+### OptGP sampler (Markov-chain Monte Carlo in the flux cone) with thinning=100 is the prescribed method for flux sampling, chosen over ACHR for large-model stability
 
 `external/agents/Biology-Agent/skills/flux-analyzer/SKILL.md:133-137` @ ea77ec1
 
@@ -489,14 +489,14 @@
 `researchclaw/agents/figure_agent/planner.py:311-312` — BUG-36: LLM may return `figures` as a list of strings instead of dicts; the fix is a post-hoc `isinstance` filter that silently discards non-dict entries with no warning logged.
 
 <a id="g19-f068"></a>
-### "FVA hangs" is documented as a known failure mode with advice to reduce processes or set loopless=False , but no time…
+### "FVA hangs" is documented as a known failure mode with advice to reduce processes or set loopless=False , but no timeout or process-kill guard is implemented
 
 `external/agents/Biology-Agent/skills/fba-simulator/SKILL.md:251-254` @ ea77ec1
 
 `external/agents/Biology-Agent/skills/fba-simulator/SKILL.md:251-254` — "FVA hangs" is documented as a known failure mode with advice to reduce `processes` or set `loopless=False`, but no timeout or process-kill guard is implemented; unattended runs on large models will block indefinitely.
 
 <a id="g19-f069"></a>
-### Thermodynamic loop detection is wrapped in a bare except Exception as exc with a WARN and silent skip; a solver error…
+### Thermodynamic loop detection is wrapped in a bare except Exception as exc with a WARN and silent skip
 
 `external/agents/Biology-Agent/skills/gsmm-validator/SKILL.md:156-159` @ ea77ec1
 
@@ -524,56 +524,56 @@
 `researchclaw/agents/benchmark_agent/orchestrator.py:40-42` — `enable_web_search: bool = False` exists in config but `orchestrate()` never checks it — the flag is not forwarded to `SurveyorAgent`, so it has no effect at the orchestrator level.
 
 <a id="g19-f073"></a>
-### The 10-retry cap is stated but no escalation path is defined after exhaustion; an orchestrator hitting this limit has…
+### The 10-retry cap is stated but no escalation path is defined after exhaustion
 
 `external/agents/Biology-Agent/skills/mfa-pipeline-orchestrator/SKILL.md:97-99` @ ea77ec1
 
 `external/agents/Biology-Agent/skills/mfa-pipeline-orchestrator/SKILL.md:97-99` — The 10-retry cap is stated but no escalation path is defined after exhaustion; an orchestrator hitting this limit has no prescribed behaviour (halt, alert, partial report).
 
 <a id="g19-f074"></a>
-### Step 4 ( metabolic-pheno-analyzer ) progress file template is completely absent from the spec; only steps 1-3 are ful…
+### Step 4 ( metabolic-pheno-analyzer ) progress file template is completely absent from the spec
 
 `external/agents/Biology-Agent/skills/mfa-pipeline-orchestrator/SKILL.md:62-93` @ ea77ec1
 
 `external/agents/Biology-Agent/skills/mfa-pipeline-orchestrator/SKILL.md:62-93` — Step 4 (`metabolic-pheno-analyzer`) progress file template is completely absent from the spec; only steps 1-3 are fully defined, leaving the final pipeline stage without a checkable artifact structure.
 
 <a id="g19-f075"></a>
-### References a gsmm-validator sub-skill ("run gsmm-validator before FBA") but that skill's interface (inputs, outputs, …
+### References a gsmm-validator sub-skill ("run gsmm-validator before FBA") but that skill's…
 
 `external/agents/Biology-Agent/skills/gsmm-builder/SKILL.md:170-172` @ ea77ec1
 
 `external/agents/Biology-Agent/skills/gsmm-builder/SKILL.md:170-172` — References a `gsmm-validator` sub-skill ("run `gsmm-validator` before FBA") but that skill's interface (inputs, outputs, progress file) is undocumented within this batch.
 
 <a id="g19-f076"></a>
-### Theory labeling (proven vs. heuristic vs. experimentally-supported) is required but the format is unstructured prose
+### Theory labeling (proven vs
 
 `external/agents/stat_research_agent/skills/stat-research-orchestrator/SKILL.md:88-91` @ ea77ec1
 
 `external/agents/stat_research_agent/skills/stat-research-orchestrator/SKILL.md:88-91` — Theory labeling (proven vs. heuristic vs. experimentally-supported) is required but the format is unstructured prose — no schema field or tag is mandated, so automated auditing cannot distinguish these categories.
 
 <a id="g19-f077"></a>
-### "Failed runs must be counted" is required but "failed run" is not defined (timeout, exception, numerical non-converge…
+### "Failed runs must be counted" is required but "failed run" is not defined (timeout, exception, numerical non-convergence, implausible output?)
 
 `external/agents/stat_research_agent/skills/statistical-experimental-evaluation/SKILL.md:86-89` @ ea77ec1
 
 `external/agents/stat_research_agent/skills/statistical-experimental-evaluation/SKILL.md:86-89` — "Failed runs must be counted" is required but "failed run" is not defined (timeout, exception, numerical non-convergence, implausible output?); ambiguous for any automated failure-counting step.
 
 <a id="g19-f078"></a>
-### Theory checks accept "rigorous or partial" theory and a "clearly labeled heuristic analysis" as passing
+### Theory checks accept "rigorous or partial" theory and a "clearly labeled heuristic…
 
 `external/agents/stat_research_agent/skills/stat-result-validator/SKILL.md:85-91` @ ea77ec1
 
 `external/agents/stat_research_agent/skills/stat-result-validator/SKILL.md:85-91` — Theory checks accept "rigorous or partial" theory and a "clearly labeled heuristic analysis" as passing — the pass threshold is low enough that a minimal heuristic paragraph could satisfy it without substantive content.
 
 <a id="g19-f079"></a>
-### Feasibility gate criterion scores are defined with thresholds ("Reject if ...") but no scoring rubric for the 1-5 sca…
+### Feasibility gate criterion scores are defined with thresholds ("Reject if ...") but no scoring rubric for the 1-5 scale per criterion
 
 `external/agents/Biology-Agent/skills/metabolic-study-planner/SKILL.md:152-165` @ ea77ec1
 
 `external/agents/Biology-Agent/skills/metabolic-study-planner/SKILL.md:152-165` — Feasibility gate criterion scores are defined with thresholds ("Reject if ...") but no scoring rubric for the 1-5 scale per criterion; the gate requires a total >= 18/25 but leaves per-criterion scoring to the agent's judgment, making it easy to rationalise past the gate.
 
 <a id="g19-f080"></a>
-### Double gene deletion truncates to list(model.genes)[:50] with no selection rationale (e.g., top-flux genes or subsyst…
+### Double gene deletion truncates to list(model.genes)[:50] with no selection rationale (e.g., top-flux genes or subsystem filter)
 
 `external/agents/Biology-Agent/skills/flux-analyzer/SKILL.md:68-73` @ ea77ec1
 
@@ -594,28 +594,28 @@
 `researchclaw/skills/builtin/domain/nlp-pretraining/SKILL.md:9` — All skills carry `version: "1.0"` with no changelog or migration path; if a skill's recipe becomes stale, there is no mechanism to deprecate or supersede it.
 
 <a id="g19-f083"></a>
-### Skill description doubles as the routing hint and the user-facing label, but the two concerns differ (routing needs k…
+### Skill description doubles as the routing hint and the user-facing label, but the two concerns differ (routing needs keywords
 
 `researchclaw/skills/builtin/experiment/systematic-review/SKILL.md:3` @ ea77ec1
 
 `researchclaw/skills/builtin/experiment/systematic-review/SKILL.md:3` — Skill `description` doubles as the routing hint and the user-facing label, but the two concerns differ (routing needs keywords; users need context); no separate `routing-hint` field exists.
 
 <a id="g19-f084"></a>
-### No "common pitfalls" section unlike nlp-alignment and rl-policy-optimization skills; detection-specific failure modes…
+### No "common pitfalls" section unlike nlp-alignment and rl-policy-optimization skills
 
 `researchclaw/skills/builtin/domain/cv-detection/SKILL.md:1-30` @ ea77ec1
 
 `researchclaw/skills/builtin/domain/cv-detection/SKILL.md:1-30` — No "common pitfalls" section unlike nlp-alignment and rl-policy-optimization skills; detection-specific failure modes (anchor misconfiguration, IoU threshold choice, class imbalance) are absent, making this skill asymmetrically incomplete relative to peers.
 
 <a id="g19-f085"></a>
-### DPO hyperparameters (lr=5e-7, beta=0.1) are hardcoded constants with no guidance on when to deviate; the listed GRPO …
+### DPO hyperparameters (lr=5e-7, beta=0.1) are hardcoded constants with no guidance on when to deviate
 
 `researchclaw/skills/builtin/domain/nlp-alignment/SKILL.md:22-25` @ ea77ec1
 
 `researchclaw/skills/builtin/domain/nlp-alignment/SKILL.md:22-25` — DPO hyperparameters (lr=5e-7, beta=0.1) are hardcoded constants with no guidance on when to deviate; the listed GRPO entry has no recipe at all, leaving the fastest-evolving alignment method underdefined.
 
 <a id="g19-f086"></a>
-### The stars >= 10 quality threshold is hardcoded and not exposed in CodeSearchAgent.__init__ parameters, making it impo…
+### The stars >= 10 quality threshold is hardcoded and not exposed in…
 
 `researchclaw/agents/code_searcher/agent.py:181-183` @ ea77ec1
 

@@ -49,7 +49,7 @@ strategic LLM (no max_tokens) -> strategic LLM with `strategic_token_limit` -> f
 for each SERP query it spawns a fresh nested `GPTResearcher`, extracts learnings, and if `depth>1` recurses with halved breadth (`new_breadth = max(2, breadth // 2)`) and follow-up questions as the next query `gpt_researcher/skills/deep_research.py:415-522 `
 
 <a id="g3-f006"></a>
-### Retriever resolution falls back to Tavily for any unknown name rather than erroring: get_retriever(r) or get_default_…
+### Retriever resolution falls back to Tavily for any unknown name rather than erroring:…
 
 `gpt_researcher/actions/retriever.py:156-160` @ 18d4051
 
@@ -72,21 +72,21 @@ Retriever resolution falls back to Tavily for any unknown name rather than error
 for web reports it mandates in-text markdown-hyperlink citations at sentence/paragraph end plus a deduped reference list in the configured format `gpt_researcher/prompts.py:273-311 `
 
 <a id="g3-f009"></a>
-### Optional LLM source curation ranks scraped content by relevance/credibility/currency/objectivity, explicitly prioriti…
+### Optional LLM source curation ranks scraped content by relevance/credibility/currency/objectivity, explicitly prioritizing quantitative data
 
 `gpt_researcher/skills/curator.py:58-96` @ 18d4051
 
 Optional LLM source curation ranks scraped content by relevance/credibility/currency/objectivity, explicitly prioritizing quantitative data; on any parse error it returns the unranked sources unchanged (fail-open) `gpt_researcher/skills/curator.py:58-96 ` and the prompt `gpt_researcher/prompts.py:315-332 `
 
 <a id="g3-f010"></a>
-### Deep-research query/learning prompts demand strict JSON with an exact schema ( {"query","researchGoal"} , {"insight",…
+### Deep-research query/learning prompts demand strict JSON with an exact schema (…
 
 `gpt_researcher/skills/deep_research.py:259-289` @ 18d4051
 
 Deep-research query/learning prompts demand strict JSON with an exact schema (`{"query","researchGoal"}`, `{"insight","sourceUrl"}`) and ask the model to attach a source URL per learning `gpt_researcher/skills/deep_research.py:259-289,344-374 `
 
 <a id="g3-f011"></a>
-### MCP tool selection uses the strategic LLM (temp 0.0) to pick <=N relevant tools from tool name+description, with a pa…
+### MCP tool selection uses the strategic LLM (temp 0.0) to pick <=N relevant tools from tool…
 
 `gpt_researcher/mcp/tool_selector.py:35-127` @ 18d4051
 
@@ -139,21 +139,21 @@ results with `raw_content` >100 chars are treated as prefetched and passed throu
 learnings get a `sourceUrl` attached but nothing checks the claim is actually supported by the cited source; citations are trusted as emitted by the extraction LLM `gpt_researcher/skills/deep_research.py:344-374 `
 
 <a id="g3-f018"></a>
-### Deep research dedups learnings with list(set(...)) , discarding order (and any deterministic report structure) for th…
+### Deep research dedups learnings with list(set(...)) , discarding order (and any…
 
 `gpt_researcher/skills/deep_research.py:533` @ 18d4051
 
 Deep research dedups learnings with `list(set(...))`, discarding order (and any deterministic report structure) for the sake of uniqueness `gpt_researcher/skills/deep_research.py:533 `
 
 <a id="g3-f019"></a>
-### Curation is off by default ( CURATE_SOURCES: False ), so out-of-the-box the report LLM receives all compressed contex…
+### Curation is off by default ( CURATE_SOURCES: False ), so out-of-the-box the report LLM…
 
 `gpt_researcher/config/variables/default.py:14` @ 18d4051
 
 Curation is off by default (`CURATE_SOURCES: False`), so out-of-the-box the report LLM receives all compressed context unranked `gpt_researcher/config/variables/default.py:14 `
 
 <a id="g3-f020"></a>
-### Nested deep-research researchers each construct a full GPTResearcher per SERP query with its own retrievers/scraper/L…
+### Nested deep-research researchers each construct a full GPTResearcher per SERP query with…
 
 `gpt_researcher/skills/deep_research.py:413-435` @ 18d4051
 

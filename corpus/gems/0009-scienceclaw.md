@@ -42,7 +42,7 @@
 `core/skill_executor.py:135-155` — CLI parameter serialisation: boolean flags emitted only when `True`, list values use `nargs="+"` style, dict values silently skipped, leading dashes stripped from parameter keys supplied by the LLM.
 
 <a id="g9-f005"></a>
-### :58-65
+### All ToolUniverse-backed workflow scripts use a module-level WORKFLOW constant as the sole config point, invoked via tu.run({"name": WORKFLOW, "arguments": {"query": args.query}}, use_cache=...)
 
 `skills/epigenomics/scripts/run.py:18` @ f4a6286
 
@@ -91,21 +91,21 @@
 `skills/research-pipeline/SKILL.md:L17` — Orchestrator enforces a single `sessions_spawn` per response constraint — an explicit product decision making the pipeline sequential.
 
 <a id="g9-f012"></a>
-### Continuous knowledge-metabolism loop caps topic files at 200 lines and compresses older content (preserving citations…
+### Continuous knowledge-metabolism loop caps topic files at 200 lines and compresses older content (preserving citations)
 
 `skills/metabolism/SKILL.md:L8-13` @ f4a6286
 
 `skills/metabolism/SKILL.md:L8-13` — Continuous knowledge-metabolism loop caps topic files at 200 lines and compresses older content (preserving citations); a 5-day sliding search window + dedup against `processed_ids` implements bounded incremental ingestion.
 
 <a id="g9-f013"></a>
-### run.py must emit [RESULT] tagged lines; unverified values get UNVERIFIED tags, enforcing a no-fabrication contract…
+### run.py must emit [RESULT] tagged lines
 
 `skills/research-implement/SKILL.md:L22-L24` @ f4a6286
 
 `skills/research-implement/SKILL.md:L22-L24` — `run.py` must emit `[RESULT]` tagged lines; unverified values get ` UNVERIFIED` tags, enforcing a no-fabrication contract at the script-output boundary.
 
 <a id="g9-f014"></a>
-### Training budget fixed at exactly 5 minutes wall-clock (~12 experiments/hour); metric is val_bpb (vocab-size-independe…
+### Training budget fixed at exactly 5 minutes wall-clock (~12 experiments/hour)
 
 `skills/autoresearch/SKILL.md:L88-91` @ f4a6286
 
@@ -119,7 +119,7 @@
 `skills/alphafold/SKILL.md:L22-36` — AlphaFold2 deployment prescribed: ColabFold for multimers (`--model-type alphafold2_multimer_v3 --num-recycles 20 --num-models 5`), LocalColabFold offline, OpenFold (PyTorch) as third alternative.
 
 <a id="g9-f016"></a>
-### ChEMBL_get_molecule_targets banned; mandates ChEMBL_search_activities with pChEMBL >= 6.0 .
+### ChEMBL_get_molecule_targets banned
 
 `skills/drug-research/SKILL.md:L112` @ f4a6286
 
@@ -147,35 +147,35 @@
 `skills/peer-review/SKILL.md:391-414` — Mandatory PDF-to-image conversion for presentation reviews: direct PDF reading is forbidden; agent must run `pdf_to_images.py` first.
 
 <a id="g9-f020"></a>
-### PDF->PNG at 200 dpi, then proportional down-scale of any page over max_dim=1000 px before saving.
+### PDF->PNG at 200 dpi, then proportional down-scale of any page over max_dim=1000 px before…
 
 `skills/document-skills/pdf/scripts/convert_pdf_to_images.py:10-24` @ f4a6286
 
 `skills/document-skills/pdf/scripts/convert_pdf_to_images.py:10-24` — PDF->PNG at 200 dpi, then proportional down-scale of any page over `max_dim=1000` px before saving.
 
 <a id="g9-f021"></a>
-### Four-level metabolite ID confidence system (L1 authentic standard MS+RT -> L4 unknown) mirroring Metabolomics Standard…
+### Four-level metabolite ID confidence system (L1 authentic standard MS+RT -> L4 unknown)…
 
 `skills/metabolomics-analysis/SKILL.md:L206-L212` @ f4a6286
 
 `skills/metabolomics-analysis/SKILL.md:L206-L212` — Four-level metabolite ID confidence system (L1 authentic standard MS+RT -> L4 unknown) mirroring Metabolomics Standards Initiative levels.
 
 <a id="g9-f022"></a>
-### Composite Feasibility Score (0–100): Patient Availability 30%, Endpoint Precedent 25%, Regulatory Clarity 20%, Compar…
+### Composite Feasibility Score (0–100): Patient Availability 30%, Endpoint Precedent 25%,…
 
 `skills/clinical-trial-design/SKILL.md:L30-L44` @ f4a6286
 
 `skills/clinical-trial-design/SKILL.md:L30-L44` — Composite Feasibility Score (0–100): Patient Availability 30%, Endpoint Precedent 25%, Regulatory Clarity 20%, Comparator Feasibility 15%, Safety Monitoring 10%.
 
 <a id="g9-f023"></a>
-### Reproducibility via pinning census_version="2023-07-25" in open_soma() plus mandatory context-manager cleanup.
+### Reproducibility via pinning census_version="2023-07-25" in open_soma() plus mandatory…
 
 `skills/cellxgene-census/SKILL.md:L58-L65` @ f4a6286
 
 `skills/cellxgene-census/SKILL.md:L58-L65` — Reproducibility via pinning `census_version="2023-07-25"` in `open_soma()` plus mandatory context-manager cleanup.
 
 <a id="g9-f024"></a>
-### PRS formula inlined ( PRS = Σ (dosage_i × effect_size_i) ) with p < 5×10⁻⁸ ; explicit "What This Skill Does NOT Do" b…
+### PRS formula inlined ( PRS = Σ (dosage_i × effect_size_i) ) with p < 5×10⁻⁸
 
 `skills/polygenic-risk-score/SKILL.md:L25-L45` @ f4a6286
 
@@ -212,7 +212,7 @@
 `openclaw-skill-pack/skills/scienceclaw-local-files/SKILL.md:L120-132` — File-type -> skill mapping: PDF->`markitdown,pubmed,literature-review`; protein FASTA->`blast,uniprot,esm,biopython,pubmed,pdb`; CSV with SMILES->`rdkit,datamol,pubchem,tdc,pubmed`; omics CSV->`scanpy,pydeseq2,pubmed,gene-database`. SMILES tools forbidden when no SMILES present.
 
 <a id="g9-f029"></a>
-### Ten research dimensions each with explicit ToolUniverse tool chains (identity via EFO/UMLS/ICD; genetics via ClinVar/…
+### Ten research dimensions each with explicit ToolUniverse tool chains (identity via EFO/UMLS/ICD
 
 `skills/disease-research/references/tool-reference.md:L392-L562` @ f4a6286
 
@@ -233,14 +233,14 @@
 `skills/chembl/SKILL.md:3-28` / `skills/pdb/SKILL.md:3-4` / `skills/uniprot/SKILL.md:L127-139` — Anti-hallucination via the `description` field: explicitly list what NOT to query with failure/success tables. UniProt's table shows mechanism phrases return zero results; only bare gene symbols/accessions work.
 
 <a id="g9-f032"></a>
-### description: field deliberately exhaustive for routing (220+ Enrichr libraries, 40+ ToolUniverse tools, 5 organisms);…
+### description: field deliberately exhaustive for routing (220+ Enrichr libraries, 40+ ToolUniverse tools, 5 organisms)
 
 `skills/gene-enrichment/SKILL.md:L9-69` @ f4a6286
 
 `skills/gene-enrichment/SKILL.md:L9-69` — `description:` field deliberately exhaustive for routing (220+ Enrichr libraries, 40+ ToolUniverse tools, 5 organisms); ten mandatory core principles precede any code including report-first, T1–T4 evidence grading, and end completeness checklist.
 
 <a id="g9-f033"></a>
-### Eight-step hypothesis workflow (understand -> literature -> synthesise -> 3–5 competing hypotheses -> evaluate on 7 axes …
+### Eight-step hypothesis workflow (understand -> literature -> synthesise -> 3–5 competing hypotheses -> evaluate on 7 axes -> design experiments -> predictions -> LaTeX)
 
 `skills/hypothesis-generation/SKILL.md:91-135` @ f4a6286
 
@@ -261,7 +261,7 @@
 `skills/drug-drug-interaction/SKILL.md:44-78` — Report-first DDI workflow: create file with 9 section headers as `[Analyzing...]` before data collection; bidirectional analysis mandatory; 15-criterion completion checklist (evidence grades ***/**o/*oo, 0–100 risk score) before "Ready for Clinical Use".
 
 <a id="g9-f036"></a>
-### ScholarEval 8-dimension framework, each on a 5-point scale; scoring uses contextual multipliers by stage/venue/type ( ).
+### ScholarEval 8-dimension framework, each on a 5-point scale
 
 `skills/scholar-evaluation/SKILL.md:88-143` @ f4a6286
 
@@ -275,21 +275,21 @@
 `skills/clinical-guidelines/SKILL.md:L65-78` — Routing table: cardiology->`AHA_ACC_search_guidelines`; pharmacogenomics->`CPIC_get_gene_drug_pairs`; 12+ sources, 41 tools.
 
 <a id="g9-f038"></a>
-### Perplexity model selection guide; research-lookup uses complexity scoring (each reasoning keyword +3 pts; ≥3 -> reason…
+### Perplexity model selection guide
 
 `skills/perplexity-search/SKILL.md:L92-103` @ f4a6286
 
 `skills/perplexity-search/SKILL.md:L92-103` / `skills/research-lookup/SKILL.md:L147-165` — Perplexity model selection guide; research-lookup uses complexity scoring (each reasoning keyword +3 pts; ≥3 -> reasoning model).
 
 <a id="g9-f039"></a>
-### Mandatory-disagreement rule (each member MUST disagree with ≥1 other member on something substantive) as a structural…
+### Mandatory-disagreement rule (each member MUST disagree with ≥1 other member on something…
 
 `skills/consciousness-council/SKILL.md:14-18` @ f4a6286
 
 `skills/consciousness-council/SKILL.md:14-18` — Mandatory-disagreement rule (each member MUST disagree with ≥1 other member on something substantive) as a structural anti-groupthink mechanism.
 
 <a id="g9-f040"></a>
-### BGPT MCP server exposes 25+ structured fields per paper ( study_type , sample_size , effect_size , p_value , jadad_sc…
+### BGPT MCP server exposes 25+ structured fields per paper ( study_type , sample_size , effect_size , p_value , jadad_score , tools_used , etc.)
 
 `skills/bgpt-paper-search/SKILL.md:40-90` @ f4a6286
 
@@ -303,7 +303,7 @@
 `skills/literature-deep-research/SKILL.md:L14-54` — Four-phase workflow: clarify -> target disambiguation (Ensembl/UniProt IDs, naming collisions) -> literature search with citation-network expansion -> progressive report synthesis. "English-first queries" mandatory.
 
 <a id="g9-f042"></a>
-### Five domain-aware prompt builders inject DOMAIN_PERSONAS keyed on biology/chemistry/materials/general; PATTERN_EXPLAN…
+### Five domain-aware prompt builders inject DOMAIN_PERSONAS keyed on biology/chemistry/materials/general
 
 `skills/prompt-engineering-patterns/scripts/prompt_optimize.py:L12-173` @ f4a6286
 
@@ -354,28 +354,28 @@
 `core/skill_executor.py:167-196` — Graceful retry with reduced parameter set: on missing-argument failure, auto-retry with only `query`, `limit`, `format`.
 
 <a id="g9-f049"></a>
-### ToolUniverse runner pattern (single WORKFLOW constant + tu.load_tools() + tu.run({"name":...}) ): zero-boilerplate CL…
+### ToolUniverse runner pattern (single WORKFLOW constant + tu.load_tools() + tu.run({"name":...}) ): zero-boilerplate CLI tool for any named workflow
 
 `skills/epigenomics/scripts/run.py:L1-82` @ f4a6286
 
 `skills/epigenomics/scripts/run.py:L1-82` — ToolUniverse runner pattern (single `WORKFLOW` constant + `tu.load_tools()` + `tu.run({"name":...})`): zero-boilerplate CLI tool for any named workflow; includes clean `--no-cache` -> `use_cache=not args.no_cache` idiom.
 
 <a id="g9-f050"></a>
-### to_serializable() recursive JSON-safe coercion ( str(obj) fallback) as a universal guard before json.dumps on heterog…
+### to_serializable() recursive JSON-safe coercion ( str(obj) fallback) as a universal guard…
 
 `skills/tooluniverse/scripts/tooluniverse_run.py:L77-87` @ f4a6286
 
 `skills/tooluniverse/scripts/tooluniverse_run.py:L77-87` / `skills/epigenomics/scripts/run.py:36-45` — `to_serializable()` recursive JSON-safe coercion (`str(obj)` fallback) as a universal guard before `json.dumps` on heterogeneous tool output.
 
 <a id="g9-f051"></a>
-### Report-first + progressive-update pattern (most-cited convention in corpus): create output file with all section head…
+### Report-first + progressive-update pattern (most-cited convention in corpus): create output file with all section headers as [Researching...] stubs before any tool call, replacing each in place
 
 `skills/disease-research/references/tool-reference.md:L366-387` @ f4a6286
 
 Report-first + progressive-update pattern (most-cited convention in corpus): create output file with all section headers as `[Researching...]` stubs before any tool call, replacing each in place. See `skills/disease-research/references/tool-reference.md:L366-387`, `skills/chemical-safety/SKILL.md:L44-52`, `skills/drug-drug-interaction/SKILL.md:44-59`, `skills/gene-enrichment/SKILL.md:L60-69`.
 
 <a id="g9-f052"></a>
-### Multi-stage filtering funnel with explicit pass-rate numbers enabling budget planning; generalized as a DesignCampaig…
+### Multi-stage filtering funnel with explicit pass-rate numbers enabling budget planning
 
 `skills/protein-qc/SKILL.md:L133-163` @ f4a6286
 
@@ -396,35 +396,35 @@ Report-first + progressive-update pattern (most-cited convention in corpus): cre
 `skills/vaex/scripts/demo.py:17-24` (and ~50 identical stubs) — Zero-dependency stub demo template returning `{skill, status, description, note}`: pip-clean smoke test confirming skill registration without installing the underlying library. Adopt as the baseline scaffold for any new skill's `demo.py`.
 
 <a id="g9-f055"></a>
-### scale_factor = min(max_dim/width, max_dim/height) : correct proportional scale-down for bounding vision-LLM token cost.
+### scale_factor = min(max_dim/width, max_dim/height) : correct proportional scale-down for…
 
 `skills/document-skills/pdf/scripts/convert_pdf_to_images.py:14-20` @ f4a6286
 
 `skills/document-skills/pdf/scripts/convert_pdf_to_images.py:14-20` — `scale_factor = min(max_dim/width, max_dim/height)`: correct proportional scale-down for bounding vision-LLM token cost.
 
 <a id="g9-f056"></a>
-### Negative-prompt "When NOT To Use" guard at the top of every computation-only skill with redirect to the correct retri…
+### Negative-prompt "When NOT To Use" guard at the top of every computation-only skill with…
 
 `skills/biopython/SKILL.md:L11-23` @ f4a6286
 
 Negative-prompt "When NOT To Use" guard at the top of every computation-only skill with redirect to the correct retrieval skill: `skills/biopython/SKILL.md:L11-23`, `skills/datamol/SKILL.md:L11-22`, `skills/molfeat/SKILL.md:L11-23`.
 
 <a id="g9-f057"></a>
-### Reciprocal rank fusion (RRF) merging OSTI, Google Scholar, ArXiv, and local corpus with fuzzy title dedup at >80% sim…
+### Reciprocal rank fusion (RRF) merging OSTI, Google Scholar, ArXiv, and local corpus with…
 
 `skills/literature-meta-search/SKILL.md:73-77` @ f4a6286
 
 `skills/literature-meta-search/SKILL.md:73-77` — Reciprocal rank fusion (RRF) merging OSTI, Google Scholar, ArXiv, and local corpus with fuzzy title dedup at >80% similarity and an `in_corpus` flag.
 
 <a id="g9-f058"></a>
-### Full pipeline via subprocess.run(..., check=True) ; each stage writes to a subdirectory of output_dir/ read by the next
+### Full pipeline via subprocess.run(..., check=True)
 
 `skills/protein-design-workflow/SKILL.md:L74-122` @ f4a6286
 
 `skills/protein-design-workflow/SKILL.md:L74-122` — Full pipeline via `subprocess.run(..., check=True)`; each stage writes to a subdirectory of `output_dir/` read by the next — simple, auditable, crash-detectable.
 
 <a id="g9-f059"></a>
-### Artifact lifecycle (create -> cache -> load -> stream) with lineage via ln.track() / ln.finish() ; artifact.view_lineage…
+### Artifact lifecycle (create -> cache -> load -> stream) with lineage via ln.track() / ln.finish()
 
 `skills/lamindb/SKILL.md:L42-54` @ f4a6286
 
@@ -438,7 +438,7 @@ Negative-prompt "When NOT To Use" guard at the top of every computation-only ski
 `skills/literature-deep-research/SKILL.md:L36-42` — Collision-aware literature search: build a naming-collision list before broad queries.
 
 <a id="g9-f061"></a>
-### defusedxml for safe XML parsing after zip extraction (prevents XXE); re-written as pretty-printed ASCII.
+### defusedxml for safe XML parsing after zip extraction (prevents XXE)
 
 `skills/document-skills/pptx/ooxml/scripts/unpack.py:L18-24` @ f4a6286
 
@@ -473,7 +473,7 @@ Negative-prompt "When NOT To Use" guard at the top of every computation-only ski
 `skills/alphafold/SKILL.md:L96-108` — Self-consistency validation loop: RFdiffusion backbone -> ProteinMPNN sequences -> AF2 prediction -> TM-score/RMSD; TM-score > 0.8 = pass.
 
 <a id="g9-f066"></a>
-### Output-file naming contract + citation template requiring PRR, 95% CI, case count, serious/fatal counts, tagged FAERS…
+### Output-file naming contract + citation template requiring PRR, 95% CI, case count,…
 
 `skills/pharmacovigilance/SKILL.md:L40-67` @ f4a6286
 
@@ -508,7 +508,7 @@ Negative-prompt "When NOT To Use" guard at the top of every computation-only ski
 `skills/dask/references/schedulers.md:279-293` — Decision matrix: numeric/Pandas->threads, pure Python->processes, debugging->synchronous, multi-machine->cluster.
 
 <a id="g9-f071"></a>
-### SLURM self-submission as structured JSON output so the orchestrating agent can poll or set a dependency rather than s…
+### SLURM self-submission as structured JSON output so the orchestrating agent can poll or…
 
 `skills/uma/SKILL.md:197-223` @ f4a6286
 
@@ -517,7 +517,7 @@ Negative-prompt "When NOT To Use" guard at the top of every computation-only ski
 ## Open threads / weak spots
 
 <a id="g9-f072"></a>
-### Duplicate YAML frontmatter (two --- blocks, two name / description fields) breaks parsers reading only the first bloc…
+### Duplicate YAML frontmatter (two --- blocks, two name / description fields) breaks parsers…
 
 `skills/gwas-snp-interpretation/SKILL.md:L1-11` @ f4a6286
 
@@ -531,84 +531,84 @@ Duplicate YAML frontmatter (two `---` blocks, two `name`/`description` fields) b
 `skill_name` `NameError` in the "newer" stub-demo / DB-query template family — referenced but never defined in the `--format summary` branch: `skills/cirq/scripts/demo.py:62` (+ dask, qutip, sympy, polars, astropy, qiskit, scanpy, plotly), `skills/anndata/scripts/demo.py:62` (+ seaborn, pennylane), and five DB query scripts (`ena-database:76`, `hmdb-database:76`, `geo-database:76`, `gwas-database:76`, `clinvar-database/scripts/query.py:77`).
 
 <a id="g9-f074"></a>
-### ~50 stub demo.py / query.py files import nothing of the advertised library and make no HTTP calls
+### ~50 stub demo.py / query.py files import nothing of the advertised library and make no…
 
 `skills/anndata/scripts/demo.py:23-33` @ f4a6286
 
 ~50 stub `demo.py` / `query.py` files import nothing of the advertised library and make no HTTP calls — they pass CI while the library is entirely uninstalled, providing false confidence: `skills/anndata/scripts/demo.py:23-33`, `skills/ena-database/scripts/query.py:22-41` (+ hmdb/geo/gwas/clinvar). The `_demo.py` prefix at `skills/alphafold-database/scripts/_demo.py:1` is silently skipped by glob-based discovery.
 
 <a id="g9-f075"></a>
-### Embedded K-Dense Web upsells hardwired into multiple skills, inserting product promotion into agent output: , , .
+### Embedded K-Dense Web upsells hardwired into multiple skills, inserting product promotion…
 
 `skills/offer-k-dense-web/SKILL.md:3-17` @ f4a6286
 
 Embedded K-Dense Web upsells hardwired into multiple skills, inserting product promotion into agent output: `skills/offer-k-dense-web/SKILL.md:3-17`, `skills/adaptyv/SKILL.md:L107-119`, `skills/peer-review/SKILL.md:L570-571`.
 
 <a id="g9-f076"></a>
-### _execute_package_skill hardcodes timeout=30 , silently overriding the caller-supplied timeout .
+### _execute_package_skill hardcodes timeout=30 , silently overriding the caller-supplied…
 
 `core/skill_executor.py:222-225` @ f4a6286
 
 `core/skill_executor.py:222-225` — `_execute_package_skill` hardcodes `timeout=30`, silently overriding the caller-supplied `timeout`.
 
 <a id="g9-f077"></a>
-### Dict-typed parameters are silently dropped; callers receive no signal their args were ignored.
+### Dict-typed parameters are silently dropped
 
 `core/skill_executor.py:147-153` @ f4a6286
 
 `core/skill_executor.py:147-153` — Dict-typed parameters are silently dropped; callers receive no signal their args were ignored.
 
 <a id="g9-f078"></a>
-### _execute_database_skill is a passthrough stub; all DB skills incur subprocess overhead and cannot stream results.
+### _execute_database_skill is a passthrough stub
 
 `core/skill_executor.py:213-214` @ f4a6286
 
 `core/skill_executor.py:213-214` — `_execute_database_skill` is a passthrough stub; all DB skills incur subprocess overhead and cannot stream results.
 
 <a id="g9-f079"></a>
-### Global singleton _executor is never reset; scienceclaw_dir fixed at first import.
+### Global singleton _executor is never reset
 
 `core/skill_executor.py:287-294` @ f4a6286
 
 `core/skill_executor.py:287-294` — Global singleton `_executor` is never reset; `scienceclaw_dir` fixed at first import.
 
 <a id="g9-f080"></a>
-### Registry attribute probing silently returns an empty dict if the ToolUniverse SDK renames its internal attribute.
+### Registry attribute probing silently returns an empty dict if the ToolUniverse SDK renames…
 
 `skills/tooluniverse/scripts/tooluniverse_search.py:L54-60` @ f4a6286
 
 `skills/tooluniverse/scripts/tooluniverse_search.py:L54-60` — Registry attribute probing silently returns an empty dict if the ToolUniverse SDK renames its internal attribute.
 
 <a id="g9-f081"></a>
-### Remote SKILL.md fetch has 15s timeout, no hash/version pin; upstream changes apply automatically on next scaffold.
+### Remote SKILL.md fetch has 15s timeout, no hash/version pin
 
 `skills/tooluniverse/setup_tu_skills.py:L180-187` @ f4a6286
 
 `skills/tooluniverse/setup_tu_skills.py:L180-187` — Remote SKILL.md fetch has 15s timeout, no hash/version pin; upstream changes apply automatically on next scaffold.
 
 <a id="g9-f082"></a>
-### Phase 0 parameter-correction tables cover only a handful of tools (4 of 60+; 1 of 41); undocumented mismatches cause …
+### Phase 0 parameter-correction tables cover only a handful of tools (4 of 60+
 
 `skills/target-research/SKILL.md:L30-47` @ f4a6286
 
 `skills/target-research/SKILL.md:L30-47` / `skills/clinical-guidelines/SKILL.md:L40-48` — Phase 0 parameter-correction tables cover only a handful of tools (4 of 60+; 1 of 41); undocumented mismatches cause silent empty results.
 
 <a id="g9-f083"></a>
-### References "Nano Banana Pro" / "Gemini 3 Pro" backends with no fallback; every figure-generating skill depends on thi…
+### References "Nano Banana Pro" / "Gemini 3 Pro" backends with no fallback
 
 `skills/scientific-schematics/SKILL.md:L1-3` @ f4a6286
 
 `skills/scientific-schematics/SKILL.md:L1-3` — References "Nano Banana Pro" / "Gemini 3 Pro" backends with no fallback; every figure-generating skill depends on this one — single point of failure.
 
 <a id="g9-f084"></a>
-### pathway_topology_analysis is a stub returning pass ; betweenness-centrality/hub-metabolite logic described in comment…
+### pathway_topology_analysis is a stub returning pass
 
 `skills/metabolomics-analysis/SKILL.md:L530-545` @ f4a6286
 
 `skills/metabolomics-analysis/SKILL.md:L530-545` — `pathway_topology_analysis` is a stub returning `pass`; betweenness-centrality/hub-metabolite logic described in comments but unimplemented.
 
 <a id="g9-f085"></a>
-### PAE interface extraction assumes 50/50 chain split; very asymmetric chains silently yield wrong interface PAE.
+### PAE interface extraction assumes 50/50 chain split
 
 `skills/protein-qc/SKILL.md:L29-32` @ f4a6286
 
@@ -622,42 +622,42 @@ Embedded K-Dense Web upsells hardwired into multiple skills, inserting product p
 `skills/stable-baselines3/scripts/evaluate_agent.py:L67-76` — `VecVideoRecorder` records only at step 0 (not all episodes as the comment claims) — likely a latent bug.
 
 <a id="g9-f087"></a>
-### Error JSON reuses args.query , which may contain PII; no sanitization before logging.
+### Error JSON reuses args.query , which may contain PII
 
 `skills/epigenomics/scripts/run.py:66-69` @ f4a6286
 
 `skills/epigenomics/scripts/run.py:66-69` — Error JSON reuses `args.query`, which may contain PII; no sanitization before logging.
 
 <a id="g9-f088"></a>
-### "Poor downstream AF2 ipTM" troubleshooting omits that high pLDDT + low ipTM typically signals independent folding wit…
+### "Poor downstream AF2 ipTM" troubleshooting omits that high pLDDT + low ipTM typically…
 
 `skills/rfdiffusion/SKILL.md:L295-300` @ f4a6286
 
 `skills/rfdiffusion/SKILL.md:L295-300` — "Poor downstream AF2 ipTM" troubleshooting omits that high pLDDT + low ipTM typically signals independent folding without a true interface.
 
 <a id="g9-f089"></a>
-### Single-dispatch-per-response constraint has no documented escape hatch for genuinely parallelisable phases.
+### Single-dispatch-per-response constraint has no documented escape hatch for genuinely…
 
 `skills/research-pipeline/SKILL.md:L17` @ f4a6286
 
 `skills/research-pipeline/SKILL.md:L17` — Single-dispatch-per-response constraint has no documented escape hatch for genuinely parallelisable phases.
 
 <a id="g9-f090"></a>
-### Prerequisite check halts with a directive in Chinese, opaque to non-Chinese-reading agents.
+### Prerequisite check halts with a directive in Chinese, opaque to non-Chinese-reading…
 
 `skills/research-review/SKILL.md:7-8` @ f4a6286
 
 `skills/research-review/SKILL.md:7-8` — Prerequisite check halts with a directive in Chinese, opaque to non-Chinese-reading agents.
 
 <a id="g9-f091"></a>
-### Model string perplexity/sonar-reasoning-pro-online (L255) conflicts with perplexity/sonar-reasoning-pro used elsewher…
+### Model string perplexity/sonar-reasoning-pro-online (L255) conflicts with…
 
 `skills/research-lookup/SKILL.md:L440-447` @ f4a6286
 
 `skills/research-lookup/SKILL.md:L440-447` — Model string `perplexity/sonar-reasoning-pro-online` (L255) conflicts with `perplexity/sonar-reasoning-pro` used elsewhere (L163).
 
 <a id="g9-f092"></a>
-### Target-prioritization weights hardcoded prose; no mechanism to adjust per indication profile.
+### Target-prioritization weights hardcoded prose
 
 `skills/gwas-drug-discovery/SKILL.md:L60-L80` @ f4a6286
 
@@ -692,7 +692,7 @@ Embedded K-Dense Web upsells hardwired into multiple skills, inserting product p
 `openclaw-skill-pack/skills/scienceclaw-post/SKILL.md:L44-48` — `--skills` now constrains gap-fill cycles as well as initial tool selection — an undocumented broadening.
 
 <a id="g9-f097"></a>
-### A social agent network with no scientific function; its presence in a bioscience skill registry is unexplained.
+### A social agent network with no scientific function
 
 `skills/moltbook/SKILL.md:L1-6` @ f4a6286
 

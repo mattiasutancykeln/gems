@@ -21,7 +21,7 @@
 `system/reference/SKILL.md:16-23 ` — Three-tier state split: Workshop (pub/sub container, all agents subscribe), Main workspace (global champion + all results + cross-team knowledge), Team workspace (per-team queue/dead-ends/strategy). Posts are ephemeral discussion; workspace files are durable structured state. This distinction — ephemeral vs. durable — is the load-bearing architectural decision the rest of the protocol depends on.
 
 <a id="g20-f002"></a>
-### HEARTBEAT.md is assembled once at launch by splicing system/templates/HEARTBEAT.md + role doc ( ROLE-GPU.md / ROLE-AN…
+### HEARTBEAT.md is assembled once at launch by splicing system/templates/HEARTBEAT.md + role doc ( ROLE-GPU.md / ROLE-ANALYST.md / ROLE-MONITOR.md ) + ROLE-TEAM.md , stripping YAML frontmatter from role docs and injecting via placeholder comments
 
 `launch.py:643-678` @ c71a923
 
@@ -35,7 +35,7 @@
 `system/templates/HEARTBEAT.md:10-19 ` — Five-branch dispatch table executes before any work: Discussion, No-Team exit, Normal cycle, Resume-and-post, or Resume-waiting. Part 0 (Mode Selector) exits with an error if uncertain rather than freelancing. Part 6 (Always-Last) runs unconditionally at every exit. No branch is optional.
 
 <a id="g20-f004"></a>
-### result_latest.json is written before training starts ( status: running , pid: os.getpid() ), updated after ( status: …
+### result_latest.json is written before training starts ( status: running , pid: os.getpid() ), updated after ( status: complete ), and flipped to posted after the workshop post
 
 `system/templates/HEARTBEAT.md:100-165` @ c71a923
 
@@ -56,7 +56,7 @@
 `system/reference/AGENT-SETUP.md:31-47 ` and `launch.py:575-700 ` — Two-tier persistent memory: `AGENT.md` is overwritten every session (current identity: role, team, GPU, last outcome, session_count, last_val_bpb); `memory/*.md` is append-only accumulated knowledge (feedback, project, reference). The MEMORY.md index (<50 lines) gates which memory files are loaded at boot. `setup_agent()` materializes all identity files before the first session — nothing is lazy-created at agent runtime.
 
 <a id="g20-f007"></a>
-### Teams are organized around falsifiable hypotheses, not axis partitions. Each strategy.md frontmatter records hypothes…
+### Teams are organized around falsifiable hypotheses, not axis partitions
 
 `system/reference/PHASES.md:101-115` @ c71a923
 
@@ -77,14 +77,14 @@
 `system/templates/ROLE-GPU.md:78-98 ` — Exactly-once shared baseline uses `If-None-Match: *` on a `baseline_lock.md` file. First GPU to arrive wins; all others skip to real queue experiments. Prevents per-team baseline duplication without a lock service.
 
 <a id="g20-f010"></a>
-### Champion propagation uses temp-then-rename ( tmp.replace(dst) ) for atomic local file update, plus appending to champ…
+### Champion propagation uses temp-then-rename ( tmp.replace(dst) ) for atomic local file update, plus appending to champion/SOURCE (one line per promotion: exp_id metric agent timestamp )
 
 `system/templates/ROLE-GPU.md:916-927` @ c71a923
 
 `system/templates/ROLE-GPU.md:916-927 ` — Champion propagation uses temp-then-rename (`tmp.replace(dst)`) for atomic local file update, plus appending to `champion/SOURCE` (one line per promotion: `exp_id metric agent timestamp`). Losing concurrent KEEPs are already gated out by `If-Match` on `champion.md` PUT. `champion/SOURCE` is the promotion audit trail.
 
 <a id="g20-f011"></a>
-### Before training, verify train.py is NOT byte-identical to champion/train.py using filecmp.cmp . If identical, set dif…
+### Before training, verify train.py is NOT byte-identical to champion/train.py using filecmp.cmp
 
 `system/templates/ROLE-GPU.md:499-511` @ c71a923
 
@@ -98,7 +98,7 @@
 `system/reference/API-REFERENCE.md:141-142 ` and `system/templates/ROLE-TEAM.md:119-122 ` — Optimistic concurrency via HTTP `If-Match: {version}` on file PUT; server returns 409 on conflict. PATCH is explicitly forbidden for `queue.md` because dotted-key PATCH on nested frontmatter (`claims.agent_1`) flattens `pending:` lists and corrupts the YAML. Queue mutations use read-modify-PUT exclusively.
 
 <a id="g20-f013"></a>
-### experiments.jsonl is the single authoritative JSONL log, orchestrator-owned. Fields: exp_id , agent , team , metric ,…
+### experiments.jsonl is the single authoritative JSONL log, orchestrator-owned
 
 `system/reference/LOGGING.md:11-38` @ c71a923
 
@@ -112,7 +112,7 @@
 `system/reference/META-IMPROVEMENT.md:1-18 ` and `system/reference/META-IMPROVEMENT.md:94-99 ` and `system/reference/META-IMPROVEMENT.md:103-115 ` — Meta-improvement runs every 3 execution cycles and requires a file to change — if nothing changed, the step did not run (anti-report rule: no checklists, no declarations of normalcy). One-change-only discipline: fix the single most important gap; bundling changes makes causality opaque. Changes are logged to `logs/meta_results.tsv` with columns `cycle`, `pattern_diagnosed`, `file_changed`, `outcome` — the system's own trace of its self-improvement history, readable by future meta-improvement runs.
 
 <a id="g20-f015"></a>
-### Execution loop is while True with no built-in termination. Twelve named profile hooks ( pre_cycle_check , discussion_…
+### Execution loop is while True with no built-in termination
 
 `runbook.md:181-201` @ c71a923
 
@@ -126,21 +126,21 @@
 `runbook.md:30-64 ` — Three-state orchestrator boot: (A) template with no `WORKSPACE_ID` -> run `launch.py` then proceed; (B) existing ablation -> read `teams/roster.md` to determine phase; (C) interruption resume -> read `logs/sessions.jsonl` + `logs/experiments.jsonl`, release stale claims, re-enter loop. Discriminant is `WORKSPACE_ID` existence plus roster content, not a separate state file.
 
 <a id="g20-f017"></a>
-### Haiku is explicitly prohibited for analyst agents. Failure mode reproduced 3/3 times in a 2026-05-26 run: analysts ha…
+### Haiku is explicitly prohibited for analyst agents
 
 `runbook.md:137-143` @ c71a923
 
 `runbook.md:137-143 ` — Haiku is explicitly prohibited for analyst agents. Failure mode reproduced 3/3 times in a 2026-05-26 run: analysts hallucinate "no API available" and write local memory files claiming work is done without ever calling the workshop API. Sonnet/opus mandatory for analysts. The prohibition lives in the runbook as a markdown comment, not a programmatic gate.
 
 <a id="g20-f018"></a>
-### Fresh per-run git clone (not symlink) prevents stale state contamination. Documented prior bug: a shared symlinked re…
+### Fresh per-run git clone (not symlink) prevents stale state contamination
 
 `launch.py:438-507` @ c71a923
 
 `launch.py:438-507 ` — Fresh per-run git clone (not symlink) prevents stale state contamination. Documented prior bug: a shared symlinked `repo/` accumulated ~1800 lines of uncommitted code from previous runs, anchoring every subsequent experiment to a non-upstream baseline. The `.cache/` directory (HuggingFace, torch, uv) IS shared across runs via symlink — intentional exception for weights/pip caches while code state is isolated.
 
 <a id="g20-f019"></a>
-### Approach registry uses fcntl.LOCK_EX for atomic read-modify-write on a shared JSON file. Agents that find their appro…
+### Approach registry uses fcntl.LOCK_EX for atomic read-modify-write on a shared JSON file
 
 `system/templates/ROLE-GPU.md:146-164` @ c71a923
 
@@ -154,7 +154,7 @@
 `system/templates/ROLE-ANALYST.md:806-818 ` — Dead-end re-triage: when the empirically measured noise floor rises above a prior dead-end's recorded delta, downgrade (not delete) the entry to `NOISE-CONTAMINATED — axis remains open`. Preserves experimental history while restoring productive surface area.
 
 <a id="g20-f021"></a>
-### Noise floor σ accumulates passively from multi-seed gate runs. After n≥5 pairs a locked: true flag in knowledge/noise…
+### Noise floor σ accumulates passively from multi-seed gate runs
 
 `system/templates/ROLE-ANALYST.md:273-318` @ c71a923
 
@@ -177,7 +177,7 @@
 `system/templates/HEARTBEAT.md:190-223 ` — Per-invocation read-state pattern: read `AGENT.md` (identity/focus/notes from last session), `MEMORY.md` index (selective), `task/TASK.md` (constraints). `HEARTBEAT.md` overrides any procedural rule in memory files; factual findings survive rule updates.
 
 <a id="g20-f024"></a>
-### Post-KEEP inductive reasoning protocol (required after any champion update): answer (1) what property made the KEEP w…
+### Post-KEEP inductive reasoning protocol (required after any champion update): answer (1) what property made the KEEP work mechanistically, (2) list 3–5 untried changes sharing that property, (3) ≥1 of 2 proposals this cycle must target the same property via a different mechanism
 
 `system/templates/ROLE-ANALYST.md:481-510` @ c71a923
 
@@ -212,7 +212,7 @@
 `system/templates/HEARTBEAT.md:36-59 ` and `system/templates/HEARTBEAT.md:477-495 ` and `launch.py:890-935 ` — Self-organizing discussion rounds: any agent can post `[DISCUSSION-TRIGGER]` (scanned: posted within last 3 rotations AND fewer than 5 `[DISCUSS-DONE]` comments). ≥5 `[DISCUSS-DONE]` votes (of 9 non-monitor agents) terminates the round; agents vote `[DISCUSS-MORE]` if new signal is still surfacing. No external coordinator decides when discussion starts or stops. The alphabetically-last analyst who participated writes `teams/roster.md` as the deterministic tiebreaker.
 
 <a id="g20-f029"></a>
-### knowledge/unqueued_axes.md is a shared cross-team backlog ledger of every axis mentioned in [DISCUSSION] , [GAPS] , […
+### knowledge/unqueued_axes.md is a shared cross-team backlog ledger of every axis mentioned in [DISCUSSION] , [GAPS] , [CONSTANTS] , [RANKED] , [DYNAMICS] , [PROPOSAL] posts
 
 `system/templates/ROLE-ANALYST.md:326-355` @ c71a923
 

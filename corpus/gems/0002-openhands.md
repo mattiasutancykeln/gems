@@ -14,21 +14,21 @@
 ## Implementation decisions
 
 <a id="g2-f001"></a>
-### The agent runtime has been extracted out of this repo into three pinned PyPI packages ( openhands-sdk , openhands-age…
+### The agent runtime has been extracted out of this repo into three pinned PyPI packages ( openhands-sdk , openhands-agent-server , openhands-tools , all ==1.30.0 )
 
 `pyproject.toml:61-62` @ ae5b8a9
 
 The agent runtime has been extracted out of this repo into three pinned PyPI packages (`openhands-sdk`, `openhands-agent-server`, `openhands-tools`, all `==1.30.0`); this repo (`openhands-ai`) is now the *application server* that orchestrates conversations, sandboxes, git, and MCP rather than owning the agent loop. `pyproject.toml:61-62 `
 
 <a id="g2-f002"></a>
-### litellm and openai are pinned to *exact* versions with inline rationale: a floor would let an untested version slip i…
+### litellm and openai are pinned to *exact* versions with inline rationale: a floor would…
 
 `pyproject.toml:163-164` @ ae5b8a9
 
 `litellm` and `openai` are pinned to *exact* versions with inline rationale: a floor would let an untested version slip in, and litellm 1.84.1 requires openai 2.33.0. `pyproject.toml:163-164 `
 
 <a id="g2-f003"></a>
-### Each conversation runs against its own sandboxed agent-server; the app-server generates a per-sandbox session_api_key…
+### Each conversation runs against its own sandboxed agent-server
 
 `openhands/app_server/sandbox/docker_sandbox_service.py:414-421` @ ae5b8a9
 
@@ -44,7 +44,7 @@ poll status until RUNNING, then hit the agent-server `/alive` endpoint before re
 ## Skills, prompts, tools
 
 <a id="g2-f005"></a>
-### Skills are markdown files with YAML frontmatter ( name , type , version , agent , triggers ); triggers are keyword wo…
+### Skills are markdown files with YAML frontmatter ( name , type , version , agent , triggers )
 
 `skills/add_agent.md:1-17` @ ae5b8a9
 
@@ -65,14 +65,14 @@ any trigger starting with `/` becomes a `TaskTrigger`, otherwise a `KeywordTrigg
 it builds org/sandbox config and POSTs to the agent-server `/api/skills` endpoint, which owns all source-specific loading; failures degrade to an empty skill list rather than raising. `openhands/app_server/app_conversation/skill_loader.py:1-11 `, `:447-492 `
 
 <a id="g2-f008"></a>
-### MCP tools are hosted server-side via FastMCP('mcp', mask_error_details=True) , exposing PR/MR-creation tools per prov…
+### MCP tools are hosted server-side via FastMCP('mcp', mask_error_details=True) , exposing PR/MR-creation tools per provider ( create_pr , create_mr , create_bitbucket_pr , create_bitbucket_data_center_pr , create_azure_devops_pr )
 
 `openhands/app_server/mcp/mcp_router.py:43-75` @ ae5b8a9
 
 MCP tools are hosted server-side via `FastMCP('mcp', mask_error_details=True)`, exposing PR/MR-creation tools per provider (`create_pr`, `create_mr`, `create_bitbucket_pr`, `create_bitbucket_data_center_pr`, `create_azure_devops_pr`); Tavily search is mounted as a proxy so the API key never enters the sandbox. `openhands/app_server/mcp/mcp_router.py:43-75 `, `:147-424 `
 
 <a id="g2-f009"></a>
-### Skills are attached to the agent by merging into AgentContext.skills via immutable model_copy updates, deduped by nam…
+### Skills are attached to the agent by merging into AgentContext.skills via immutable…
 
 `openhands/app_server/app_conversation/app_conversation_service_base.py:166-211` @ ae5b8a9
 
@@ -88,7 +88,7 @@ Skills are attached to the agent by merging into `AgentContext.skills` via immut
 for each authenticated git provider, enumerate the user's login plus their orgs/groups and probe convention repos (`owner/.openhands` + `owner/.agents` on GitHub-style, `owner/openhands-config` on GitLab/Azure). Discovery is bounded (`_MAX_ORG_CANDIDATES=30`), URL resolution runs concurrently under a semaphore (`_URL_RESOLVE_CONCURRENCY=8`), and unresolved repos are dropped. `openhands/app_server/app_conversation/skill_loader.py:198-217 `, `:264-370 `
 
 <a id="g2-f011"></a>
-### Confirmation policy is derived from two orthogonal inputs (a boolean confirmation-mode flag and the analyzer string) …
+### Confirmation policy is derived from two orthogonal inputs (a boolean confirmation-mode…
 
 `openhands/app_server/app_conversation/app_conversation_service_base.py:731-742` @ ae5b8a9
 
@@ -111,28 +111,28 @@ Confirmation policy is derived from two orthogonal inputs (a boolean confirmatio
 ## Open threads / weak spots
 
 <a id="g2-f014"></a>
-### The org_configs list is sent alongside a legacy singular org_config (first entry) to stay compatible with older agent…
+### The org_configs list is sent alongside a legacy singular org_config (first entry) to stay…
 
 `openhands/app_server/app_conversation/skill_loader.py:428-439` @ ae5b8a9
 
 The `org_configs` list is sent alongside a legacy singular `org_config` (first entry) to stay compatible with older agent-server images — a dual-payload shim that needs removal once all images understand the list form. `openhands/app_server/app_conversation/skill_loader.py:428-439 `
 
 <a id="g2-f015"></a>
-### The WEB_HOST default is hardcoded to app.all-hands.dev and PR-followup links only render in SAAS mode, so self-hosted…
+### The WEB_HOST default is hardcoded to app.all-hands.dev and PR-followup links only render in SAAS mode, so self-hosted deployments silently get no conversation backlink in generated PRs
 
 `openhands/app_server/mcp/mcp_router.py:45-46` @ ae5b8a9
 
 The `WEB_HOST` default is hardcoded to `app.all-hands.dev` and PR-followup links only render in SAAS mode, so self-hosted deployments silently get no conversation backlink in generated PRs. `openhands/app_server/mcp/mcp_router.py:45-46 `, `:82-95 `
 
 <a id="g2-f016"></a>
-### Host-network mode plus max_num_sandboxes > 1 is only a runtime warning, not a guard; concurrent sandboxes will collid…
+### Host-network mode plus max_num_sandboxes > 1 is only a runtime warning, not a guard
 
 `openhands/app_server/sandbox/docker_sandbox_service.py:390-396` @ ae5b8a9
 
 Host-network mode plus `max_num_sandboxes > 1` is only a runtime warning, not a guard; concurrent sandboxes will collide on the same host ports. `openhands/app_server/sandbox/docker_sandbox_service.py:390-396 `
 
 <a id="g2-f017"></a>
-### Skill-loading failures are broadly swallowed and logged at debug/warning; a misconfigured provider silently yields fe…
+### Skill-loading failures are broadly swallowed and logged at debug/warning
 
 `openhands/app_server/app_conversation/skill_loader.py:481-492` @ ae5b8a9
 

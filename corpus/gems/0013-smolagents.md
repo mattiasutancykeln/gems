@@ -14,7 +14,7 @@
 ## Implementation decisions
 
 <a id="g13-f001"></a>
-### ToolCallingAgent uses ThreadPoolExecutor with configurable max_tool_threads for parallel tool invocation. Each thread…
+### ToolCallingAgent uses ThreadPoolExecutor with configurable max_tool_threads for parallel tool invocation
 
 `src/smolagents/agents.py:1215-1259` @ e8b988d
 
@@ -28,14 +28,14 @@
 `src/smolagents/agents.py:268-292` — `MultiStepAgent` orchestration contract: `managed_agents` list, `step_callbacks` registry keyed by `MemoryStep` class type, `planning_interval` for phased re-planning, and `final_answer_checks` validation gates. All four concerns are declared at construction time as distinct parameters, not mode flags.
 
 <a id="g13-f003"></a>
-### Managed agents are configured at parent init time with standardized input/output schemas: inputs = {task: string, add…
+### Managed agents are configured at parent init time with standardized input/output schemas: inputs = {task: string, additional_args: nullable object} , output_type: string
 
 `src/smolagents/agents.py:369-388` @ e8b988d
 
 `src/smolagents/agents.py:369-388` — Managed agents are configured at parent init time with standardized input/output schemas: `inputs = {task: string, additional_args: nullable object}`, `output_type: string`. Interface is stamped onto the child from the parent's perspective, decoupling child construction from parent calling conventions.
 
 <a id="g13-f004"></a>
-### Managed agent __call__ wraps agent.run() output with a prompt template; the provide_run_summary flag controls whether…
+### Managed agent __call__ wraps agent.run() output with a prompt template
 
 `src/smolagents/agents.py:868-890` @ e8b988d
 
@@ -49,21 +49,21 @@
 `src/smolagents/agents.py:1444-1502` — State variable substitution at tool call time: string-valued arguments matching state keys are replaced before validation and execution. Managed agents and tools share the same call path but are dispatched by membership in `managed_agents` dict.
 
 <a id="g13-f006"></a>
-### CodeAgent supports local and remote executors (Blaxel, E2B, Modal, Docker) via a factory that routes on executor_type…
+### CodeAgent supports local and remote executors (Blaxel, E2B, Modal, Docker) via a factory that routes on executor_type enum
 
 `src/smolagents/agents.py:1505-1545` @ e8b988d
 
 `src/smolagents/agents.py:1505-1545` / `src/smolagents/agents.py:1598-1618` — `CodeAgent` supports local and remote executors (Blaxel, E2B, Modal, Docker) via a factory that routes on `executor_type` enum. Remote executors explicitly forbid `managed_agents` (raises `Exception` at init); no fallback or queuing is defined.
 
 <a id="g13-f007"></a>
-### ActionStep.to_messages() reconstructs a full conversation thread from a single step's state, including model output, …
+### ActionStep.to_messages() reconstructs a full conversation thread from a single step's…
 
 `src/smolagents/memory.py:46-90` @ e8b988d
 
 `src/smolagents/memory.py:46-90` — `ActionStep.to_messages()` reconstructs a full conversation thread from a single step's state, including model output, tool calls, images, observations, and error recovery, preserving message role semantics (ASSISTANT, TOOL_CALL, TOOL_RESPONSE, USER) for context reinjection.
 
 <a id="g13-f008"></a>
-### Callback registry uses type-based dispatch; callbacks stored in _callbacks[step_cls] keyed by MemoryStep subclass. in…
+### Callback registry uses type-based dispatch
 
 `src/smolagents/memory.py:280-317` @ e8b988d
 
@@ -84,35 +84,35 @@
 `src/smolagents/models.py:1174-1183` — Retry policy: `RateLimiter` throttles before call; `Retrying` handles post-call retries with exponential backoff, jitter, and predicate-based conditions (`is_rate_limit_error` matching "429", "rate limit", "too many requests"). Both concerns are separate objects composed at `ApiModel.init`.
 
 <a id="g13-f011"></a>
-### Final answer serialization uses explicit prefix-based format ( "safe:" or "pickle:" ) to distinguish modes at deseria…
+### Final answer serialization uses explicit prefix-based format ( "safe:" or "pickle:" ) to distinguish modes at deserialization time, preventing silent downgrade attacks
 
 `src/smolagents/remote_executors.py:143-304` @ e8b988d
 
 `src/smolagents/remote_executors.py:143-304` — Final answer serialization uses explicit prefix-based format (`"safe:"` or `"pickle:"`) to distinguish modes at deserialization time, preventing silent downgrade attacks. `allow_pickle=False` raises rather than falls back.
 
 <a id="g13-f012"></a>
-### Timeout decorator uses ThreadPoolExecutor instead of signals, enabling cross-platform (Windows) and any-thread execut…
+### Timeout decorator uses ThreadPoolExecutor instead of signals, enabling cross-platform (Windows) and any-thread execution
 
 `src/smolagents/local_python_executor.py:285-320` @ e8b988d
 
 `src/smolagents/local_python_executor.py:285-320` — Timeout decorator uses `ThreadPoolExecutor` instead of signals, enabling cross-platform (Windows) and any-thread execution. Timed-out threads are not forcibly killed; caller receives the error but thread continues in background.
 
 <a id="g13-f013"></a>
-### fix_final_answer_code surgically rewrites variable assignments to final_answer (renaming to final_answer_variable ) o…
+### fix_final_answer_code surgically rewrites variable assignments to final_answer (renaming…
 
 `src/smolagents/local_python_executor.py:332-357` @ e8b988d
 
 `src/smolagents/local_python_executor.py:332-357` — `fix_final_answer_code` surgically rewrites variable assignments to `final_answer` (renaming to `final_answer_variable`) only when `final_answer()` is called in the same code block, preserving LLM variable memory across subsequent steps.
 
 <a id="g13-f014"></a>
-### Safe module import filtering recursively copies imported module attributes while blocking import objects themselves; …
+### Safe module import filtering recursively copies imported module attributes while blocking import objects themselves
 
 `src/smolagents/local_python_executor.py:1270-1306` @ e8b988d
 
 `src/smolagents/local_python_executor.py:1270-1306` — Safe module import filtering recursively copies imported module attributes while blocking import objects themselves; circular references are detected and returned as-is to prevent infinite loops.
 
 <a id="g13-f015"></a>
-### get_safe_serializer_code() and get_deserializer_code() generate standalone serializer functions as strings for inject…
+### get_safe_serializer_code() and get_deserializer_code() generate standalone serializer…
 
 `src/smolagents/serialization.py:376-449` @ e8b988d
 
@@ -126,7 +126,7 @@
 `src/smolagents/tool_validation.py:157-263` — Tool validation enforces class-level immutability: class attributes must be literals/dicts, `init` parameters must have defaults, all methods self-contained referencing only declared names. Prevents tool state from hiding in init args, ensuring reproducibility across orchestrator boundaries.
 
 <a id="g13-f017"></a>
-### Stream delta agglomeration collects partial tool-call state across index keys, concatenating arguments incrementally …
+### Stream delta agglomeration collects partial tool-call state across index keys,…
 
 `src/smolagents/models.py:220-279` @ e8b988d
 
@@ -149,7 +149,7 @@
 `src/smolagents/prompts/code_agent.yaml:120-144` — Initial plan prompt performs a 3-phase fact survey: facts given -> facts to lookup (with location hints) -> facts to derive (logical reasoning). Prevents the agent from solving before gathering requirements.
 
 <a id="g13-f020"></a>
-### Update plan prompt annotates remaining_steps (L195) to constrain re-planning. However, no built-in mechanism enforces…
+### Update plan prompt annotates remaining_steps (L195) to constrain re-planning
 
 `src/smolagents/prompts/code_agent.yaml:169-197` @ e8b988d
 
@@ -163,7 +163,7 @@
 `src/smolagents/prompts/structured_code_agent.yaml:4-27` — Structured output mode wraps thought/code in JSON: `{"thought": "...", "code": "..."}`. Enables deterministic parsing when code block tags embed in JSON strings.
 
 <a id="g13-f022"></a>
-### System prompt uses explicit final_answer tool as completion gate; examples show observation-driven next step selectio…
+### System prompt uses explicit final_answer tool as completion gate
 
 `src/smolagents/prompts/toolcalling_agent.yaml:1-25` @ e8b988d
 
@@ -177,7 +177,7 @@
 `src/smolagents/models.py:43-67` — `CODEAGENT_RESPONSE_FORMAT`: JSON Schema strict mode requiring `thought` + `code` fields, used by providers that support structured generation (Cerebras, Fireworks). Not universally applicable.
 
 <a id="g13-f024"></a>
-### Tool JSON schema generation extracts tool.inputs properties, handles anyOf unions (nullable alternatives), populates …
+### Tool JSON schema generation extracts tool.inputs properties, handles anyOf unions (nullable alternatives), populates required from non-nullable inputs
 
 `src/smolagents/models.py:288-329` @ e8b988d
 
@@ -191,56 +191,56 @@
 `src/smolagents/tools.py:289-290` — LLM-facing tool contract: `name: description\n Takes inputs: {inputs}\n Returns an output of type: {output_type}`. Minimal; no execution details exposed.
 
 <a id="g13-f026"></a>
-### Tool code prompt embeds docstring with args + returns documentation; if output_schema exists, JSON schema is included…
+### Tool code prompt embeds docstring with args + returns documentation
 
 `src/smolagents/tools.py:258-287` @ e8b988d
 
 `src/smolagents/tools.py:258-287` — Tool code prompt embeds docstring with args + returns documentation; if `output_schema` exists, JSON schema is included with note to use direct field access (L269).
 
 <a id="g13-f027"></a>
-### PythonInterpreterTool injects authorized imports list into the tool description at init time, making runtime constrai…
+### PythonInterpreterTool injects authorized imports list into the tool description at init…
 
 `src/smolagents/default_tools.py:50-80` @ e8b988d
 
 `src/smolagents/default_tools.py:50-80` — `PythonInterpreterTool` injects authorized imports list into the tool description at init time, making runtime constraints visible to the LLM at call time rather than using static defaults.
 
 <a id="g13-f028"></a>
-### DuckDuckGoSearchTool and ApiWebSearchTool implement client-side rate limiting with configurable sleep between request…
+### DuckDuckGoSearchTool and ApiWebSearchTool implement client-side rate limiting with…
 
 `src/smolagents/default_tools.py:140-160` @ e8b988d
 
 `src/smolagents/default_tools.py:140-160` — `DuckDuckGoSearchTool` and `ApiWebSearchTool` implement client-side rate limiting with configurable sleep between requests, enabling backoff without server cooperation.
 
 <a id="g13-f029"></a>
-### WebSearchTool 's inline HTML parser validates completeness with set intersection before appending results, guarding a…
+### WebSearchTool 's inline HTML parser validates completeness with set intersection before…
 
 `src/smolagents/default_tools.py:374-431` @ e8b988d
 
 `src/smolagents/default_tools.py:374-431` — `WebSearchTool`'s inline HTML parser validates completeness with set intersection before appending results, guarding against partial captures.
 
 <a id="g13-f030"></a>
-### PlanningStep embeds a role-change message ("Now proceed and carry out this plan.") after plan output to prevent model…
+### PlanningStep embeds a role-change message ("Now proceed and carry out this plan.") after…
 
 `src/smolagents/memory.py:153-183` @ e8b988d
 
 `src/smolagents/memory.py:153-183` — `PlanningStep` embeds a role-change message ("Now proceed and carry out this plan.") after plan output to prevent models from continuing the plan narrative rather than executing it.
 
 <a id="g13-f031"></a>
-### Browser agent system prompt defines rich interaction primitives ( go_to , click , scroll , search_item_ctrl_f , close…
+### Browser agent system prompt defines rich interaction primitives ( go_to , click , scroll , search_item_ctrl_f , close_popups )
 
 `src/smolagents/vision_web_browser.py:160-214` @ e8b988d
 
 `src/smolagents/vision_web_browser.py:160-214` — Browser agent system prompt defines rich interaction primitives (`go_to`, `click`, `scroll`, `search_item_ctrl_f`, `close_popups`); explicitly warns against code-based element queries and mandates visual inspection of screenshots.
 
 <a id="g13-f032"></a>
-### get_json_schema() generates tool descriptions by parsing Google-format docstrings and Python type hints, producing JS…
+### get_json_schema() generates tool descriptions by parsing Google-format docstrings and Python type hints, producing JSON schemas with name , description , parameters
 
 `src/smolagents/_function_type_hints_utils.py:97-232` @ e8b988d
 
 `src/smolagents/_function_type_hints_utils.py:97-232` — `get_json_schema()` generates tool descriptions by parsing Google-format docstrings and Python type hints, producing JSON schemas with `name`, `description`, `parameters`. Supports enum extraction via `(choices: [...])` blocks; handles union types, arrays, and tuples with `prefixItems`.
 
 <a id="g13-f033"></a>
-### MCPClient accepts either stdio parameters or dicts with "transport" key (streamable-http or sse). Issues FutureWarnin…
+### MCPClient accepts either stdio parameters or dicts with "transport" key (streamable-http or sse)
 
 `src/smolagents/mcp_client.py:85-122` @ e8b988d
 
@@ -363,7 +363,7 @@
 ## Open threads / weak spots
 
 <a id="g13-f050"></a>
-### Remote code execution and managed agents are mutually exclusive: raises Exception if both present. No fallback, queui…
+### Remote code execution and managed agents are mutually exclusive: raises Exception if both present
 
 `src/smolagents/agents.py:1608-1609` @ e8b988d
 
@@ -377,84 +377,84 @@
 `src/smolagents/local_python_executor.py:340-344` — HACK in `fix_final_answer_code`: if `final_answer()` is not called in the code block, the function skips rewriting to avoid breaking LLM memory, but leaves `"final_answer = ..."` assignments unfixed. Creates inconsistency if the LLM later calls `final_answer()`.
 
 <a id="g13-f052"></a>
-### provide_run_summary flag appends raw memory messages without pagination or size guard. For long traces, output may ex…
+### provide_run_summary flag appends raw memory messages without pagination or size guard
 
 `src/smolagents/agents.py:867-890` @ e8b988d
 
 `src/smolagents/agents.py:867-890` — `provide_run_summary` flag appends raw memory messages without pagination or size guard. For long traces, output may exceed context window with no truncation warning. (Also `src/smolagents/agents.py:976-979` — `step_callbacks` and `final_answer_checks` are not serialized in `to_dict()`; silently dropped on `agent.save()` round-trip.)
 
 <a id="g13-f053"></a>
-### step_callbacks and final_answer_checks are explicitly not serialized in to_dict() ; agent.save() silently drops these…
+### step_callbacks and final_answer_checks are explicitly not serialized in to_dict()
 
 `src/smolagents/agents.py:976-979` @ e8b988d
 
 `src/smolagents/agents.py:976-979` — `step_callbacks` and `final_answer_checks` are explicitly not serialized in `to_dict()`; `agent.save()` silently drops these, making serialized agents non-equivalent to in-memory ones.
 
 <a id="g13-f054"></a>
-### Tool validation requires __init__ parameters to have defaults but does not enforce that class attributes are initiali…
+### Tool validation requires __init__ parameters to have defaults but does not enforce that class attributes are initialized by those defaults
 
 `src/smolagents/tool_validation.py:160-161` @ e8b988d
 
 `src/smolagents/tool_validation.py:160-161` — Tool validation requires `init` parameters to have defaults but does not enforce that class attributes are initialized by those defaults; class attribute may be declared but never actually set, creating gotchas for tool reuse across sessions.
 
 <a id="g13-f055"></a>
-### _create_kernel_http logs error_details (including request body) without truncation on non-201 status. Large tool defi…
+### _create_kernel_http logs error_details (including request body) without truncation on non-201 status
 
 `src/smolagents/remote_executors.py:532-548` @ e8b988d
 
 `src/smolagents/remote_executors.py:532-548` — `_create_kernel_http` logs `error_details` (including request body) without truncation on non-201 status. Large tool definitions in request bodies could flood logs.
 
 <a id="g13-f056"></a>
-### Safety check prevents assignment to names in static_tools but custom_tools can be overwritten silently; no protection…
+### Safety check prevents assignment to names in static_tools but custom_tools can be overwritten silently
 
 `src/smolagents/local_python_executor.py:802-804` @ e8b988d
 
 `src/smolagents/local_python_executor.py:802-804` — Safety check prevents assignment to names in `static_tools` but `custom_tools` can be overwritten silently; no protection if a tool name collides with a control flow variable.
 
 <a id="g13-f057"></a>
-### FutureWarning for structured_output default change fires only once per process at MCPClient.__init__ ; users who don'…
+### FutureWarning for structured_output default change fires only once per process at MCPClient.__init__
 
 `src/smolagents/mcp_client.py:92-101` @ e8b988d
 
 `src/smolagents/mcp_client.py:92-101` — `FutureWarning` for `structured_output` default change fires only once per process at `MCPClient.init`; users who don't see the first instantiation output may miss the version dependency for v1.25.
 
 <a id="g13-f058"></a>
-### return_full_code() concatenates all code actions with "\n\n" separator without verifying they form valid Python or de…
+### return_full_code() concatenates all code actions with "\n\n" separator without verifying they form valid Python or detecting duplicate variable definitions across steps
 
 `src/smolagents/memory.py:273-277` @ e8b988d
 
 `src/smolagents/memory.py:273-277` — `return_full_code()` concatenates all code actions with `"\n\n"` separator without verifying they form valid Python or detecting duplicate variable definitions across steps. May produce syntactically incorrect combined scripts.
 
 <a id="g13-f059"></a>
-### Gradio compatibility check uses gr.__version__.startswith("5") to toggle type="messages" kwarg. Brittle string-based …
+### Gradio compatibility check uses gr.__version__.startswith("5") to toggle type="messages" kwarg
 
 `src/smolagents/gradio_ui.py:435-450` @ e8b988d
 
 `src/smolagents/gradio_ui.py:435-450` — Gradio compatibility check uses `gr.version.startswith("5")` to toggle `type="messages"` kwarg. Brittle string-based version detection with no explicit version range or deprecation warning for breaking changes between Gradio 5 and 6.
 
 <a id="g13-f060"></a>
-### InferenceClientModel structured outputs silently fail or are rejected for providers other than Cerebras/Fireworks; no…
+### InferenceClientModel structured outputs silently fail or are rejected for providers other than Cerebras/Fireworks
 
 `src/smolagents/models.py:1561-1565` @ e8b988d
 
 `src/smolagents/models.py:1561-1565` — `InferenceClientModel` structured outputs silently fail or are rejected for providers other than Cerebras/Fireworks; no graceful fallback.
 
 <a id="g13-f061"></a>
-### Deserialize logic duplicates JSON-to-Python conversion from SafeSerializer but lacks access to the full serializer mo…
+### Deserialize logic duplicates JSON-to-Python conversion from SafeSerializer but lacks access to the full serializer module at remote sites
 
 `src/smolagents/remote_executors.py:306-332` @ e8b988d
 
 `src/smolagents/remote_executors.py:306-332` — Deserialize logic duplicates JSON-to-Python conversion from `SafeSerializer` but lacks access to the full serializer module at remote sites; couples format to serializer API.
 
 <a id="g13-f062"></a>
-### check_safer_result validates evaluation results don't leak dangerous modules/functions, but shows the analogous assig…
+### check_safer_result validates evaluation results don't leak dangerous modules/functions,…
 
 `src/smolagents/local_python_executor.py:156-183` @ e8b988d
 
 `src/smolagents/local_python_executor.py:156-183` — `check_safer_result` validates evaluation results don't leak dangerous modules/functions, but `src/smolagents/local_python_executor.py:802-804` shows the analogous assignment guard is incomplete for `custom_tools`.
 
 <a id="g13-f063"></a>
-### Dataclass deserialization returns a dict with __dataclass__ and __module__ keys instead of reconstructing the class; …
+### Dataclass deserialization returns a dict with __dataclass__ and __module__ keys instead of reconstructing the class
 
 `src/smolagents/serialization.py:239-245` @ e8b988d
 

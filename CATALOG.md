@@ -35,37 +35,42 @@ Patterns with multiple independent implementations across gems:
 | [#17](https://github.com/mattiasutancykeln/gems/issues/17) | [archestra](gems/0017-archestra.md) | - | - | 18 | none (forbidden) | - |
 | [#18](https://github.com/mattiasutancykeln/gems/issues/18) | [Arbor](gems/0018-arbor.md) | repo | agent, research | 73 | Apache-2.0 (permissive) | - |
 | [#19](https://github.com/mattiasutancykeln/gems/issues/19) | [AutoResearchClaw](gems/0019-autoresearchclaw.md) | repo | agent, research | 86 | MIT (permissive) | - |
-| [#22](https://github.com/mattiasutancykeln/gems/issues/22) | [data-to-paper](gems/0022-data-to-paper.md) | repo | infra, research | 0 | MIT (permissive) | - |
-| [#23](https://github.com/mattiasutancykeln/gems/issues/23) | [restate](gems/0023-restate.md) | repo | infra | 0 | none (forbidden) | - |
-| [#24](https://github.com/mattiasutancykeln/gems/issues/24) | [dbos-transact-py](gems/0024-dbos-transact-py.md) | repo | infra | 0 | MIT (permissive) | - |
-| [#25](https://github.com/mattiasutancykeln/gems/issues/25) | [in-toto](gems/0025-in-toto.md) | repo | infra | 0 | none (forbidden) | - |
-| [#26](https://github.com/mattiasutancykeln/gems/issues/26) | [OpenLineage](gems/0026-openlineage.md) | repo | infra | 0 | Apache-2.0 (permissive) | - |
-| [#27](https://github.com/mattiasutancykeln/gems/issues/27) | [datalad](gems/0027-datalad.md) | repo | infra | 0 | none (forbidden) | - |
-| [#28](https://github.com/mattiasutancykeln/gems/issues/28) | [dolt](gems/0028-dolt.md) | repo | infra | 0 | Apache-2.0 (permissive) | - |
-| [#29](https://github.com/mattiasutancykeln/gems/issues/29) | [kitops](gems/0029-kitops.md) | repo | infra | 0 | Apache-2.0 (permissive) | - |
-| [#30](https://github.com/mattiasutancykeln/gems/issues/30) | [microsandbox](gems/0030-microsandbox.md) | repo | infra | 0 | Apache-2.0 (permissive) | - |
-| [#31](https://github.com/mattiasutancykeln/gems/issues/31) | [E2B](gems/0031-e2b.md) | repo | infra | 0 | Apache-2.0 (permissive) | - |
-| [#32](https://github.com/mattiasutancykeln/gems/issues/32) | [letta](gems/0032-letta.md) | repo | agent | 0 | Apache-2.0 (permissive) | - |
-| [#33](https://github.com/mattiasutancykeln/gems/issues/33) | [SWE-agent](gems/0033-swe-agent.md) | repo | agent | 0 | MIT (permissive) | - |
-| [#34](https://github.com/mattiasutancykeln/gems/issues/34) | [pydantic-ai](gems/0034-pydantic-ai.md) | repo | agent | 0 | MIT (permissive) | - |
-| [#35](https://github.com/mattiasutancykeln/gems/issues/35) | [goose](gems/0035-goose.md) | repo | agent | 0 | Apache-2.0 (permissive) | - |
-| [#36](https://github.com/mattiasutancykeln/gems/issues/36) | [Shannon](gems/0036-shannon.md) | repo | agent, infra | 0 | MIT (permissive) | - |
-| [#37](https://github.com/mattiasutancykeln/gems/issues/37) | [dspy](gems/0037-dspy.md) | repo | agent | 0 | MIT (permissive) | - |
-| [#38](https://github.com/mattiasutancykeln/gems/issues/38) | [composio](gems/0038-composio.md) | repo | agent | 0 | MIT (permissive) | - |
-| [#39](https://github.com/mattiasutancykeln/gems/issues/39) | [humanlayer](gems/0039-humanlayer.md) | repo | agent | 0 | none (forbidden) | - |
-| [#40](https://github.com/mattiasutancykeln/gems/issues/40) | [inspect_ai](gems/0040-inspect-ai.md) | repo | eval | 0 | MIT (permissive) | - |
-| [#41](https://github.com/mattiasutancykeln/gems/issues/41) | [impossiblebench](gems/0041-impossiblebench.md) | repo | eval | 0 | MIT (permissive) | - |
-| [#42](https://github.com/mattiasutancykeln/gems/issues/42) | [tau-bench](gems/0042-tau-bench.md) | repo | eval | 0 | MIT (permissive) | - |
-| [#43](https://github.com/mattiasutancykeln/gems/issues/43) | [vivaria](gems/0043-vivaria.md) | repo | eval, infra | 0 | MIT (permissive) | - |
-| [#44](https://github.com/mattiasutancykeln/gems/issues/44) | [TheAgentCompany](gems/0044-theagentcompany.md) | repo | eval | 0 | MIT (permissive) | - |
-| [#45](https://github.com/mattiasutancykeln/gems/issues/45) | [deep_research_bench](gems/0045-deep-research-bench.md) | repo | eval, research | 0 | Apache-2.0 (permissive) | - |
-| [#46](https://github.com/mattiasutancykeln/gems/issues/46) | [Mind2Web-2](gems/0046-mind2web-2.md) | repo | eval | 0 | MIT (permissive) | - |
-| [#47](https://github.com/mattiasutancykeln/gems/issues/47) | [verifiers](gems/0047-verifiers.md) | repo | eval | 0 | MIT (permissive) | - |
-| [#48](https://github.com/mattiasutancykeln/gems/issues/48) | [openevolve](gems/0048-openevolve.md) | repo | agent, research | 0 | Apache-2.0 (permissive) | - |
-| [#49](https://github.com/mattiasutancykeln/gems/issues/49) | [Co-Scientist](gems/0049-co-scientist.md) | repo | agent, research | 0 | Apache-2.0 (permissive) | - |
-| [#50](https://github.com/mattiasutancykeln/gems/issues/50) | [AI-Researcher](gems/0050-ai-researcher.md) | repo | agent, research | 0 | none (forbidden) | - |
-| [#51](https://github.com/mattiasutancykeln/gems/issues/51) | [ResearchGym](gems/0051-researchgym.md) | repo | eval, research | 0 | none (forbidden) | - |
-| [#52](https://github.com/mattiasutancykeln/gems/issues/52) | [CellVoyager](gems/0052-cellvoyager.md) | repo | research | 0 | MIT (permissive) | - |
-| [#53](https://github.com/mattiasutancykeln/gems/issues/53) | [BioDiscoveryAgent](gems/0053-biodiscoveryagent.md) | repo | agent, research | 0 | MIT (permissive) | - |
-| [#54](https://github.com/mattiasutancykeln/gems/issues/54) | [research-town](gems/0054-research-town.md) | repo | agent, research | 0 | Apache-2.0 (permissive) | - |
-| [#55](https://github.com/mattiasutancykeln/gems/issues/55) | [k-dense-byok](gems/0055-k-dense-byok.md) | repo | agent, research | 0 | MIT (permissive) | - |
+
+## Queued for extraction (34)
+
+Captured gems not yet mined into findings:
+
+- [#22](https://github.com/mattiasutancykeln/gems/issues/22) data-to-paper - Technion-Kishony-lab/data-to-paper (raw)
+- [#23](https://github.com/mattiasutancykeln/gems/issues/23) restate - restatedev/restate (raw)
+- [#24](https://github.com/mattiasutancykeln/gems/issues/24) dbos-transact-py - dbos-inc/dbos-transact-py (raw)
+- [#25](https://github.com/mattiasutancykeln/gems/issues/25) in-toto - in-toto/in-toto (raw)
+- [#26](https://github.com/mattiasutancykeln/gems/issues/26) OpenLineage - OpenLineage/OpenLineage (raw)
+- [#27](https://github.com/mattiasutancykeln/gems/issues/27) datalad - datalad/datalad (raw)
+- [#28](https://github.com/mattiasutancykeln/gems/issues/28) dolt - dolthub/dolt (raw)
+- [#29](https://github.com/mattiasutancykeln/gems/issues/29) kitops - kitops-ml/kitops (raw)
+- [#30](https://github.com/mattiasutancykeln/gems/issues/30) microsandbox - microsandbox/microsandbox (raw)
+- [#31](https://github.com/mattiasutancykeln/gems/issues/31) E2B - e2b-dev/E2B (raw)
+- [#32](https://github.com/mattiasutancykeln/gems/issues/32) letta - letta-ai/letta (raw)
+- [#33](https://github.com/mattiasutancykeln/gems/issues/33) SWE-agent - SWE-agent/SWE-agent (raw)
+- [#34](https://github.com/mattiasutancykeln/gems/issues/34) pydantic-ai - pydantic/pydantic-ai (raw)
+- [#35](https://github.com/mattiasutancykeln/gems/issues/35) goose - block/goose (raw)
+- [#36](https://github.com/mattiasutancykeln/gems/issues/36) Shannon - Kocoro-lab/Shannon (raw)
+- [#37](https://github.com/mattiasutancykeln/gems/issues/37) dspy - stanfordnlp/dspy (raw)
+- [#38](https://github.com/mattiasutancykeln/gems/issues/38) composio - ComposioHQ/composio (raw)
+- [#39](https://github.com/mattiasutancykeln/gems/issues/39) humanlayer - humanlayer/humanlayer (raw)
+- [#40](https://github.com/mattiasutancykeln/gems/issues/40) inspect_ai - UKGovernmentBEIS/inspect_ai (raw)
+- [#41](https://github.com/mattiasutancykeln/gems/issues/41) impossiblebench - safety-research/impossiblebench (raw)
+- [#42](https://github.com/mattiasutancykeln/gems/issues/42) tau-bench - sierra-research/tau-bench (raw)
+- [#43](https://github.com/mattiasutancykeln/gems/issues/43) vivaria - METR/vivaria (raw)
+- [#44](https://github.com/mattiasutancykeln/gems/issues/44) TheAgentCompany - TheAgentCompany/TheAgentCompany (raw)
+- [#45](https://github.com/mattiasutancykeln/gems/issues/45) deep_research_bench - Ayanami0730/deep_research_bench (raw)
+- [#46](https://github.com/mattiasutancykeln/gems/issues/46) Mind2Web-2 - OSU-NLP-Group/Mind2Web-2 (raw)
+- [#47](https://github.com/mattiasutancykeln/gems/issues/47) verifiers - PrimeIntellect-ai/verifiers (raw)
+- [#48](https://github.com/mattiasutancykeln/gems/issues/48) openevolve - algorithmicsuperintelligence/openevolve (raw)
+- [#49](https://github.com/mattiasutancykeln/gems/issues/49) Co-Scientist - Kaimen-Inc/Co-Scientist (raw)
+- [#50](https://github.com/mattiasutancykeln/gems/issues/50) AI-Researcher - HKUDS/AI-Researcher (raw)
+- [#51](https://github.com/mattiasutancykeln/gems/issues/51) ResearchGym - Anikethh/ResearchGym (raw)
+- [#52](https://github.com/mattiasutancykeln/gems/issues/52) CellVoyager - zou-group/CellVoyager (raw)
+- [#53](https://github.com/mattiasutancykeln/gems/issues/53) BioDiscoveryAgent - snap-stanford/BioDiscoveryAgent (raw)
+- [#54](https://github.com/mattiasutancykeln/gems/issues/54) research-town - ulab-uiuc/research-town (raw)
+- [#55](https://github.com/mattiasutancykeln/gems/issues/55) k-dense-byok - K-Dense-AI/k-dense-byok (raw)

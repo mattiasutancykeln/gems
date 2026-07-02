@@ -226,3 +226,13 @@ test("oversizedPages: default cap is 450_000 bytes, custom cap is honored", () =
   assert.deepEqual(oversizedPages(pages).map((f) => f.path), ["a.md"]);
   assert.deepEqual(oversizedPages(pages, 400_000).map((f) => f.path).sort(), ["a.md", "b.md"]);
 });
+
+test("renderCatalog splits queued (0-finding) gems into a separate section, not the main table", () => {
+  const raw = { number: 99, title: "queued-thing", url: "u", repo: "o/queued", sha: null,
+    source: "repo", topics: [], verdict: null, quality: "normal", stage: "raw",
+    license: "none", codeReuse: "forbidden", findingCount: 0 };
+  const md = renderCatalog([gem, raw], all);
+  assert.match(md, /## Queued for extraction \(1\)/);
+  assert.match(md, /- \[#99\]\([^)]*issues\/99\) queued-thing - o\/queued \(raw\)/);
+  assert.doesNotMatch(md, /\|\s*\[#99\]/);   // queued gem is NOT a main-table row
+});

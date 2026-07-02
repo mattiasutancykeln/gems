@@ -21,7 +21,7 @@
 a privileged "main" agent that never sees raw tool output and a "quarantine" agent that sees the untrusted result but can only emit an option index. The main agent drives a bounded multiple-choice Q&A loop, then writes a summary from the transcript alone. `platform/backend/src/agents/subagents/dual-llm.ts:80-158 `
 
 <a id="g17-f002"></a>
-### The quarantine agent's answer is coerced to a valid option index, defaulting to the last (catch-all) option on any ou…
+### The quarantine agent's answer is coerced to a valid option index, defaulting to the last…
 
 `platform/backend/src/agents/subagents/dual-llm.ts:160-185` @ 0773240
 
@@ -42,7 +42,7 @@ Both dual-LLM agents run at `temperature: 0` and the quarantine side uses `gener
 under the "restrictive" global policy, tool output with no matching trusted-data policy is treated as untrusted (allowlist model); "permissive" is an explicit YOLO opt-in that trusts everything and skips evaluation. `platform/backend/src/models/trusted-data-policy.ts:338-423 `
 
 <a id="g17-f005"></a>
-### Trust is a per-tool-result verdict computed by re-scanning the whole message history's tool calls before each new too…
+### Trust is a per-tool-result verdict computed by re-scanning the whole message history's tool calls before each new tool call
 
 `platform/backend/src/guardrails/trusted-data.ts:86-275` @ 0773240
 
@@ -51,35 +51,35 @@ Trust is a per-tool-result verdict computed by re-scanning the whole message his
 ## Skills, prompts, tools
 
 <a id="g17-f006"></a>
-### The privileged-agent system prompt hard-codes the information boundary ("You NEVER see raw tool output"), the exact Q…
+### The privileged-agent system prompt hard-codes the information boundary ("You NEVER see…
 
 `platform/shared/built-in-agents.ts:117-151` @ 0773240
 
 The privileged-agent system prompt hard-codes the information boundary ("You NEVER see raw tool output"), the exact `QUESTION:/OPTIONS:` output grammar with a numbered option list, and a summary mode barred from inventing details or mentioning the protocol. `platform/shared/built-in-agents.ts:117-151 `
 
 <a id="g17-f007"></a>
-### The quarantine system prompt forbids quoting/summarizing raw data outside the chosen index, tells it to ignore embedd…
+### The quarantine system prompt forbids quoting/summarizing raw data outside the chosen…
 
 `platform/shared/built-in-agents.ts:153-171` @ 0773240
 
 The quarantine system prompt forbids quoting/summarizing raw data outside the chosen index, tells it to ignore embedded instructions, and constrains output to `{"answer": <integer>}` — the anti-prompt-injection contract lives in the prompt, enforced by the schema. `platform/shared/built-in-agents.ts:153-171 `
 
 <a id="g17-f008"></a>
-### The prompt authoring policy that configures per-tool guardrails states the two goals explicitly: prevent internal->ext…
+### The prompt authoring policy that configures per-tool guardrails states the two goals…
 
 `platform/shared/built-in-agents.ts:33-52` @ 0773240
 
 The prompt authoring policy that configures per-tool guardrails states the two goals explicitly: prevent internal->external data exfiltration, and route open-internet/third-party results through the Dual-LLM so injected instructions never reach the privileged model verbatim. `platform/shared/built-in-agents.ts:33-52 `
 
 <a id="g17-f009"></a>
-### Tool-result text is stripped to a plain content summary before the model sees it ( toModelOutput ), dropping structur…
+### Tool-result text is stripped to a plain content summary before the model sees it (…
 
 `platform/backend/src/clients/chat-tool-builder.ts:291-294` @ 0773240
 
 Tool-result text is stripped to a plain `content` summary before the model sees it (`toModelOutput`), dropping `structuredContent`, `rawContent`, and `_meta` so the LLM only receives the sanitized channel (cited "SEP-1865"). `platform/backend/src/clients/chat-tool-builder.ts:291-294 `
 
 <a id="g17-f010"></a>
-### Recovery messages steer a model that calls a hallucinated/unassigned tool back through the intended search_tools -> r…
+### Recovery messages steer a model that calls a hallucinated/unassigned tool back through…
 
 `platform/backend/src/archestra-mcp-server/tool-recovery-messages.ts:7-33` @ 0773240
 
@@ -102,21 +102,21 @@ a `block_when_context_is_untrusted` action allows a tool when context is trusted
 the parent's `contextIsTrusted` is passed down as `parentContextIsTrusted`, but the child re-evaluates its own tool results independently rather than inheriting a blanket trust verdict. `platform/backend/src/archestra-mcp-server/delegation.ts:162-181 `
 
 <a id="g17-f013"></a>
-### Built-in tools bypass policy, but a named allowlist of injection-prone built-ins (e.g. query_knowledge_sources ) is d…
+### Built-in tools bypass policy, but a named allowlist of injection-prone built-ins (e.g
 
 `platform/backend/src/archestra-mcp-server/branding.ts:83-97` @ 0773240
 
-Built-in tools bypass policy, but a named allowlist of injection-prone built-ins (e.g. `query_knowledge_sources`) is deliberately excluded from bypass and evaluated like external output because knowledge-base content can carry prompt injection. `platform/backend/src/archestra-mcp-server/branding.ts:83-97 `
+`query_knowledge_sources`) is deliberately excluded from bypass and evaluated like external output because knowledge-base content can carry prompt injection. `platform/backend/src/archestra-mcp-server/branding.ts:83-97 `
 
 <a id="g17-f014"></a>
-### Sandbox egress is a pure, unit-testable policy builder that emits provider-specific K8s NetworkPolicy objects (Cilium…
+### Sandbox egress is a pure, unit-testable policy builder that emits provider-specific K8s NetworkPolicy objects (Cilium/GKE-FQDN/AWS/vanilla) from an EffectiveNetworkPolicy
 
 `platform/backend/src/k8s/dagger-environment-runtime/network-policy.ts:63-134` @ 0773240
 
 Sandbox egress is a pure, unit-testable policy builder that emits provider-specific K8s NetworkPolicy objects (Cilium/GKE-FQDN/AWS/vanilla) from an `EffectiveNetworkPolicy`; `unrestricted` is an explicit allow-all with no metadata/RFC1918 floor, making the confinement decision auditable in isolation. `platform/backend/src/k8s/dagger-environment-runtime/network-policy.ts:63-134 `
 
 <a id="g17-f015"></a>
-### Internal-eval bench boots a fresh migrated backend + isolated DB per environment, seeds a pinned skill+MCP+agent surf…
+### Internal-eval bench boots a fresh migrated backend + isolated DB per environment, seeds a…
 
 `archestra-bench/README.md:1-40` @ 0773240
 
@@ -125,21 +125,21 @@ Internal-eval bench boots a fresh migrated backend + isolated DB per environment
 ## Open threads / weak spots
 
 <a id="g17-f016"></a>
-### The dual-LLM loop is a fixed 5-round budget ( maxRounds: 5 ) with a temperature-0 free-text QUESTION:/OPTIONS: parse;…
+### The dual-LLM loop is a fixed 5-round budget ( maxRounds: 5 ) with a temperature-0 free-text QUESTION:/OPTIONS: parse
 
 `platform/backend/src/agents/subagents/dual-llm.ts:98-125` @ 0773240
 
 The dual-LLM loop is a fixed 5-round budget (`maxRounds: 5`) with a temperature-0 free-text `QUESTION:/OPTIONS:` parse; a malformed question format silently breaks the loop early, so summary quality degrades quietly rather than erroring. `platform/backend/src/agents/subagents/dual-llm.ts:98-125 ` and `platform/backend/src/database/seed.ts:108-111 `
 
 <a id="g17-f017"></a>
-### The quarantine channel is one integer per round, but the option strings are authored by the privileged main agent fro…
+### The quarantine channel is one integer per round, but the option strings are authored by the privileged main agent from the user request alone
 
 `platform/backend/src/agents/subagents/dual-llm.ts:127-142` @ 0773240
 
 The quarantine channel is one integer per round, but the option strings are authored by the privileged main agent from the user request alone; an adversary controlling tool output can still influence which pre-authored option best matches, so leakage bandwidth per round is bounded but nonzero (log2(#options) bits). `platform/backend/src/agents/subagents/dual-llm.ts:127-142 `
 
 <a id="g17-f018"></a>
-### evaluate / evaluateBulk fall back to "untrusted" when a tool has no policy row, but the whole guardrail is skipped en…
+### evaluate / evaluateBulk fall back to "untrusted" when a tool has no policy row, but the…
 
 `platform/backend/src/models/trusted-data-policy.ts:412-423` @ 0773240
 

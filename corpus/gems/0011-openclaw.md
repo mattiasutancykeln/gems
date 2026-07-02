@@ -14,21 +14,21 @@
 ## Implementation decisions
 
 <a id="g11-f001"></a>
-### Spawn delivery routing checks thread-binding readiness ( deliverInitialChildRunDirectly ) before calling agent method…
+### Spawn delivery routing checks thread-binding readiness ( deliverInitialChildRunDirectly ) before calling agent method
 
 `src/agents/subagent-spawn.ts:1546-1590` @ c84e521
 
 `src/agents/subagent-spawn.ts:1546-1590` — Spawn delivery routing checks thread-binding readiness (`deliverInitialChildRunDirectly`) before calling `agent` method. Thread-bound children receive their initial run directly to the channel/thread; otherwise the parent polls via `sessions_list`. Eliminates artificial latency on thread-bound spawns.
 
 <a id="g11-f002"></a>
-### Context preparation (fork vs. isolated) is a separate state machine returning a discriminated PreparedSpawnContext un…
+### Context preparation (fork vs
 
 `src/agents/subagent-spawn.ts:482-589` @ c84e521
 
 `src/agents/subagent-spawn.ts:482-589` — Context preparation (fork vs. isolated) is a separate state machine returning a discriminated `PreparedSpawnContext` union (`ok` + mode + forked metadata, or error). Fork fallback to isolated is explicit, making context-inheritance decisions auditable at spawn time.
 
 <a id="g11-f003"></a>
-### Child session patching is factored into buildDirectChildSessionPatch() , which validates each field (spawnDepth, suba…
+### Child session patching is factored into buildDirectChildSessionPatch() , which validates each field (spawnDepth, subagentRole, controlScope, tool deny/allow lists, thinking level, model) individually rather than blind-merging
 
 `src/agents/subagent-spawn.ts:313-358` @ c84e521
 
@@ -49,7 +49,7 @@
 `src/agents/subagent-capabilities.ts:161-175` — Role/scope derived from depth: `resolveSubagentRoleForDepth()` maps depth ≤0 -> "main", depth <maxSpawnDepth -> "orchestrator", else -> "leaf"; `controlScope` is "children" for non-leaf roles. Explicit stored overrides replace fallback behavior; no separate role table needed.
 
 <a id="g11-f006"></a>
-### (also )
+### Graceful terminal-event deferral
 
 `src/agents/subagent-registry.ts:200-228` @ c84e521
 
@@ -133,14 +133,14 @@
 `src/agents/subagent-run-timeout.ts:13-28` — Timer-safe deadline calculation: setTimeout bounds (32-bit signed int) checked separately from ms durations; Finite, Safe-Integer, and positive conditions validated independently. Deadline = `startedAt + durationMs`, falling back to `createdAt` if `startedAt` is absent.
 
 <a id="g11-f018"></a>
-### Output capture -> outcome -> delivery -> cleanup pipeline with signal-aware cancellation: each stage is best-effort; err…
+### Output capture -> outcome -> delivery -> cleanup pipeline with signal-aware cancellation: each stage is best-effort
 
 `src/agents/subagent-announce.ts:233-260` @ c84e521
 
 `src/agents/subagent-announce.ts:233-260` — Output capture -> outcome -> delivery -> cleanup pipeline with signal-aware cancellation: each stage is best-effort; errors are caught to prevent stage failures from blocking downstream cleanup. Silent-token filtering allows child to signal "no update needed" without orphaning session state.
 
 <a id="g11-f019"></a>
-### Exponential backoff retry strategy (3 max retries, 2× multiplier) for orphan recovery, with fallback to finalizeInter…
+### Exponential backoff retry strategy (3 max retries, 2× multiplier) for orphan recovery,…
 
 `src/agents/subagent-orphan-recovery.ts:395-399` @ c84e521
 
@@ -175,14 +175,14 @@
 `src/agents/subagent-spawn.ts:1075-1116` — Mode resolution enforces thread-binding: session mode is valid only with thread binding enabled; run mode is default. Forces thread-persistence decisions to be explicit.
 
 <a id="g11-f024"></a>
-### Spawn depth and active-children count enforced at spawn time with clear error messages, not post-hoc, preventing runa…
+### Spawn depth and active-children count enforced at spawn time with clear error messages,…
 
 `src/agents/subagent-spawn.ts:1161-1179` @ c84e521
 
 `src/agents/subagent-spawn.ts:1161-1179` — Spawn depth and active-children count enforced at spawn time with clear error messages, not post-hoc, preventing runaway recursion and fan-out explosion.
 
 <a id="g11-f025"></a>
-### Reactivation of completed subagent sessions validates existing.endedAt before allowing the swap, preventing accidenta…
+### Reactivation of completed subagent sessions validates existing.endedAt before allowing the swap, preventing accidental resurrection of active children
 
 `src/gateway/session-subagent-reactivation.ts:13-32` @ c84e521
 
@@ -191,7 +191,7 @@
 ## Skills, prompts, tools
 
 <a id="g11-f026"></a>
-### Subagent system prompt parameterizes spawn depth, max depth, role (main/orchestrator/leaf), ACP enablement, and nativ…
+### Subagent system prompt parameterizes spawn depth, max depth, role (main/orchestrator/leaf), ACP enablement, and native command guidance
 
 `src/agents/subagent-system-prompt.ts:36-111` @ c84e521
 
@@ -226,21 +226,21 @@
 `src/agents/tools/subagents-tool.ts:28-76` — Subagents list tool returns a 5-tuple: `requesterSessionKey`, `callerSessionKey`, `callerIsSubagent`, `total`, and textual active/recent run representation. `callerIsSubagent` flag helps distinguish recursive spawn contexts.
 
 <a id="g11-f031"></a>
-### agents_list returns requester (requesting agent ID), allowAny (bool), and ordered AgentListEntry objects with id , na…
+### agents_list returns requester (requesting agent ID), allowAny (bool), and ordered AgentListEntry objects with id , name , configured , model , and agentRuntime metadata (including runtime source: env/agent/defaults/model/provider/implicit/session-key)
 
 `src/agents/tools/agents-list-tool.ts:35-112` @ c84e521
 
 `src/agents/tools/agents-list-tool.ts:35-112` — `agents_list` returns `requester` (requesting agent ID), `allowAny` (bool), and ordered `AgentListEntry` objects with `id`, `name`, `configured`, `model`, and `agentRuntime` metadata (including runtime source: env/agent/defaults/model/provider/implicit/session-key). Enables informed agent selection without hardcoding.
 
 <a id="g11-f032"></a>
-### Initial user message for a spawned subagent is a structured envelope: [Subagent Context] block (depth/max depth/persi…
+### Initial user message for a spawned subagent is a structured envelope: [Subagent Context] block (depth/max depth/persistence mode) followed by [Subagent Task]
 
 `src/agents/subagent-initial-user-message.ts:7-30` @ c84e521
 
 `src/agents/subagent-initial-user-message.ts:7-30` — Initial user message for a spawned subagent is a structured envelope: `[Subagent Context]` block (depth/max depth/persistence mode) followed by `[Subagent Task]`. No system-prompt duplication.
 
 <a id="g11-f033"></a>
-### Subagent system prompt builder is injected with plugin guidance ( listRegisteredPluginAgentPromptGuidance ), depth in…
+### Subagent system prompt builder is injected with plugin guidance ( listRegisteredPluginAgentPromptGuidance ), depth info, ACP availability, and attachment metadata
 
 `src/agents/subagent-spawn.ts:1431-1446` @ c84e521
 
@@ -254,7 +254,7 @@
 `src/agents/subagent-spawn-accepted-note.ts:8-22` — Post-spawn notes are context-sensitive: "Auto-announce is push-based; do NOT poll" for runs, "thread-bound session stays active" for sessions; notes are suppressed for cron spawns.
 
 <a id="g11-f035"></a>
-### Three-branch reply instruction builder based on requester type: subagent requesters get "internal orchestration updat…
+### Three-branch reply instruction builder based on requester type: subagent requesters get "internal orchestration update"
 
 `src/agents/subagent-announce.ts:87-99` @ c84e521
 
@@ -275,7 +275,7 @@
 `src/agents/subagent-announce-output.ts:137-184` — Subagent output snapshot: assistant text, silent text, tool calls, yield state. Summarizer tracks yield-call pattern (`sessions_yield` tool + result) as "waiting for continuation"; filters silent replies; counts tool calls if no text output.
 
 <a id="g11-f038"></a>
-### Deduped child completion rows formatted with status + findings + title; sorted by createdAt then endedAt ; silent or …
+### Deduped child completion rows formatted with status + findings + title
 
 `src/agents/subagent-announce-output.ts:373-414` @ c84e521
 
@@ -296,42 +296,42 @@
 `src/agents/subagent-registry.ts:1384-1432` — Steering and completion lease API: `leasePendingAgentSteeringItems()`, `ackPendingAgentSteeringItems()`, `releasePendingAgentSteeringItems()` provide a three-phase handshake for requester to claim, execute, and release steering work; state changes persisted after each phase.
 
 <a id="g11-f041"></a>
-### Resume messages sent via callGateway with inputProvenance metadata ( kind: "inter_session" , sourceSessionKey from pa…
+### Resume messages sent via callGateway with inputProvenance metadata ( kind:…
 
 `src/agents/subagent-orphan-recovery.ts:131-150` @ c84e521
 
 `src/agents/subagent-orphan-recovery.ts:131-150` — Resume messages sent via `callGateway` with `inputProvenance` metadata (`kind: "inter_session"`, `sourceSessionKey` from parent, `lane: "subagent"`) to preserve parent-child tracing across interruptions.
 
 <a id="g11-f042"></a>
-### Config-change detection pattern ( /openclaw\.json|openclaw gateway restart|config\.patch/i ) scans assistant messages…
+### Config-change detection pattern ( /openclaw\.json|openclaw gateway…
 
 `src/agents/subagent-orphan-recovery.ts:200` @ c84e521
 
 `src/agents/subagent-orphan-recovery.ts:200` — Config-change detection pattern (`/openclaw\.json|openclaw gateway restart|config\.patch/i`) scans assistant messages to warn reactivated children about pre-applied config changes, preventing duplicate modifications.
 
 <a id="g11-f043"></a>
-### assistantCallsSessionsYield() detects the sessions_yield tool call across multiple provider-specific naming conventio…
+### assistantCallsSessionsYield() detects the sessions_yield tool call across multiple…
 
 `src/agents/subagent-yield-output.ts:37-45` @ c84e521
 
 `src/agents/subagent-yield-output.ts:37-45` — `assistantCallsSessionsYield()` detects the `sessions_yield` tool call across multiple provider-specific naming conventions (toolCall/tool_use/toolUse/functionCall/function_call), making yield detection SDK-agnostic.
 
 <a id="g11-f044"></a>
-### readStructuredToolPayload() implements lenient parsing of tool payloads from nested content arrays, plain records, or…
+### readStructuredToolPayload() implements lenient parsing of tool payloads from nested…
 
 `src/agents/subagent-yield-output.ts:59-85` @ c84e521
 
 `src/agents/subagent-yield-output.ts:59-85` — `readStructuredToolPayload()` implements lenient parsing of tool payloads from nested content arrays, plain records, or JSON-in-text, covering common cases where provider SDKs nest structured data in `block.text` fields.
 
 <a id="g11-f045"></a>
-### isSessionsYieldToolResult() uses explicit tool-name matching and adjacency heuristics (yield status in details/payloa…
+### isSessionsYieldToolResult() uses explicit tool-name matching and adjacency heuristics…
 
 `src/agents/subagent-yield-output.ts:88-110` @ c84e521
 
 `src/agents/subagent-yield-output.ts:88-110` — `isSessionsYieldToolResult()` uses explicit tool-name matching and adjacency heuristics (yield status in details/payload) as fallback when providers omit tool names on result messages.
 
 <a id="g11-f046"></a>
-### Token count formatting uses k/m suffixes with rounding heuristics (999.5 k -> 1 m, not "1000k") to keep display compact.
+### Token count formatting uses k/m suffixes with rounding heuristics (999.5 k -> 1 m, not…
 
 `src/shared/subagents-format.ts:5-25` @ c84e521
 
@@ -347,21 +347,21 @@
 `src/agents/subagent-spawn.ts:211-230` — `SpawnSubagentResult` discriminated union: `status: "accepted" | "forbidden" | "error"` with payload fields conditional on status. Error cases include `error`, `childSessionKey`, and `runId` so callers can diagnose and clean up partially-created sessions.
 
 <a id="g11-f048"></a>
-### Spawn ownership resolved into a 4-tuple ( controllerSessionKey , threadBindingRequesterSessionKey , completionRequest…
+### Spawn ownership resolved into a 4-tuple ( controllerSessionKey , threadBindingRequesterSessionKey , completionRequesterSessionKey , completionRequesterDisplayKey ) decoupling control, thread binding, and completion delivery
 
 `src/agents/subagent-spawn-ownership.ts:13-55` @ c84e521
 
 `src/agents/subagent-spawn-ownership.ts:13-55` — Spawn ownership resolved into a 4-tuple (`controllerSessionKey`, `threadBindingRequesterSessionKey`, `completionRequesterSessionKey`, `completionRequesterDisplayKey`) decoupling control, thread binding, and completion delivery. A parent can spawn on behalf of another requester without losing the audit trail.
 
 <a id="g11-f049"></a>
-### (also )
+### Cascading cleanup on failure
 
 `src/agents/subagent-spawn.ts:686-703` @ c84e521
 
 `src/agents/subagent-spawn.ts:686-703` (also `src/agents/subagent-spawn.ts:1592-1653`) — Cascading cleanup on failure: context-engine rollback -> attachment directory -> optional lifecycle hooks -> session deletion. Each step is best-effort; a later cleanup failure does not hide the original error.
 
 <a id="g11-f050"></a>
-### Attachments validated and materialized to disk before calling the gateway; receipt persisted in the registry. Allows …
+### Attachments validated and materialized to disk before calling the gateway
 
 `src/agents/subagent-spawn.ts:1460-1483` @ c84e521
 
@@ -403,7 +403,7 @@
 `src/agents/subagent-announce-delivery.ts:225-239` — Tiered exponential backoff schedules: transient delivery (5 s/10 s/20 s) vs. compaction steer (1 s/2 s/4 s/8 s), with test-mode fast schedules (8/16/32 ms). Loops clamp to remaining delivery timeout so retries do not overrun the deadline.
 
 <a id="g11-f056"></a>
-### Error-pattern matchers for transient vs. permanent delivery failures. Transient: unavailable, overloaded, network err…
+### Error-pattern matchers for transient vs
 
 `src/agents/subagent-announce-delivery.ts:357-381` @ c84e521
 
@@ -473,7 +473,7 @@
 `src/agents/subagent-target-policy.ts:51-82` — Spawn target allowlist: `resolveSubagentAllowedTargetIds()` returns self-only (no config), allowAny ("*" token), or intersected allowlist. Requester can only spawn within this set.
 
 <a id="g11-f066"></a>
-### Multi-provider tool-name normalization across ≥5 naming conventions (name, toolName, tool_name, functionName, functio…
+### Multi-provider tool-name normalization across ≥5 naming conventions (name, toolName, tool_name, functionName, function_name)
 
 `src/agents/subagent-yield-output.ts:8-20` @ c84e521
 
@@ -503,14 +503,14 @@
 ## Open threads / weak spots
 
 <a id="g11-f070"></a>
-### File truncated at line 1443 mid-function. sendSubagentAnnounceDirectly spans ~1 200 lines; remaining direct-agent cal…
+### File truncated at line 1443 mid-function
 
 `src/agents/subagent-announce-delivery.ts:1443` @ c84e521
 
 `src/agents/subagent-announce-delivery.ts:1443` — File truncated at line 1443 mid-function. `sendSubagentAnnounceDirectly` spans ~1 200 lines; remaining direct-agent call, response handling, generated-media fallback, and cleanup are unread. Critical delivery edge cases may be unhandled.
 
 <a id="g11-f071"></a>
-### persistSubagentRunsToDisk swallows all exceptions silently. If SQLite is corrupted or disk full, runs are lost withou…
+### persistSubagentRunsToDisk swallows all exceptions silently
 
 `src/agents/subagent-registry-cleanup.ts:52-63` @ c84e521
 
@@ -531,28 +531,28 @@
 `src/agents/subagent-registry-run-manager.ts:289-374` — Explicit run timeout deadline can race with wait completion: `resolveHardRunTimeoutEndedAt()` checks if now is within 250 ms of deadline; within that skew, a `session.end` arriving after the deadline may still be treated as ok instead of timeout.
 
 <a id="g11-f074"></a>
-### Fork context is currently restricted to same-agent spawns ("context=fork currently requires the same target agent as …
+### Fork context is currently restricted to same-agent spawns ("context=fork currently requires the same target agent as the requester")
 
 `src/agents/subagent-spawn.ts:513-515` @ c84e521
 
 `src/agents/subagent-spawn.ts:513-515` — Fork context is currently restricted to same-agent spawns ("context=fork currently requires the same target agent as the requester"). Known limitation; may need expansion for cross-agent fork scenarios.
 
 <a id="g11-f075"></a>
-### Attachment receipt structure duplicates metadata ( count , totalBytes , files , relDir ) but is never validated again…
+### Attachment receipt structure duplicates metadata ( count , totalBytes , files , relDir ) but is never validated against materialized state
 
 `src/agents/subagent-spawn.ts:1449-1456` @ c84e521
 
 `src/agents/subagent-spawn.ts:1449-1456` — Attachment receipt structure duplicates metadata (`count`, `totalBytes`, `files`, `relDir`) but is never validated against materialized state. If materialization and receipt diverge, silent inconsistency can occur.
 
 <a id="g11-f076"></a>
-### subagent_spawned hook failures are silently swallowed ("Spawn should still return accepted if spawn lifecycle hooks f…
+### subagent_spawned hook failures are silently swallowed ("Spawn should still return accepted if spawn lifecycle hooks fail")
 
 `src/agents/subagent-spawn.ts:1707-1733` @ c84e521
 
 `src/agents/subagent-spawn.ts:1707-1733` — `subagent_spawned` hook failures are silently swallowed ("Spawn should still return accepted if spawn lifecycle hooks fail"). Hook failures are not reported to the parent.
 
 <a id="g11-f077"></a>
-### Context-engine rollback is best-effort only. If rollback fails, the error is silently dropped, potentially leaving da…
+### Context-engine rollback is best-effort only
 
 `src/agents/subagent-spawn.ts:631-638` @ c84e521
 
@@ -573,70 +573,70 @@
 `src/agents/subagent-registry.ts:784-793` — Suspended delivery expiry hardcoded: cron 2 h, subagent 6 h, interactive 24 h; no config override; pressure-pruning (soft cap 25, hard cap 50) may discard deliveries before TTL expires if backlog grows.
 
 <a id="g11-f080"></a>
-### Wake-on-descendant-settle detects :wake suffix to avoid re-waking, but if a wake run itself spawns descendants and tr…
+### Wake-on-descendant-settle detects :wake suffix to avoid re-waking, but if a wake run itself spawns descendants and tries to wake again, the check may falsely reject a legitimate second wake
 
 `src/agents/subagent-announce.ts:366-388` @ c84e521
 
 `src/agents/subagent-announce.ts:366-388` — Wake-on-descendant-settle detects `:wake` suffix to avoid re-waking, but if a wake run itself spawns descendants and tries to wake again, the check may falsely reject a legitimate second wake. No test coverage seen.
 
 <a id="g11-f081"></a>
-### Token data wait loop with hardcoded 150 ms sleep and 3 attempts; no backoff or adaptive timeout. Fast-test mode uses …
+### Token data wait loop with hardcoded 150 ms sleep and 3 attempts
 
 `src/agents/subagent-announce-output.ts:539-554` @ c84e521
 
 `src/agents/subagent-announce-output.ts:539-554` — Token data wait loop with hardcoded 150 ms sleep and 3 attempts; no backoff or adaptive timeout. Fast-test mode uses 1 attempt only, so production tests may not catch slow-path bugs.
 
 <a id="g11-f082"></a>
-### Kill operation calls abortEmbeddedAgentRun and clearSessionQueues in sequence but neither returns a boolean indicatin…
+### Kill operation calls abortEmbeddedAgentRun and clearSessionQueues in sequence but neither returns a boolean indicating success
 
 `src/agents/subagent-control.ts:165-212` @ c84e521
 
 `src/agents/subagent-control.ts:165-212` — Kill operation calls `abortEmbeddedAgentRun` and `clearSessionQueues` in sequence but neither returns a boolean indicating success. If queue clear fails, `killed` flag may still be true, reporting false positive to caller.
 
 <a id="g11-f083"></a>
-### Wait outcome recheck only happens if output exists. If capture returns empty, outcome is not rechecked; race window e…
+### Wait outcome recheck only happens if output exists
 
 `src/agents/subagent-announce.ts:289-299` @ c84e521
 
 `src/agents/subagent-announce.ts:289-299` — Wait outcome recheck only happens if output exists. If capture returns empty, outcome is not rechecked; race window exists where child finishes just after first wait, before final output read.
 
 <a id="g11-f084"></a>
-### No abort-signal check inside the active-wake compaction retry inner loop (L271–L327). If signal fires during a delay,…
+### No abort-signal check inside the active-wake compaction retry inner loop (L271–L327)
 
 `src/agents/subagent-announce-delivery.ts:1194` @ c84e521
 
 `src/agents/subagent-announce-delivery.ts:1194` — No abort-signal check inside the active-wake compaction retry inner loop (L271–L327). If signal fires during a delay, loop may still issue another queue attempt.
 
 <a id="g11-f085"></a>
-### Legacy timeout reclassification happens before the endedAt > 0 check; reclassified runs will skip resume (likely inte…
+### Legacy timeout reclassification happens before the endedAt > 0 check
 
 `src/agents/subagent-orphan-recovery.ts:238-248` @ c84e521
 
 `src/agents/subagent-orphan-recovery.ts:238-248` — Legacy timeout reclassification happens before the `endedAt > 0` check; reclassified runs will skip resume (likely intentional but semantics are subtle and undocumented).
 
 <a id="g11-f086"></a>
-### Session-store update after successful resume can fail silently (warn-level log only), leaving abortedLastRun true in …
+### Session-store update after successful resume can fail silently (warn-level log only),…
 
 `src/agents/subagent-orphan-recovery.ts:334-354` @ c84e521
 
 `src/agents/subagent-orphan-recovery.ts:334-354` — Session-store update after successful resume can fail silently (warn-level log only), leaving `abortedLastRun` true in the persisted store even though resume succeeded and is tracked in memory.
 
 <a id="g11-f087"></a>
-### Exceptions during individual orphan processing increment result.failed only if it is 0 (L382–384), potentially maskin…
+### Exceptions during individual orphan processing increment result.failed only if it is 0…
 
 `src/agents/subagent-orphan-recovery.ts:369-377` @ c84e521
 
 `src/agents/subagent-orphan-recovery.ts:369-377` — Exceptions during individual orphan processing increment `result.failed` only if it is 0 (L382–384), potentially masking multiple distinct failures under a single count.
 
 <a id="g11-f088"></a>
-### Reactivation checks only that existing.endedAt is a number; does not validate outcome status. A completed-but-failed …
+### Reactivation checks only that existing.endedAt is a number
 
 `src/gateway/session-subagent-reactivation.ts:21-32` @ c84e521
 
 `src/gateway/session-subagent-reactivation.ts:21-32` — Reactivation checks only that `existing.endedAt` is a number; does not validate outcome status. A completed-but-failed child could be reactivated without explicit outcome clearing.
 
 <a id="g11-f089"></a>
-### Spawn depth limit is advisory-only in prompt ("you CAN spawn..."); depth check happens at runtime registration, so a …
+### Spawn depth limit is advisory-only in prompt ("you CAN spawn...")
 
 `src/agents/subagent-system-prompt.ts:76-91` @ c84e521
 
@@ -650,7 +650,7 @@
 `src/agents/subagent-spawn.ts:248-276` — Scope-upgrade handshake on headless gateway clients: Admin-only methods are pinned to ADMIN_SCOPE to avoid mid-request pairing handshakes, but other methods may still trigger upgrades. Issue reference (#59428) is not visible in the codebase.
 
 <a id="g11-f091"></a>
-### onSubagentEnded context-engine hook is fire-and-forget best-effort: timeout or failure silently logged but does not b…
+### onSubagentEnded context-engine hook is fire-and-forget best-effort: timeout or failure…
 
 `src/agents/subagent-registry-lifecycle.ts:730-773` @ c84e521
 

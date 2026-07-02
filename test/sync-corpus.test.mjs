@@ -163,3 +163,12 @@ test("strips upstream-quoted emoji from finding title/text before it reaches fin
   assert.match(cache.text, /Dedupes concurrent fetches with a 30s grace window before re-fetch\./);
   assert.equal(cache.text.includes("\u{1F527}"), false);
 });
+
+test("raw-stage gems with no report do not warn about a missing report", () => {
+  const root = setup();
+  const rawIssue = makeIssue({ number: 77, title: "[raw] newthing",
+    comments: [], labels: ["stage:raw", "source:repo"], body: "https://github.com/acme/newthing" });
+  const { warnings, gems } = syncCorpus({ fetchIssues: () => [rawIssue], fetchLicense: () => "MIT", rootDir: root, log: () => {} });
+  assert.ok(!warnings.some((w) => /no parseable report/.test(w)), "raw gem should not warn about a missing report");
+  assert.equal(gems.find((g) => g.number === 77).findingCount, 0);
+});

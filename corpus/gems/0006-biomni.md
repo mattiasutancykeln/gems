@@ -14,77 +14,77 @@
 ## Implementation decisions
 
 <a id="g6-f001"></a>
-### LLM is initialized with hard stop sequences ["</execute>", "</solution>"] , eliminating a whole class of runaway-gene…
+### LLM is initialized with hard stop sequences ["</execute>", "</solution>"] , eliminating a…
 
 `biomni/agent/a1.py:L197-L204` @ 400c1f3
 
 `biomni/agent/a1.py:L197-L204` — LLM is initialized with hard stop sequences `["</execute>", "</solution>"]`, eliminating a whole class of runaway-generation bugs where the model overruns its action boundary.
 
 <a id="g6-f002"></a>
-### Tool timeout uses multiprocessing.Process + Queue (not threading) so a hung tool can be SIGKILLed without corrupting …
+### Tool timeout uses multiprocessing.Process + Queue (not threading) so a hung tool can be SIGKILLed without corrupting the host process
 
 `biomni/agent/react.py:L91-L152` @ 400c1f3
 
 `biomni/agent/react.py:L91-L152` — Tool timeout uses `multiprocessing.Process` + `Queue` (not threading) so a hung tool can be SIGKILLed without corrupting the host process; threads cannot be forcibly killed in Python.
 
 <a id="g6-f003"></a>
-### Module-level _persistent_namespace = {} shared across all run_python_repl calls so variables defined in one agent ste…
+### Module-level _persistent_namespace = {} shared across all run_python_repl calls so…
 
 `biomni/tool/support_tools.py:6-7` @ 400c1f3
 
 `biomni/tool/support_tools.py:6-7` — Module-level `_persistent_namespace = {}` shared across all `run_python_repl` calls so variables defined in one agent step survive into the next, eliminating re-run boilerplate.
 
 <a id="g6-f004"></a>
-### plt.show and plt.savefig are monkey-patched once (guarded by _biomni_patched sentinel) to auto-capture figures to bas…
+### plt.show and plt.savefig are monkey-patched once (guarded by _biomni_patched sentinel) to…
 
 `biomni/tool/support_tools.py:87-120` @ 400c1f3
 
 `biomni/tool/support_tools.py:87-120` — `plt.show` and `plt.savefig` are monkey-patched once (guarded by `_biomni_patched` sentinel) to auto-capture figures to base64, removing the requirement for the agent to explicitly save plots in a headless environment.
 
 <a id="g6-f005"></a>
-### Incomplete XML tag auto-close before regex parsing prevents silent drops when the LLM truncates mid-tag: if "<execute…
+### Incomplete XML tag auto-close before regex parsing prevents silent drops when the LLM…
 
 `biomni/agent/a1.py:L1415-L1420` @ 400c1f3
 
 `biomni/agent/a1.py:L1415-L1420` — Incomplete XML tag auto-close before regex parsing prevents silent drops when the LLM truncates mid-tag: `if "<execute>" in msg and "</execute>" not in msg: msg += "</execute>"`.
 
 <a id="g6-f006"></a>
-### Instead of regex post-processing, result formatting makes a second LLM call with with_structured_output(output_class)…
+### Instead of regex post-processing, result formatting makes a second LLM call with with_structured_output(output_class) over the conversation log, turning free-form agent output into a typed Pydantic object
 
 `biomni/agent/qa_llm.py:32-49` @ 400c1f3
 
 `biomni/agent/qa_llm.py:32-49` — Instead of regex post-processing, result formatting makes a second LLM call with `with_structured_output(output_class)` over the conversation log, turning free-form agent output into a typed Pydantic object. The same pattern appears in `biomni/agent/react.py:L447-L464` and `biomni/agent/a1.py:L1942-L1960` under the name "evaluateGPT."
 
 <a id="g6-f007"></a>
-### Tools are materialized into a pandas.DataFrame at construction time alongside the raw list, creating a retrieval inde…
+### Tools are materialized into a pandas.DataFrame at construction time alongside the raw…
 
 `biomni/tool/tool_registry.py:15-18` @ 400c1f3
 
 `biomni/tool/tool_registry.py:15-18` — Tools are materialized into a `pandas.DataFrame` at construction time alongside the raw list, creating a retrieval index from the same source of truth as direct lookups.
 
 <a id="g6-f008"></a>
-### run_python_repl is always stripped from the tool-description dict fed to the system prompt (always available implicit…
+### run_python_repl is always stripped from the tool-description dict fed to the system…
 
 `biomni/agent/a1.py:L1308` @ 400c1f3
 
 `biomni/agent/a1.py:L1308` — `run_python_repl` is always stripped from the tool-description dict fed to the system prompt (always available implicitly), preventing token waste and confusion: `tool_desc = {i: [x for x in j if x["name"] != "run_python_repl"] for i, j in self.module2api.items()}`.
 
 <a id="g6-f009"></a>
-### Three-layer credential resolution ( env_var_1 or env_var_2 or config_attribute ) with no hardcoded fallback; avoids s…
+### Three-layer credential resolution ( env_var_1 or env_var_2 or config_attribute ) with no hardcoded fallback
 
 `biomni/tool/protocols.py:L24-26` @ 400c1f3
 
 `biomni/tool/protocols.py:L24-26` — Three-layer credential resolution (`env_var_1 or env_var_2 or config_attribute`) with no hardcoded fallback; avoids secrets in code while supporting multiple deployment configurations.
 
 <a id="g6-f010"></a>
-### PubMed retry progressively drops the last word of the query on each attempt rather than retrying verbatim; effective …
+### PubMed retry progressively drops the last word of the query on each attempt rather than retrying verbatim
 
 `biomni/tool/literature.py:L168-173` @ 400c1f3
 
 `biomni/tool/literature.py:L168-173` — PubMed retry progressively drops the last word of the query on each attempt rather than retrying verbatim; effective heuristic for over-specified queries returning zero results: `simplified_query = " ".join(query.split()[:-retries])`.
 
 <a id="g6-f011"></a>
-### OpenAI models receive an extra inline reminder to use XML tags injected at the start of every generate call, compensa…
+### OpenAI models receive an extra inline reminder to use XML tags injected at the start of…
 
 `biomni/agent/a1.py:L1382-L1388` @ 400c1f3
 
@@ -98,56 +98,56 @@
 `biomni/tool/lab_automation.py:30-43` — PyLabRobot docs are fetched from a pinned commit SHA (`106aef9c8699…`), not `main`, so the agent's grounding context is frozen and reproducible regardless of upstream changes.
 
 <a id="g6-f013"></a>
-### basic.ipynb is sorted first within liquid-handling docs ( key=0 if endswith("basic.ipynb") else 1 ), ensuring the mos…
+### basic.ipynb is sorted first within liquid-handling docs ( key=0 if…
 
 `biomni/tool/lab_automation.py:103-108` @ 400c1f3
 
 `biomni/tool/lab_automation.py:103-108` — `basic.ipynb` is sorted first within liquid-handling docs (`key=0 if endswith("basic.ipynb") else 1`), ensuring the most foundational tutorial is the first thing in context before specialized notebooks.
 
 <a id="g6-f014"></a>
-### torch.load is monkey-patched to force weights_only=False for nnUNet weight compatibility and unconditionally restored…
+### torch.load is monkey-patched to force weights_only=False for nnUNet weight compatibility…
 
 `biomni/tool/bioimaging.py:L432-455` @ 400c1f3
 
 `biomni/tool/bioimaging.py:L432-455` — `torch.load` is monkey-patched to force `weights_only=False` for nnUNet weight compatibility and unconditionally restored in a `finally` block, isolating the shim to only the segmentation call.
 
 <a id="g6-f015"></a>
-### Model download sends browser-like User-Agent / Accept headers to bypass Zenodo anti-bot, rather than a plain requests…
+### Model download sends browser-like User-Agent / Accept headers to bypass Zenodo anti-bot,…
 
 `biomni/tool/bioimaging.py:L192-203` @ 400c1f3
 
 `biomni/tool/bioimaging.py:L192-203` — Model download sends browser-like `User-Agent`/`Accept` headers to bypass Zenodo anti-bot, rather than a plain `requests.get`, because Zenodo returns 403 to scripts.
 
 <a id="g6-f016"></a>
-### PDF validation checks both Content-Type header and magic bytes ( b"%PDF" ) to catch misconfigured servers that return…
+### PDF validation checks both Content-Type header and magic bytes ( b"%PDF" ) to catch…
 
 `biomni/tool/literature.py:L377` @ 400c1f3
 
 `biomni/tool/literature.py:L377` — PDF validation checks both `Content-Type` header and magic bytes (`b"%PDF"`) to catch misconfigured servers that return HTTP 200 with wrong content type.
 
 <a id="g6-f017"></a>
-### The gnomAD schema is stored as a concrete example GraphQL query (not a schema definition). Using a worked example red…
+### The gnomAD schema is stored as a concrete example GraphQL query (not a schema definition)
 
 `biomni/tool/schema_db/gnomad.pkl:L2-L68` @ 400c1f3
 
 `biomni/tool/schema_db/gnomad.pkl:L2-L68` — The gnomAD schema is stored as a concrete example GraphQL query (not a schema definition). Using a worked example reduces the LLM's need to synthesize correct query syntax; it mutates the template instead.
 
 <a id="g6-f018"></a>
-### The PubChem schema separates operations , properties , and formats into distinct flat lists (4 × 5 × 6), making it tr…
+### The PubChem schema separates operations , properties , and formats into distinct flat…
 
 `biomni/tool/schema_db/pubchem.pkl:L1-L3` @ 400c1f3
 
 `biomni/tool/schema_db/pubchem.pkl:L1-L3` — The PubChem schema separates `operations`, `properties`, and `formats` into distinct flat lists (4 × 5 × 6), making it trivial for a tool-selector to enumerate valid combinations without recursive traversal.
 
 <a id="g6-f019"></a>
-### Custom functions are stored in builtins._biomni_custom_functions so code executed in a separate REPL subprocess can a…
+### Custom functions are stored in builtins._biomni_custom_functions so code executed in a…
 
 `biomni/agent/a1.py:L331-L335` @ 400c1f3
 
 `biomni/agent/a1.py:L331-L335` — Custom functions are stored in `builtins._biomni_custom_functions` so code executed in a separate REPL subprocess can access them by name without an explicit import.
 
 <a id="g6-f020"></a>
-### Two separate env_desc modules are selected at import time based on commercial_mode rather than filtering at runtime, …
+### Two separate env_desc modules are selected at import time based on commercial_mode rather…
 
 `biomni/agent/a1.py:L101-L108` @ 400c1f3
 
@@ -175,14 +175,14 @@
 `biomni/agent/init.py:L1` — The agent package surface is deliberately thin: only `A1` is re-exported, insulating downstream callers from internal class proliferation and making the agent surface easy to version.
 
 <a id="g6-f024"></a>
-### CNVkit discovery walks PATH -> biomni_e1 conda env -> bio_env_py310 -> error , so the tool self-locates in managed envir…
+### CNVkit discovery walks PATH -> biomni_e1 conda env -> bio_env_py310 -> error , so the tool…
 
 `biomni/tool/cancer_biology.py:L1034-1066` @ 400c1f3
 
 `biomni/tool/cancer_biology.py:L1034-1066` — CNVkit discovery walks `PATH -> biomni_e1 conda env -> bio_env_py310 -> error`, so the tool self-locates in managed environments without requiring PATH setup from the caller.
 
 <a id="g6-f025"></a>
-### Jupyter notebook cells are stripped to only import lines containing "pylabrobot" , capped at 20 lines per cell, keepi…
+### Jupyter notebook cells are stripped to only import lines containing "pylabrobot" , capped…
 
 `biomni/tool/lab_automation.py:131-139` @ 400c1f3
 
@@ -191,7 +191,7 @@
 ## Skills, prompts, tools
 
 <a id="g6-f026"></a>
-### The main system prompt mandates a numbered checklist plan ( [ ] / [x] / [-] ) updated after every step, giving the LL…
+### The main system prompt mandates a numbered checklist plan ( [ ] / [x] / [-] ) updated…
 
 `biomni/agent/a1.py:L1098-L1143` @ 400c1f3
 
@@ -205,7 +205,7 @@
 `biomni/agent/a1.py:L1124-L1142` — Three execution modes are specified inline: Python (default), `#!R` prefix for R, `#!BASH`/`#!CLI` for shell—all dispatched from one `<execute>` tag by inspecting the first line of the code block.
 
 <a id="g6-f028"></a>
-### Custom resources (tools, data, software, know-how docs) are injected into a highlighted PRIORITY CUSTOM RESOURCES blo…
+### Custom resources (tools, data, software, know-how docs) are injected into a highlighted…
 
 `biomni/agent/a1.py:L1162-L1210` @ 400c1f3
 
@@ -226,70 +226,70 @@
 `biomni/tool/literature.py:L218-267` / `biomni/tool/tool_description/literature.py:136-160` — `advanced_web_search_claude` is an LLM-calls-LLM surface: it spawns a nested Claude agent with `web_search_20250305`, caps the action budget via `max_uses`, and threads inline citations back into the return string. Agent-spawning as a first-class tool action.
 
 <a id="g6-f031"></a>
-### LLM decision rules are embedded directly in the entity_type parameter description: "MUST match actual entity type! Ch…
+### LLM decision rules are embedded directly in the entity_type parameter description: "MUST match actual entity type! Check user hints (e.g., 'files' means entity_type='file') or search results ('node_type' field)." A second AGENT USAGE GUIDANCE block in the docstring reinforces the same rule
 
 `biomni/tool/tool_description/support_tools.py:58-63` @ 400c1f3
 
 `biomni/tool/tool_description/support_tools.py:58-63` / `biomni/tool/support_tools.py:250-255` — LLM decision rules are embedded directly in the `entity_type` parameter description: "MUST match actual entity type! Check user hints (e.g., 'files' means entity_type='file') or search results ('node_type' field)." A second `AGENT USAGE GUIDANCE` block in the docstring reinforces the same rule. Prompt engineering inside the schema.
 
 <a id="g6-f032"></a>
-### Chunk analysis prompt includes explicit anti-hallucination rules: "return NO tasks" is preferred over including non-u…
+### Chunk analysis prompt includes explicit anti-hallucination rules: "return NO tasks" is preferred over including non-universal ones
 
 `biomni/agent/env_collection.py:L44-L79` @ 400c1f3
 
 `biomni/agent/env_collection.py:L44-L79` — Chunk analysis prompt includes explicit anti-hallucination rules: "return NO tasks" is preferred over including non-universal ones; specificity is enforced by requiring concrete protocol names (e.g., "DESeq2" not "Gene Expression Analysis").
 
 <a id="g6-f033"></a>
-### Consolidation prompt requests a strict three-key JSON ( tasks , databases , software ) with a code_implementation fie…
+### Consolidation prompt requests a strict three-key JSON ( tasks , databases , software )…
 
 `biomni/agent/env_collection.py:L82-L133` @ 400c1f3
 
 `biomni/agent/env_collection.py:L82-L133` — Consolidation prompt requests a strict three-key JSON (`tasks`, `databases`, `software`) with a `code_implementation` field containing pseudocode—structured output specification embedded directly in the prompt.
 
 <a id="g6-f034"></a>
-### A hardcoded "Notes" block of known pitfalls (deprecated names, async rules, multi-channel tip format) is prepended be…
+### A hardcoded "Notes" block of known pitfalls (deprecated names, async rules, multi-channel tip format) is prepended before the fetched docs, ensuring known failure modes are salient before the model reads general documentation
 
 `biomni/tool/lab_automation.py:209-223` @ 400c1f3
 
 `biomni/tool/lab_automation.py:209-223` — A hardcoded "Notes" block of known pitfalls (deprecated names, async rules, multi-channel tip format) is prepended before the fetched docs, ensuring known failure modes are salient before the model reads general documentation. System-prompt injection inside a tool.
 
 <a id="g6-f035"></a>
-### analyze_flow_cytometry_immunophenotyping accepts gating_strategy as {population: [(marker, operator, threshold)]}
+### analyze_flow_cytometry_immunophenotyping accepts gating_strategy as {population:…
 
 `biomni/tool/tool_description/cell_biology.py:118-129` @ 400c1f3
 
 `biomni/tool/tool_description/cell_biology.py:118-129` — `analyze_flow_cytometry_immunophenotyping` accepts `gating_strategy` as `{population: [(marker, operator, threshold)]}` — a declarative mini-DSL that an LLM can construct directly from natural-language cell population descriptions.
 
 <a id="g6-f036"></a>
-### simulate_protein_signaling_network encodes graph topology as {target: [(regulator, ±1)]} and reaction params as {(reg…
+### simulate_protein_signaling_network encodes graph topology as {target: [(regulator, ±1)]}…
 
 `biomni/tool/tool_description/systems_biology.py:114-148` @ 400c1f3
 
 `biomni/tool/tool_description/systems_biology.py:114-148` — `simulate_protein_signaling_network` encodes graph topology as `{target: [(regulator, ±1)]}` and reaction params as `{(regulator, target): {W, n, EC50}}`—compact structures an LLM can populate directly from pathway descriptions.
 
 <a id="g6-f037"></a>
-### simulate_renin_angiotensin_system_dynamics embeds exact dict key names ( 'k_ren' , 'k_agt' , 'k_ace' ) in the descrip…
+### simulate_renin_angiotensin_system_dynamics embeds exact dict key names ( 'k_ren' ,…
 
 `biomni/tool/tool_description/systems_biology.py:190-218` @ 400c1f3
 
 `biomni/tool/tool_description/systems_biology.py:190-218` — `simulate_renin_angiotensin_system_dynamics` embeds exact dict key names (`'k_ren'`, `'k_agt'`, `'k_ace'`) in the description strings, giving the LLM precise construction targets rather than requiring schema inference.
 
 <a id="g6-f038"></a>
-### Every database tool exposes a prompt (natural-language) required parameter alongside an optional endpoint / search_te…
+### Every database tool exposes a prompt (natural-language) required parameter alongside an optional endpoint / search_term escape hatch
 
 `biomni/tool/tool_description/database.py:1-731` @ 400c1f3
 
 `biomni/tool/tool_description/database.py:1-731` — Every database tool exposes a `prompt` (natural-language) required parameter alongside an optional `endpoint`/`search_term` escape hatch. Dual-mode pattern: free text for LLM callers, exact URL for deterministic retrieval.
 
 <a id="g6-f039"></a>
-### The entire tool schema uses description fields as inline micro-docs with mechanism summaries, GPU notes, and trade-of…
+### The entire tool schema uses description fields as inline micro-docs with mechanism…
 
 `biomni/tool/tool_description/genomics.py:L1-840` @ 400c1f3
 
 `biomni/tool/tool_description/genomics.py:L1-840` — The entire tool schema uses `description` fields as inline micro-docs with mechanism summaries, GPU notes, and trade-offs, so an LLM orchestrator can select the correct tool purely from the JSON description without external documentation.
 
 <a id="g6-f040"></a>
-### GEO schema bundles NCBI search field tags (e.g. "[ORGN]" , "[PDAT]" ), entry type codes, and date format patterns. Re…
+### GEO schema bundles NCBI search field tags (e.g
 
 `biomni/tool/schema_db/geo.pkl:L1-L33` @ 400c1f3
 
@@ -303,14 +303,14 @@
 `biomni/tool/schema_db/pubchem.pkl:L2-L3` — Schema pickle encodes a bounded action space: 4 operations × 5 properties × 6 formats. An LLM tool-selector can exhaustively enumerate valid combinations, preventing hallucinated endpoint paths.
 
 <a id="g6-f042"></a>
-### Protocol generation has its own named instruction section specifying exactly which four tools to call ( search_protoc…
+### Protocol generation has its own named instruction section specifying exactly which four…
 
 `biomni/agent/a1.py:L1152-L1155` @ 400c1f3
 
 `biomni/agent/a1.py:L1152-L1155` — Protocol generation has its own named instruction section specifying exactly which four tools to call (`search_protocols`, `advanced_web_search_claude`, `list_local_protocols`, `read_local_protocol`) before generating any protocol.
 
 <a id="g6-f043"></a>
-### read_function_source_code lets the agent introspect its own tool implementations by fully qualified name, enabling se…
+### read_function_source_code lets the agent introspect its own tool implementations by fully…
 
 `biomni/tool/tool_description/support_tools.py:15-29` @ 400c1f3
 
@@ -324,14 +324,14 @@
 `biomni/tool/literature.py:L280-291` — Citation threading: iterates `response.content` blocks, separates `text` into paragraphs and `citations` into a list, then appends `(Citation: title - url)` inline. Clean mechanism for grounding LLM responses with source attribution.
 
 <a id="g6-f045"></a>
-### The copy-number analysis log closes with a NEXT STEPS section listing upgrade tools (ABSOLUTE, FACETS, scarHRD, HRDet…
+### The copy-number analysis log closes with a NEXT STEPS section listing upgrade tools…
 
 `biomni/tool/cancer_biology.py:L1286-1289` @ 400c1f3
 
 `biomni/tool/cancer_biology.py:L1286-1289` — The copy-number analysis log closes with a `NEXT STEPS` section listing upgrade tools (ABSOLUTE, FACETS, scarHRD, HRDetect), giving the orchestrating agent actionable follow-up options embedded in the tool output.
 
 <a id="g6-f046"></a>
-### Code-gen system prompt instructs the LLM to "prioritize the use of codes on public repositories, such as HuggingFace …
+### Code-gen system prompt instructs the LLM to "prioritize the use of codes on public…
 
 `biomni/agent/function_generator.py:L39-L49` @ 400c1f3
 
@@ -345,14 +345,14 @@
 `biomni/tool/protocols.py:L36` — The `query` docstring directs the LLM caller: "should be EXACT as we are looking for EXACT MATCH"—a behavioral directive embedded in the tool description rather than in a separate prompt template.
 
 <a id="g6-f048"></a>
-### result_formatting uses a system prompt identifying the model as "evaluateGPT, tasked with extract and parse the task …
+### result_formatting uses a system prompt identifying the model as "evaluateGPT, tasked with…
 
 `biomni/agent/qa_llm.py:33-41` @ 400c1f3
 
 `biomni/agent/qa_llm.py:33-41` — `result_formatting` uses a system prompt identifying the model as "evaluateGPT, tasked with extract and parse the task output based on the history of an agent," separating the parsing role cleanly from the acting role.
 
 <a id="g6-f049"></a>
-### Protocol .txt files in biomni/tool/protocols/ (Thermo Fisher, Addgene) are described as "automatically retrieved by t…
+### Protocol .txt files in biomni/tool/protocols/ (Thermo Fisher, Addgene) are described as…
 
 `README.md:336-354` @ 400c1f3
 
@@ -569,49 +569,49 @@ All `tool_description/*.py` files — Uniform typed manifest schema: `{descripti
 ## Open threads / weak spots
 
 <a id="g6-f080"></a>
-### go() uses a fixed thread_id=42 in config, meaning all concurrent agent invocations share a single LangGraph checkpoin…
+### go() uses a fixed thread_id=42 in config, meaning all concurrent agent invocations share a single LangGraph checkpoint thread and overwrite each other's state
 
 `biomni/agent/a1.py:L1774` @ 400c1f3
 
 `biomni/agent/a1.py:L1774` — `go()` uses a fixed `thread_id=42` in config, meaning all concurrent agent invocations share a single LangGraph checkpoint thread and overwrite each other's state. Critical correctness bug for any multi-user or parallel use.
 
 <a id="g6-f081"></a>
-### Access code "Biomni2025" is hardcoded in the Gradio demo source; anyone reading the repo can bypass the verification …
+### Access code "Biomni2025" is hardcoded in the Gradio demo source
 
 `biomni/agent/a1.py:L2654-L2655` @ 400c1f3
 
 `biomni/agent/a1.py:L2654-L2655` — Access code `"Biomni2025"` is hardcoded in the Gradio demo source; anyone reading the repo can bypass the verification gate.
 
 <a id="g6-f082"></a>
-### Two separate exec(command, namespace) paths run with full process privileges and no timeout or resource cap. The READ…
+### Two separate exec(command, namespace) paths run with full process privileges and no timeout or resource cap
 
 `biomni/tool/support_tools.py:31` @ 400c1f3
 
 `biomni/tool/support_tools.py:31` / `biomni/tool/lab_automation.py:550-553` — Two separate `exec(command, namespace)` paths run with full process privileges and no timeout or resource cap. The README explicitly warns this is unsafe for production; the lab automation path even includes a comment: "In practice, you might want to use subprocess or other isolation methods."
 
 <a id="g6-f083"></a>
-### SnpEff is called with shell=True and output redirection; if filtered_vcf or annotated_vcf paths contain shell metacha…
+### SnpEff is called with shell=True and output redirection
 
 `biomni/tool/cancer_biology.py:L519-520` @ 400c1f3
 
 `biomni/tool/cancer_biology.py:L519-520` — SnpEff is called with `shell=True` and output redirection; if `filtered_vcf` or `annotated_vcf` paths contain shell metacharacters, this is a command injection risk.
 
 <a id="g6-f084"></a>
-### Registry serialization uses pickle , which is both insecure (arbitrary code execution on load from untrusted file) an…
+### Registry serialization uses pickle , which is both insecure (arbitrary code execution on…
 
 `biomni/tool/tool_registry.py:79-88` @ 400c1f3
 
 `biomni/tool/tool_registry.py:79-88` — Registry serialization uses `pickle`, which is both insecure (arbitrary code execution on load from untrusted file) and version-sensitive.
 
 <a id="g6-f085"></a>
-### Fallback model ID "claude-4-sonnet-latest" is non-standard (not a known Anthropic model ID); will cause an API error …
+### Fallback model ID "claude-4-sonnet-latest" is non-standard (not a known Anthropic model ID)
 
 `biomni/tool/literature.py:L253-254` @ 400c1f3
 
 `biomni/tool/literature.py:L253-254` — Fallback model ID `"claude-4-sonnet-latest"` is non-standard (not a known Anthropic model ID); will cause an API error whenever the `biomni.config` import fails.
 
 <a id="g6-f086"></a>
-### get_tool_by_name , get_tool_by_id , get_id_by_name , and get_name_by_id all perform linear list scans—O(n) lookup deg…
+### get_tool_by_name , get_tool_by_id , get_id_by_name , and get_name_by_id all perform…
 
 `biomni/tool/tool_registry.py:36-58` @ 400c1f3
 
@@ -625,77 +625,77 @@ All `tool_description/*.py` files — Uniform typed manifest schema: `{descripti
 `biomni/agent/env_collection.py:L198-L230` — JSON parse failure in consolidation falls back to `{"tasks": [{"error": "...", "raw_response": ...}]}` with no retry or logging of the bad model output; silent data loss.
 
 <a id="g6-f088"></a>
-### When auto_download=False and the model is absent, the code falls through to input() , which will hang forever in a he…
+### When auto_download=False and the model is absent, the code falls through to input() ,…
 
 `biomni/tool/bioimaging.py:L409-413` @ 400c1f3
 
 `biomni/tool/bioimaging.py:L409-413` — When `auto_download=False` and the model is absent, the code falls through to `input()`, which will hang forever in a headless or agent context.
 
 <a id="g6-f089"></a>
-### query_scholar uses pg.FreeProxies() unconditionally on every invocation with no timeout; uncontrolled third-party pro…
+### query_scholar uses pg.FreeProxies() unconditionally on every invocation with no timeout
 
 `biomni/tool/literature.py:L127-131` @ 400c1f3
 
 `biomni/tool/literature.py:L127-131` — `query_scholar` uses `pg.FreeProxies()` unconditionally on every invocation with no timeout; uncontrolled third-party proxies are highly unreliable in non-demo environments.
 
 <a id="g6-f090"></a>
-### Placeholder emails hardcoded in both PubMed clients ( "your-email@example.com" and "YOUR_EMAIL" ); NCBI will rate-lim…
+### Placeholder emails hardcoded in both PubMed clients ( "your-email@example.com" and "YOUR_EMAIL" )
 
 `biomni/tool/literature.py:L161` @ 400c1f3
 
 `biomni/tool/literature.py:L161` / `biomni/tool/example_mcp_tools/pubmed_mcp.py:L7` — Placeholder emails hardcoded in both PubMed clients (`"your-email@example.com"` and `"YOUR_EMAIL"`); NCBI will rate-limit or block requests in production.
 
 <a id="g6-f091"></a>
-### _capture_matplotlib_plots() inside execute_in_repl is commented out, so plots are only captured if the agent's code c…
+### _capture_matplotlib_plots() inside execute_in_repl is commented out, so plots are only captured if the agent's code calls plt.show() or plt.savefig()
 
 `biomni/tool/support_tools.py:35` @ 400c1f3
 
 `biomni/tool/support_tools.py:35` — `_capture_matplotlib_plots()` inside `execute_in_repl` is commented out, so plots are only captured if the agent's code calls `plt.show()` or `plt.savefig()`. Silent no-op otherwise.
 
 <a id="g6-f092"></a>
-### entity_type defaults to "dataset" even though both the docstring and description warn this default is usually wrong. …
+### entity_type defaults to "dataset" even though both the docstring and description warn this default is usually wrong
 
 `biomni/tool/tool_description/support_tools.py:60-62` @ 400c1f3
 
 `biomni/tool/tool_description/support_tools.py:60-62` / `biomni/tool/support_tools.py:205` — `entity_type` defaults to `"dataset"` even though both the docstring and description warn this default is usually wrong. Agents using zero-shot parameter inference will likely hit the wrong code path.
 
 <a id="g6-f093"></a>
-### Fallback module when no match is found is hardcoded to "biomni.tool.scRNA_tools" , a domain-specific default that wil…
+### Fallback module when no match is found is hardcoded to "biomni.tool.scRNA_tools" , a…
 
 `biomni/agent/a1.py:L1851-L1853` @ 400c1f3
 
 `biomni/agent/a1.py:L1851-L1853` — Fallback module when no match is found is hardcoded to `"biomni.tool.scRNA_tools"`, a domain-specific default that will silently misdirect import instructions for non-scRNA tools.
 
 <a id="g6-f094"></a>
-### analyze_enzyme_kinetics_assay calls np.random.seed(42) and generates synthetic data with np.random.normal rather than…
+### analyze_enzyme_kinetics_assay calls np.random.seed(42) and generates synthetic data with…
 
 `biomni/tool/biochemistry.py:L521-528` @ 400c1f3
 
 `biomni/tool/biochemistry.py:L521-528` — `analyze_enzyme_kinetics_assay` calls `np.random.seed(42)` and generates synthetic data with `np.random.normal` rather than analyzing caller-provided data—the function simulates kinetics, not analyzes them.
 
 <a id="g6-f095"></a>
-### ADC map fitting uses a triple nested loop iterating voxel-by-voxel with no vectorization; prohibitively slow for typi…
+### ADC map fitting uses a triple nested loop iterating voxel-by-voxel with no vectorization
 
 `biomni/tool/physiology.py:L687-712` @ 400c1f3
 
 `biomni/tool/physiology.py:L687-712` — ADC map fitting uses a triple nested loop iterating voxel-by-voxel with no vectorization; prohibitively slow for typical brain volumes (~50M voxels).
 
 <a id="g6-f096"></a>
-### time.sleep(2) between HMMER job submission and result fetch is unconditional; under any server latency, the result UR…
+### time.sleep(2) between HMMER job submission and result fetch is unconditional
 
 `biomni/tool/synthetic_biology.py:L1256` @ 400c1f3
 
 `biomni/tool/synthetic_biology.py:L1256` — `time.sleep(2)` between HMMER job submission and result fetch is unconditional; under any server latency, the result URL returns 404 and domain detection silently returns an empty list.
 
 <a id="g6-f097"></a>
-### Async main() detection spawns a second thread just to call asyncio.run() when an event loop is already running. Can d…
+### Async main() detection spawns a second thread just to call asyncio.run() when an event loop is already running
 
 `biomni/tool/lab_automation.py:574-599` @ 400c1f3
 
 `biomni/tool/lab_automation.py:574-599` — Async `main()` detection spawns a second thread just to call `asyncio.run()` when an event loop is already running. Can deadlock if the outer loop holds locks the inner run needs.
 
 <a id="g6-f098"></a>
-### Debug print statements ( DEBUG: Using conversation state... ) left in production path of _get_messages_for_processing .
+### Debug print statements ( DEBUG: Using conversation state..
 
 `biomni/agent/a1.py:L2187` @ 400c1f3
 
@@ -704,35 +704,35 @@ All `tool_description/*.py` files — Uniform typed manifest schema: `{descripti
 Other takes: [gem #8](0008-ai-scientist-v2.md#g8-f077)
 
 <a id="g6-f099"></a>
-### str(self.log) converts a Python list of tuples to raw repr before passing to the LLM; no structured message formattin…
+### str(self.log) converts a Python list of tuples to raw repr before passing to the LLM
 
 `biomni/agent/qa_llm.py:49` @ 400c1f3
 
 `biomni/agent/qa_llm.py:49` — `str(self.log)` converts a Python list of tuples to raw repr before passing to the LLM; no structured message formatting—token efficiency and parse reliability depend on the model tolerating Python repr syntax.
 
 <a id="g6-f100"></a>
-### Default DATA_ROOT="/dfs/project/bioagentos/data/singlecell/" is a hardcoded lab cluster path; will silently fail or p…
+### Default DATA_ROOT="/dfs/project/bioagentos/data/singlecell/" is a hardcoded lab cluster path
 
 `biomni/tool/tool_description/genomics.py:L159` @ 400c1f3
 
 `biomni/tool/tool_description/genomics.py:L159` — Default `DATA_ROOT="/dfs/project/bioagentos/data/singlecell/"` is a hardcoded lab cluster path; will silently fail or produce wrong behavior on any other system.
 
 <a id="g6-f101"></a>
-### n_samples_per_label=10 is listed as "(currently unused)"—dead schema parameter that silently does nothing, but may co…
+### n_samples_per_label=10 is listed as "(currently unused)"—dead schema parameter that…
 
 `biomni/tool/tool_description/genomics.py:L549-551` @ 400c1f3
 
 `biomni/tool/tool_description/genomics.py:L549-551` — `n_samples_per_label=10` is listed as "(currently unused)"—dead schema parameter that silently does nothing, but may confuse LLM callers that try to act on it.
 
 <a id="g6-f102"></a>
-### query_chatnt lists question and sequence as required parameters but both have default: "A" , a schema-generation bug …
+### query_chatnt lists question and sequence as required parameters but both have default:…
 
 `biomni/tool/tool_description/systems_biology.py:230-233` @ 400c1f3
 
 `biomni/tool/tool_description/systems_biology.py:230-233` — `query_chatnt` lists `question` and `sequence` as required parameters but both have `default: "A"`, a schema-generation bug that can mask missing inputs: `{"default": "A", "description": "Questions about the DNA sequence", "name": "question", "type": "str"}`.
 
 <a id="g6-f103"></a>
-### No version pin or API revision field in the PubChem schema payload; a stale pickle would silently cause bad requests …
+### No version pin or API revision field in the PubChem schema payload
 
 `biomni/tool/schema_db/pubchem.pkl:L1` @ 400c1f3
 
@@ -746,21 +746,21 @@ Other takes: [gem #8](0008-ai-scientist-v2.md#g8-f077)
 `biomni/tool/schema_db/gnomad.pkl:L3-L4` — Example query hardcodes `gene_symbol: "BRCA1"` and `dataset: gnomad_r4`; if gnomAD releases r5 or retires that dataset enum, the template generates invalid queries with cryptic GraphQL errors.
 
 <a id="g6-f105"></a>
-### geo_databases dict lists only two entries ( gds , geoprofiles ) while entry_types lists four; a tool iterating geo_da…
+### geo_databases dict lists only two entries ( gds , geoprofiles ) while entry_types lists four
 
 `biomni/tool/schema_db/geo.pkl:L29-L32` @ 400c1f3
 
 `biomni/tool/schema_db/geo.pkl:L29-L32` — `geo_databases` dict lists only two entries (`gds`, `geoprofiles`) while `entry_types` lists four; a tool iterating `geo_databases` will silently omit GSE/GSM/GPL queries.
 
 <a id="g6-f106"></a>
-### contours[0] is assumed to be the aorta (largest contour) with no anatomical sanity check; any large non-aortic struct…
+### contours[0] is assumed to be the aorta (largest contour) with no anatomical sanity check
 
 `biomni/tool/pathology.py:L83-85` @ 400c1f3
 
 `biomni/tool/pathology.py:L83-85` — `contours[0]` is assumed to be the aorta (largest contour) with no anatomical sanity check; any large non-aortic structure or imaging artifact silently produces wrong measurements.
 
 <a id="g6-f107"></a>
-### Cell-cycle classifier is explicitly a hardcoded rule set ( # This is a simplified approach - in practice, you would t…
+### Cell-cycle classifier is explicitly a hardcoded rule set ( # This is a simplified approach
 
 `biomni/tool/cell_biology.py:113-135` @ 400c1f3
 
@@ -774,14 +774,14 @@ Other takes: [gem #8](0008-ai-scientist-v2.md#g8-f077)
 `biomni/agent/react.py:L60-L61` — TODO comment `### TODO: Download the data` with no implementation; the data directory is created but nothing is fetched if it doesn't exist.
 
 <a id="g6-f109"></a>
-### query_scholar is hardcoded to return only the first result with no max_papers parameter, significantly less capable t…
+### query_scholar is hardcoded to return only the first result with no max_papers parameter,…
 
 `biomni/tool/tool_description/literature.py:44-56` @ 400c1f3
 
 `biomni/tool/tool_description/literature.py:44-56` — `query_scholar` is hardcoded to return only the first result with no `max_papers` parameter, significantly less capable than the `query_arxiv`/`query_pubmed` equivalents.
 
 <a id="g6-f110"></a>
-### fetch_supplementary_info_from_doi returns research_log (a list ) on the no-links early-exit path, but returns "\n".jo…
+### fetch_supplementary_info_from_doi returns research_log (a list ) on the no-links…
 
 `biomni/tool/literature.py:L63` @ 400c1f3
 

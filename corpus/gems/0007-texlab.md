@@ -35,7 +35,7 @@ each `.on::<R,_>()` tries `req.extract` for the method, runs the handler on matc
 `run_query` clones the `Arc<RwLock<Workspace>>`, acquires a read lock inside a pool task, and ships the response, so many features run concurrently against a shared immutable snapshot. `crates/texlab/src/server.rs:199-229 `
 
 <a id="g7-f004"></a>
-### Diagnostics are debounced by spawning a pool task that sleeps config().diagnostics.delay then posts an internal Diagn…
+### Diagnostics are debounced by spawning a pool task that sleeps config().diagnostics.delay…
 
 `crates/texlab/src/server.rs:288-295` @ 90836b9
 
@@ -58,28 +58,28 @@ Diagnostics are debounced by spawning a pool task that sleeps `config().diagnost
 `cleanAuxiliary`, `cleanArtifacts`, `changeEnvironment`, `findEnvironments`, `showDependencyGraph`, `cancelBuild`. `crates/texlab/src/server.rs:176-186 `
 
 <a id="g7-f007"></a>
-### Non-standard build/preview features are advertised as experimental capability flags ( textDocumentBuild , textDocumen…
+### Non-standard build/preview features are advertised as experimental capability flags (…
 
 `crates/texlab/src/server.rs:188-194` @ 90836b9
 
 Non-standard build/preview features are advertised as `experimental` capability flags (`textDocumentBuild`, `textDocumentForwardSearch`) rather than as vendored request methods. `crates/texlab/src/server.rs:188-194 `
 
 <a id="g7-f008"></a>
-### execute_command dispatches each command name to a prepared closure run through run_fallible ; unknown commands return…
+### execute_command dispatches each command name to a prepared closure run through run_fallible
 
 `crates/texlab/src/server.rs:617-663` @ 90836b9
 
 `execute_command` dispatches each command name to a prepared closure run through `run_fallible`; unknown commands return `InvalidParams` with the offending name. `crates/texlab/src/server.rs:617-663 `
 
 <a id="g7-f009"></a>
-### Completion is a registry of 15 independent providers invoked in sequence into one shared builder ( complete_commands …
+### Completion is a registry of 15 independent providers invoked in sequence into one shared…
 
 `crates/completion/src/lib.rs:193-211` @ 90836b9
 
 Completion is a registry of 15 independent providers invoked in sequence into one shared builder (`complete_commands`, `complete_citations`, `complete_label_references`, ...). `crates/completion/src/lib.rs:193-211 `
 
 <a id="g7-f010"></a>
-### Inverse search works editor-agnostically via a separate CLI subcommand that canonicalizes a path+line and sends an IP…
+### Inverse search works editor-agnostically via a separate CLI subcommand that canonicalizes…
 
 `crates/texlab/src/main.rs:71-109` @ 90836b9
 
@@ -95,7 +95,7 @@ Inverse search works editor-agnostically via a separate CLI subcommand that cano
 sort by preselect, then score, then per-kind `sort_index`, then label; dedup by label; truncate to `LIMIT = 50`. `crates/completion/src/util/builder.rs:29-44 ` and `crates/completion/src/lib.rs:13 `
 
 <a id="g7-f012"></a>
-### is_incomplete is set when matching is prefix-based or the result hit LIMIT , forcing the client to re-query as the us…
+### is_incomplete is set when matching is prefix-based or the result hit LIMIT , forcing the…
 
 `crates/texlab/src/features/completion.rs:32-35` @ 90836b9
 
@@ -109,14 +109,14 @@ sort by preselect, then score, then per-kind `sort_index`, then label; dedup by 
 the list carries only labels/edits, and expensive rendering (citeproc bib rendering, package metadata lookup) is deferred to `resolve` on the one item the user highlights. `crates/texlab/src/features/completion.rs:49-77 `
 
 <a id="g7-f014"></a>
-### Citation candidates are scored in parallel with rayon ( par_iter().filter_map(...) + par_extend ), keeping the matche…
+### Citation candidates are scored in parallel with rayon ( par_iter().filter_map(...) +…
 
 `crates/completion/src/providers/citations.rs:17-27` @ 90836b9
 
 Citation candidates are scored in parallel with rayon (`par_iter().filter_map(...)` + `par_extend`), keeping the matcher hot over large `.bib` files. `crates/completion/src/providers/citations.rs:17-27 `
 
 <a id="g7-f015"></a>
-### The lexer reverses its token vector once so the cursor is the vector tail: peek is last() , eat is pop()
+### The lexer reverses its token vector once so the cursor is the vector tail: peek is last()…
 
 `crates/parser/src/latex/lexer.rs:16-49` @ 90836b9
 
@@ -139,35 +139,35 @@ spawned builds insert their pid into a shared `pending_builds` set, `cancelBuild
 `edit` clones the text, splices the range, and calls `open`, which re-parses the document and rebuilds the dependency `Graph` for *all* documents in the workspace. `crates/base-db/src/workspace.rs:118-138 ` and `crates/base-db/src/workspace.rs:87-91 `
 
 <a id="g7-f018"></a>
-### $/cancelRequest is a no-op ( fn cancel returns Ok(()) ), so long-running queries dispatched to the pool cannot actual…
+### $/cancelRequest is a no-op ( fn cancel returns Ok(()) ), so long-running queries dispatched to the pool cannot actually be aborted
 
 `crates/texlab/src/server.rs:335-337` @ 90836b9
 
 `$/cancelRequest` is a no-op (`fn cancel` returns `Ok(())`), so long-running queries dispatched to the pool cannot actually be aborted; only `shutdown` is honored. `crates/texlab/src/server.rs:335-337 `
 
 <a id="g7-f019"></a>
-### Worker tasks unwrap() the response send in run_query / run_fallible ; a closed client channel panics the pool thread …
+### Worker tasks unwrap() the response send in run_query / run_fallible
 
 `crates/texlab/src/server.rs:206-228` @ 90836b9
 
 Worker tasks `unwrap()` the response send in `run_query`/`run_fallible`; a closed client channel panics the pool thread instead of degrading gracefully. `crates/texlab/src/server.rs:206-228 `
 
 <a id="g7-f020"></a>
-### semantic_tokens_range is a stub that returns Ok(()) and never sends a response; it is not advertised in capabilities,…
+### semantic_tokens_range is a stub that returns Ok(()) and never sends a response
 
 `crates/texlab/src/server.rs:681-687` @ 90836b9
 
 `semantic_tokens_range` is a stub that returns `Ok(())` and never sends a response; it is not advertised in capabilities, but any client that called it would hang waiting. `crates/texlab/src/server.rs:681-687 `
 
 <a id="g7-f021"></a>
-### Disk loading uses String::from_utf8_unchecked on the borrowed-lossy path, relying on the invariant that a borrowed Co…
+### Disk loading uses String::from_utf8_unchecked on the borrowed-lossy path, relying on the…
 
 `crates/base-db/src/workspace.rs:96-100` @ 90836b9
 
 Disk loading uses `String::from_utf8_unchecked` on the borrowed-lossy path, relying on the invariant that a borrowed `Cow` from `from_utf8_lossy` implies valid UTF-8. `crates/base-db/src/workspace.rs:96-100 `
 
 <a id="g7-f022"></a>
-### Unused-entry diagnostics silently skip bibliographies larger than MAX_UNUSED_ENTRIES = 1000 entries, so big .bib file…
+### Unused-entry diagnostics silently skip bibliographies larger than MAX_UNUSED_ENTRIES = 1000 entries, so big .bib files lose that check with no user signal
 
 `crates/diagnostics/src/citations.rs:12` @ 90836b9
 
