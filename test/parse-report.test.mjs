@@ -178,3 +178,33 @@ test("no finding title is left as a bare attribution artifact", () => {
     }
   }
 });
+
+test("fallback title: a mid-prose colon inside a parenthetical doesn't clip the title", () => {
+  const c = "## Extraction report\n\n**Source:** `AutoScientists/AutoScientists` @ `c71a9231234567890abcdef1234567890abcdef` (pinned x)\n\n### Patterns worth porting\n\n- `system/templates/HEARTBEAT.md:100-165 @ AutoScientists@c71a923` — result_latest.json is written before training starts (`status: running`, `pid: os.getpid()`), updated after.\n";
+  const { findings } = parseIssue(makeIssue({ comments: [c] }));
+  assert.equal(findings.length, 1);
+  const f = findings[0];
+  assert.ok(f.title.startsWith("result_latest.json is written before training starts"),
+    `expected prose title, got: ${f.title}`);
+  assert.ok(f.title.includes("status: running"),
+    `expected the parenthetical to survive in the title, got: ${f.title}`);
+  assert.ok(!f.title.endsWith("( status"), `title clipped mid-parenthetical: ${f.title}`);
+  assert.notEqual(f.title, "result_latest.json is written before training starts ( status");
+  assert.equal(f.citation, "system/templates/HEARTBEAT.md:100-165");
+});
+
+test("fallback title: an early top-level label colon still trims the title", () => {
+  const c = "## Extraction report\n\n**Source:** `a/b` @ `1234567` (pinned x)\n\n### Patterns worth porting\n\n- `src/x.py:1-2` — Path-traversal guard: resolves and checks prefix before exec.\n";
+  const { findings } = parseIssue(makeIssue({ comments: [c] }));
+  assert.equal(findings.length, 1);
+  assert.equal(findings[0].title, "Path-traversal guard");
+});
+
+test("fallback title: a protected backtick-quoted field colon is unaffected", () => {
+  const c = "## Extraction report\n\n**Source:** `a/b` @ `1234567` (pinned x)\n\n### Patterns worth porting\n\n- `x/y.md:L9-69` — `description:` field deliberately exhaustive covering all cases.\n";
+  const { findings } = parseIssue(makeIssue({ comments: [c] }));
+  assert.equal(findings.length, 1);
+  const f = findings[0];
+  assert.ok(f.title.startsWith("description:"), `expected label colon preserved, got: ${f.title}`);
+  assert.notEqual(f.title, "description");
+});
