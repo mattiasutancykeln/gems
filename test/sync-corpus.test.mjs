@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, writeFileSync, readFileSync, existsSync } from "node:fs";
+import { mkdtempSync, writeFileSync, readFileSync, existsSync, readdirSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { syncCorpus } from "../scripts/sync-corpus.mjs";
@@ -53,6 +53,52 @@ test("writes complete corpus from two issues", () => {
   assert.ok(readFileSync(join(root, "corpus/INDEX.md"), "utf8").length > 0);
   assert.ok(existsSync(join(root, "corpus/by-topic.md")));
   assert.ok(readFileSync(join(root, "corpus/by-topic.md"), "utf8").length > 0);
+
+  // the hub is now small; the per-value shards carry the finding one-liners
+  assert.ok(existsSync(join(root, "corpus/by-topic")));
+  const topicShards = readdirSync(join(root, "corpus/by-topic"));
+  assert.ok(topicShards.length > 0, "expected at least one by-topic/ shard");
+  const firstShard = readFileSync(join(root, "corpus/by-topic", topicShards[0]), "utf8");
+  assert.ok(firstShard.length > 0);
+  assert.match(firstShard, /\.\.\/gems\//); // shard finding links go up a directory
+
+  assert.ok(existsSync(join(root, "corpus/by-source")));
+  assert.ok(readdirSync(join(root, "corpus/by-source")).length > 0);
+  assert.ok(existsSync(join(root, "corpus/by-category")));
+  assert.ok(readdirSync(join(root, "corpus/by-category")).length > 0);
+});
+
+test("stale shard files from a removed axis value are cleaned up on the next sync", () => {
+  const root = setup();
+  const issueWithBoth = makeIssue({ labels: ["stage:extracted", "source:repo", "topic:agent", "topic:infra", "quality:high"] });
+  syncCorpus({ fetchIssues: () => [issueWithBoth], fetchLicense, rootDir: root, log: () => {} });
+  const firstRunShards = readdirSync(join(root, "corpus/by-topic")).sort();
+  assert.ok(firstRunShards.includes("infra.md"), `expected infra.md among ${firstRunShards}`);
+
+  const issueWithoutInfra = makeIssue({ labels: ["stage:extracted", "source:repo", "topic:agent", "quality:high"] });
+  syncCorpus({ fetchIssues: () => [issueWithoutInfra], fetchLicense, rootDir: root, log: () => {} });
+  const secondRunShards = readdirSync(join(root, "corpus/by-topic")).sort();
+  assert.ok(!secondRunShards.includes("infra.md"), `infra.md should have been cleaned up, got ${secondRunShards}`);
+  assert.ok(secondRunShards.includes("agent.md"));
+});
+
+test("size guard: WARN log and PARSE_WARNINGS.md entry when an index page approaches the render ceiling", () => {
+  const root = setup();
+  // Each finding carries a long, unique citation path so a moderate finding count (fast to
+  // cluster) still inflates a single shard past the 450KB warn threshold.
+  const pad = "x".repeat(1500);
+  const manyFindings = Array.from({ length: 350 },
+    (_, i) => `- **Finding number ${i}**: \`src/generated/${pad}/file${i}.ts:1-2\` — description.`,
+  ).join("\n");
+  const bigComment = `## Extraction report\n\n**Source:** \`acme/widget\` @ \`abcdef0123456789abcdef0123456789abcdef01\` (pinned 2026-06-10T09:56:19Z)\n**Workers:** 2 • **Files read:** 5\n\n---\n\n### Patterns worth porting\n\n${manyFindings}\n\n### Files read by workers\n\n- src/cache.ts\n`;
+  const issue = makeIssue({ comments: [SUM_COMMENT, bigComment] });
+  const logs = [];
+  const { warnings } = syncCorpus({ fetchIssues: () => [issue], fetchLicense, rootDir: root, log: (m) => logs.push(m) });
+
+  assert.ok(logs.some((l) => l.includes("WARN") && l.includes("approaching the 512KB GitHub render ceiling")),
+    `expected a size-guard WARN log, got: ${logs.join("\n")}`);
+  assert.ok(warnings.some((w) => w.includes("approaching the 512KB GitHub render ceiling")));
+  assert.match(readFileSync(join(root, "corpus/PARSE_WARNINGS.md"), "utf8"), /approaching the 512KB GitHub render ceiling/);
 });
 
 test("license cache: cached repos are not re-fetched", () => {

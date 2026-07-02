@@ -5,8 +5,11 @@ import { fileURLToPath } from "node:url";
 import { parseIssue } from "../lib/parse-report.mjs";
 import { clusterFindings } from "../lib/cluster.mjs";
 import { codeReuseFor } from "../lib/license-map.mjs";
-import { renderGemPage, renderCatalog, renderIndexPages, gemPageName, setGemTitles, injectStats } from "../lib/pages.mjs";
+import { renderGemPage, renderCatalog, renderIndexPages, oversizedPages, gemPageName, setGemTitles, injectStats } from "../lib/pages.mjs";
 import { stripEmoji } from "../lib/sanitize.mjs";
+
+// faceted index pages that shard by axis value under a subdirectory of the same name
+const SHARDED_INDEX_DIRS = ["by-topic", "by-source", "by-category"];
 
 const REPO = "mattiasutancykeln/gems";
 
@@ -54,9 +57,25 @@ export function syncCorpus({ fetchIssues, fetchLicense, rootDir, log = console.e
     writeFileSync(join(pagesDir, gemPageName(gem)), renderGemPage(gem, findings.filter((f) => f.gem === gem.number), findings));
   writeFileSync(join(rootDir, "CATALOG.md"), renderCatalog(gems, findings));
 
+  // clear stale shard dirs so a value removed since the last sync doesn't leave an orphaned file
+  for (const sub of SHARDED_INDEX_DIRS) {
+    const dir = join(corpusDir, sub);
+    if (existsSync(dir)) rmSync(dir, { recursive: true, force: true });
+  }
+
   const indexPages = renderIndexPages(gems, findings);
-  for (const [filename, content] of Object.entries(indexPages))
-    writeFileSync(join(corpusDir, filename), content);
+  for (const [relativePath, content] of Object.entries(indexPages)) {
+    const fullPath = join(corpusDir, relativePath);
+    mkdirSync(dirname(fullPath), { recursive: true });
+    writeFileSync(fullPath, content);
+  }
+
+  const oversized = oversizedPages(indexPages);
+  for (const { path, bytes } of oversized) {
+    const msg = `index page ${path} is ${Math.round(bytes / 1024)}KB, approaching the 512KB GitHub render ceiling - consider further sharding`;
+    log(`WARN: ${msg}`);
+    warnings.push(msg);
+  }
 
   const warnPath = join(corpusDir, "PARSE_WARNINGS.md");
   if (warnings.length)

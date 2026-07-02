@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { slugify, gemPageName, renderGemPage, renderCatalog, renderIndexPages, injectStats, setGemTitles } from "../lib/pages.mjs";
+import { slugify, gemPageName, renderGemPage, renderCatalog, renderIndexPages, oversizedPages, injectStats, setGemTitles } from "../lib/pages.mjs";
 
 const gem = { number: 21, title: "SciAgentArena — benchmarking AI agents", url: "https://arxiv.org/abs/2606.12736",
   repo: "HelloWorldLTY/SciAgentArena", sha: "ce27b8c", source: "paper", topics: ["eval"], verdict: "keep",
@@ -62,74 +62,106 @@ const idxFindings = [
     quality: "high", clusterId: "c002", clusterLabel: "solo", title: "Untagged finding", text: "t" },
 ];
 
-test("renderIndexPages: returns exactly the five expected pages", () => {
+test("renderIndexPages: returns hub pages plus per-value shard files under by-topic/, by-source/, by-category/", () => {
   setGemTitles(idxGems);
   const pages = renderIndexPages(idxGems, idxFindings);
-  assert.deepEqual(Object.keys(pages).sort(),
-    ["INDEX.md", "by-category.md", "by-cluster.md", "by-source.md", "by-topic.md"]);
+  const keys = Object.keys(pages).sort();
+  // hubs
+  for (const hub of ["INDEX.md", "by-category.md", "by-cluster.md", "by-source.md", "by-topic.md"])
+    assert.ok(keys.includes(hub), `missing hub ${hub}`);
+  // topic shards: idxFindings carry topics "eval" and "agent"
+  assert.ok(keys.includes("by-topic/eval.md"));
+  assert.ok(keys.includes("by-topic/agent.md"));
+  // the untagged finding (topic: []) gets its own shard
+  assert.ok(keys.includes("by-topic/untagged.md"));
+  // source shards: one per repo
+  assert.ok(keys.includes("by-source/hellowworldlty-sciagentarena.md") ||
+    keys.some((k) => k.startsWith("by-source/") && k.toLowerCase().includes("sciagentarena")));
+  assert.ok(keys.some((k) => k.startsWith("by-category/") && k.endsWith(".md")));
 });
 
-test("by-topic: multi-topic finding listed under both topics, untagged finding under (untagged)", () => {
+test("by-topic hub: multi-topic finding counted in each topic shard, links to shard files, untagged listed last", () => {
   setGemTitles(idxGems);
-  const md = renderIndexPages(idxGems, idxFindings)["by-topic.md"];
-  assert.match(md, /## agent \(2\)/);
-  assert.match(md, /## eval \(1\)/);
-  assert.match(md, /## \(untagged\) \(1\)/);
-  const agentIdx = md.indexOf("## agent");
-  const evalIdx = md.indexOf("## eval");
-  const untaggedIdx = md.indexOf("## (untagged)");
+  const pages = renderIndexPages(idxGems, idxFindings);
+  const hub = pages["by-topic.md"];
+  assert.match(hub, /\[agent\]\(by-topic\/agent\.md\) \(2\)/);
+  assert.match(hub, /\[eval\]\(by-topic\/eval\.md\) \(1\)/);
+  assert.match(hub, /\[\(untagged\)\]\(by-topic\/untagged\.md\) \(1\)/);
+  const agentIdx = hub.indexOf("[agent]");
+  const evalIdx = hub.indexOf("[eval]");
+  const untaggedIdx = hub.indexOf("[(untagged)]");
   assert.ok(agentIdx < evalIdx && evalIdx < untaggedIdx, "topics sorted alpha, untagged last");
-  const agentSection = md.slice(agentIdx, evalIdx);
-  assert.match(agentSection, /Budget check/);
-  assert.match(agentSection, /Noise gate/);
-  const evalSection = md.slice(evalIdx, untaggedIdx);
-  assert.match(evalSection, /Budget check/);
-  const untaggedSection = md.slice(untaggedIdx);
-  assert.match(untaggedSection, /Untagged finding/);
+
+  // "Budget check" carries topic ["eval", "agent"] -> appears in both shards
+  assert.match(pages["by-topic/agent.md"], /Budget check/);
+  assert.match(pages["by-topic/agent.md"], /Noise gate/);
+  assert.match(pages["by-topic/eval.md"], /Budget check/);
+  assert.match(pages["by-topic/untagged.md"], /Untagged finding/);
 });
 
-test("by-category: canonical category order, not source order", () => {
+test("by-topic shard: finding links use ../gems/ (one directory deeper than corpus root)", () => {
   setGemTitles(idxGems);
-  const md = renderIndexPages(idxGems, idxFindings)["by-category.md"];
-  const patternIdx = md.indexOf("## Patterns worth porting");
-  const highlightIdx = md.indexOf("## Highlights");
+  const shard = renderIndexPages(idxGems, idxFindings)["by-topic/agent.md"];
+  assert.match(shard, /\[Budget check\]\(\.\.\/gems\/0021-sciagentarena-benchmarking-ai-agents\.md#g21-f001\)/);
+});
+
+test("by-category hub: canonical category order, not source order; shards hold one-liners", () => {
+  setGemTitles(idxGems);
+  const pages = renderIndexPages(idxGems, idxFindings);
+  const hub = pages["by-category.md"];
+  const patternIdx = hub.indexOf("Patterns worth porting");
+  const highlightIdx = hub.indexOf("Highlights");
   assert.ok(patternIdx >= 0 && highlightIdx >= 0 && patternIdx < highlightIdx);
+  assert.match(hub, /\(by-category\/pattern\.md\)/);
+  assert.match(hub, /\(by-category\/highlight\.md\)/);
+  assert.match(pages["by-category/pattern.md"], /Budget check/);
+  assert.match(pages["by-category/pattern.md"], /\.\.\/gems\//);
 });
 
-test("by-source: groups findings under owner/repo with gem links and counts", () => {
+test("by-source hub: repos linked with count, github link, and shard link", () => {
   setGemTitles(idxGems);
-  const md = renderIndexPages(idxGems, idxFindings)["by-source.md"];
-  assert.match(md, /## HelloWorldLTY\/SciAgentArena \(2\)/);
-  assert.match(md, /## mims-harvard\/AutoScientists \(1\)/);
-  assert.match(md, /\[gem #21\]\(gems\/0021-sciagentarena-benchmarking-ai-agents\.md\)/);
-  assert.match(md, /https:\/\/github\.com\/HelloWorldLTY\/SciAgentArena/);
+  const hub = renderIndexPages(idxGems, idxFindings)["by-source.md"];
+  assert.match(hub, /\[HelloWorldLTY\/SciAgentArena\]\(https:\/\/github\.com\/HelloWorldLTY\/SciAgentArena\) \(2\) -> \[findings\]\(by-source\//);
+  assert.match(hub, /\[mims-harvard\/AutoScientists\]\(https:\/\/github\.com\/mims-harvard\/AutoScientists\) \(1\) -> \[findings\]\(by-source\//);
 });
 
-test("by-source: repos sorted by finding-count desc, then repo name asc", () => {
+test("by-source hub: repos sorted by finding-count desc, then repo name asc", () => {
   setGemTitles(idxGems);
-  const md = renderIndexPages(idxGems, idxFindings)["by-source.md"];
+  const hub = renderIndexPages(idxGems, idxFindings)["by-source.md"];
   // HelloWorldLTY/SciAgentArena has 2 findings, mims-harvard/AutoScientists has 1 -
   // count-desc must win over alphabetical (mims-harvard sorts before HelloWorldLTY).
-  const heavyIdx = md.indexOf("## HelloWorldLTY/SciAgentArena");
-  const lightIdx = md.indexOf("## mims-harvard/AutoScientists");
+  const heavyIdx = hub.indexOf("HelloWorldLTY/SciAgentArena");
+  const lightIdx = hub.indexOf("mims-harvard/AutoScientists");
   assert.ok(heavyIdx >= 0 && lightIdx >= 0 && heavyIdx < lightIdx,
     "higher finding-count repo must appear first even though its name sorts later");
 });
 
+test("by-source shard: one-liners for the repo, gem links use ../gems/", () => {
+  setGemTitles(idxGems);
+  const pages = renderIndexPages(idxGems, idxFindings);
+  const repoShard = Object.entries(pages).find(([k]) => k.startsWith("by-source/") && k.toLowerCase().includes("sciagentarena"))[1];
+  assert.match(repoShard, /Budget check/);
+  assert.match(repoShard, /Untagged finding/);
+  assert.match(repoShard, /\.\.\/gems\/0021-sciagentarena-benchmarking-ai-agents\.md/);
+});
+
 test("renderIndexPages: resolves gem links without requiring caller to pre-call setGemTitles", () => {
   setGemTitles([]); // simulate stale/empty global title map from an unrelated earlier call
-  const md = renderIndexPages(idxGems, idxFindings)["by-topic.md"];
-  assert.match(md, /\[Budget check\]\(gems\/0021-sciagentarena-benchmarking-ai-agents\.md#g21-f001\)/);
+  const shard = renderIndexPages(idxGems, idxFindings)["by-topic/agent.md"];
+  assert.match(shard, /\[Budget check\]\(\.\.\/gems\/0021-sciagentarena-benchmarking-ai-agents\.md#g21-f001\)/);
 });
 
-test("by-cluster: only clusters with size>=2, sorted size desc then clusterId asc", () => {
+test("by-cluster: unchanged single file, only clusters with size>=2, sorted size desc then clusterId asc", () => {
   setGemTitles(idxGems);
-  const md = renderIndexPages(idxGems, idxFindings)["by-cluster.md"];
+  const pages = renderIndexPages(idxGems, idxFindings);
+  const md = pages["by-cluster.md"];
   assert.match(md, /## budget gating \(2 findings across gems #20, #21\)/);
   assert.doesNotMatch(md, /solo/); // clusterId c002 has only 1 member, excluded
+  // by-cluster.md is never sharded - no by-cluster/ subdirectory entries
+  assert.ok(!Object.keys(pages).some((k) => k.startsWith("by-cluster/")));
 });
 
-test("INDEX.md links to catalog and all four sibling index pages", () => {
+test("INDEX.md links to catalog and all four sibling index hub pages", () => {
   setGemTitles(idxGems);
   const md = renderIndexPages(idxGems, idxFindings)["INDEX.md"];
   assert.match(md, /\[Catalog\]\(\.\.\/CATALOG\.md\)/);
@@ -140,9 +172,27 @@ test("INDEX.md links to catalog and all four sibling index pages", () => {
   assert.match(md, /2 gems · 3 findings · 2 clusters/);
 });
 
-test("renderIndexPages: no emojis in any page", () => {
+test("renderIndexPages: no emojis in any page (hubs and shards)", () => {
   setGemTitles(idxGems);
   const pages = renderIndexPages(idxGems, idxFindings);
   for (const [name, md] of Object.entries(pages))
     assert.doesNotMatch(md, /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u, `emoji found in ${name}`);
+});
+
+// ---- oversizedPages ----
+
+test("oversizedPages: flags entries over the cap, passes small ones", () => {
+  const small = { "by-topic.md": "small hub content" };
+  const big = { "by-topic/agent.md": "x".repeat(500_000) };
+  assert.deepEqual(oversizedPages(small), []);
+  const flagged = oversizedPages(big);
+  assert.equal(flagged.length, 1);
+  assert.equal(flagged[0].path, "by-topic/agent.md");
+  assert.equal(flagged[0].bytes, 500_000);
+});
+
+test("oversizedPages: default cap is 450_000 bytes, custom cap is honored", () => {
+  const pages = { "a.md": "x".repeat(460_000), "b.md": "x".repeat(440_000) };
+  assert.deepEqual(oversizedPages(pages).map((f) => f.path), ["a.md"]);
+  assert.deepEqual(oversizedPages(pages, 400_000).map((f) => f.path).sort(), ["a.md", "b.md"]);
 });
