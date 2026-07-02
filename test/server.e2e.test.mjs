@@ -12,9 +12,14 @@ const here = dirname(fileURLToPath(import.meta.url));
 function makeCorpus() {
   const dir = mkdtempSync(join(tmpdir(), "gems-corpus-"));
   mkdirSync(join(dir, "gems"), { recursive: true });
-  const gems = [{ number: 1, title: "widget", url: "u", repo: "acme/widget", sha: "1234567", source: "repo",
-    topics: ["agent"], verdict: "keep", quality: "high", stage: "extracted", license: "MIT",
-    codeReuse: "permissive", findingCount: 2 }];
+  const gems = [
+    { number: 1, title: "widget", url: "u", repo: "acme/widget", sha: "1234567", source: "repo",
+      topics: ["agent"], verdict: "keep", quality: "high", stage: "extracted", license: "MIT",
+      codeReuse: "permissive", findingCount: 2 },
+    { number: 2, title: "gadget", url: "u2", repo: "acme/gadget", sha: "89abcde", source: "repo",
+      topics: ["agent"], verdict: "keep", quality: "normal", stage: "extracted", license: "MIT",
+      codeReuse: "permissive", findingCount: 1 },
+  ];
   const findings = [
     { id: "g1-f001", gem: 1, repo: "acme/widget", sha: "1234567", citation: "src/q.ts:1-9", citations: ["src/q.ts:1-9"],
       category: "pattern", topic: ["agent"], license: "MIT", codeReuse: "permissive", quality: "high",
@@ -22,6 +27,9 @@ function makeCorpus() {
     { id: "g1-f002", gem: 1, repo: "acme/widget", sha: "1234567", citation: "src/d.ts:2-5", citations: ["src/d.ts:2-5"],
       category: "weak-spot", topic: ["agent"], license: "MIT", codeReuse: "permissive", quality: "high",
       clusterId: "c002", clusterLabel: "dead ends", title: "Dead-end registry", text: "persist failed directions" },
+    { id: "g2-f001", gem: 2, repo: "acme/gadget", sha: "89abcde", citation: "src/w.ts:3-9", citations: ["src/w.ts:3-9"],
+      category: "pattern", topic: ["agent"], license: "MIT", codeReuse: "permissive", quality: "normal",
+      clusterId: "c001", clusterLabel: "claim queue", title: "Locking claim queue", text: "gadget also claims jobs via file locks" },
   ];
   writeFileSync(join(dir, "gems.json"), JSON.stringify(gems));
   writeFileSync(join(dir, "findings.jsonl"), findings.map((f) => JSON.stringify(f)).join("\n") + "\n");
@@ -47,11 +55,11 @@ async function connect(corpusDir) {
   return client;
 }
 
-test("server exposes 3 tools and answers a query", async () => {
+test("server exposes 5 tools and answers a query", async () => {
   const client = await connect(makeCorpus());
   try {
     const { tools } = await client.listTools();
-    assert.deepEqual(tools.map((t) => t.name).sort(), ["gems_ground", "gems_inspire", "gems_query"]);
+    assert.deepEqual(tools.map((t) => t.name).sort(), ["gems_facets", "gems_get", "gems_ground", "gems_inspire", "gems_query"]);
     const res = await client.callTool({ name: "gems_query", arguments: { q: "claim queue file locks" } });
     const text = res.content[0].text;
     assert.match(text, /Optimistic claim queue/);
@@ -78,5 +86,31 @@ test("ground and inspire respond; empty query is actionable", async () => {
     const e = await client.callTool({ name: "gems_query", arguments: { q: "zzzz-nonexistent" } });
     assert.match(e.content[0].text, /No findings for/);
     assert.match(e.content[0].text, /Available topics: agent/);
+  } finally { await client.close(); }
+});
+
+test("gems_facets summarizes the corpus vocabulary", async () => {
+  const client = await connect(makeCorpus());
+  try {
+    const res = await client.callTool({ name: "gems_facets", arguments: {} });
+    const text = res.content[0].text;
+    assert.match(text, /2 gems · 3 findings · 2 clusters/);
+    assert.match(text, /agent \(3\)/);
+    assert.match(text, /"claim queue".*2 findings, gems #1, #2/);
+  } finally { await client.close(); }
+});
+
+test("gems_get fetches a finding with its cluster siblings, and is actionable on a bogus id", async () => {
+  const client = await connect(makeCorpus());
+  try {
+    const res = await client.callTool({ name: "gems_get", arguments: { id: "g1-f001" } });
+    const text = res.content[0].text;
+    assert.match(text, /Optimistic claim queue/);
+    assert.match(text, /Locking claim queue/);
+    const missing = await client.callTool({ name: "gems_get", arguments: { id: "g99-f999" } });
+    const missingText = missing.content[0].text;
+    assert.match(missingText, /No finding with id g99-f999/);
+    assert.match(missingText, /gems_query/);
+    assert.match(missingText, /gems_facets/);
   } finally { await client.close(); }
 });

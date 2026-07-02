@@ -25,7 +25,7 @@ cd gems && npm install
 claude   # approve the workspace trust prompt; tools connect automatically
 ```
 
-Three tools appear: `gems_query` (targeted search), `gems_ground` (cited evidence for a decision, license-aware), `gems_inspire` (diverse high-quality sample to spark ideas). To make them available in every project instead:
+Five tools appear: `gems_query` (targeted search), `gems_ground` (cited evidence for a decision, license-aware), `gems_inspire` (diverse high-quality sample to spark ideas), `gems_facets` (browse the corpus vocabulary - topics, categories, repos, clusters), `gems_get` (fetch a finding by id with its cluster siblings). To make them available in every project instead:
 
 ```bash
 claude mcp add --scope user gems -- node /path/to/gems/mcp/server.mjs

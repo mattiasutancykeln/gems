@@ -20,7 +20,7 @@ async function main() {
     process.exit(1);
   }
   const { createRetriever } = await import("../lib/retrieve.mjs");
-  const { renderHits, renderEmpty } = await import("../lib/render.mjs");
+  const { renderHits, renderEmpty, renderFacets } = await import("../lib/render.mjs");
 
   const gemsPath = join(corpusDir, "gems.json");
   const findingsPath = join(corpusDir, "findings.jsonl");
@@ -74,6 +74,26 @@ async function main() {
       k: z.number().int().min(1).max(15).optional().describe("Sample size, default 5"),
     },
   }, async ({ topic, k = 5 }) => asResult(retriever.inspire({ topic, k }), topic ?? "inspiration"));
+
+  server.registerTool("gems_facets", {
+    title: "List the gems corpus facets",
+    description: "List the searchable vocabulary of the gems corpus - all topics, categories, code-reuse classes, top source repos, and cross-gem clusters, with counts. Call this first to discover what you can filter gems_query/gems_ground on.",
+    inputSchema: {},
+  }, async () => ({ content: [{ type: "text", text: renderFacets(retriever.facets()) }] }));
+
+  server.registerTool("gems_get", {
+    title: "Fetch a finding by id",
+    description: "Fetch a specific finding by its id (e.g. from a prior search result), together with its cross-gem cluster siblings. Use to expand a finding you already have the id for.",
+    inputSchema: {
+      id: z.string().describe("Finding id like g21-f046"),
+    },
+  }, async ({ id }) => {
+    const found = retriever.get(id);
+    if (!found) {
+      return { content: [{ type: "text", text: `No finding with id ${id}. Use gems_query to search, or gems_facets to browse.` }] };
+    }
+    return { content: [{ type: "text", text: renderHits([found.finding, ...found.siblings], { gemsByNumber }) }] };
+  });
 
   await server.connect(new StdioServerTransport());
   console.error(`gems: ${gems.length} gems · ${findings.length} findings · ${clusters} clusters · corpus @ ${corpusDir}`);
