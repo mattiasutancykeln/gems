@@ -200,6 +200,65 @@ test("fallback title: an early top-level label colon still trims the title", () 
   assert.equal(findings[0].title, "Path-traversal guard");
 });
 
+test("fallback title: a citation-only bullet with no prose falls back readably, never a number-only title", () => {
+  const c = "## Extraction report\n\n**Source:** `a/b` @ `1234567` (pinned x)\n\n### Patterns worth porting\n\n- `core/x.py:58-65 @ o/r@abc1234`\n";
+  const { findings } = parseIssue(makeIssue({ comments: [c] }));
+  assert.equal(findings.length, 1);
+  const f = findings[0];
+  assert.notEqual(f.title, ":58-65");
+  assert.doesNotMatch(f.title, /^[\s\d:,\-]+$/, `title is a wordless fragment: ${f.title}`);
+  assert.match(f.title, /[A-Za-z]/, `title should contain a word: ${f.title}`);
+  assert.notEqual(f.title, "");
+  assert.equal(f.citation, "core/x.py:58-65");
+});
+
+test("fallback title: a bare secondary line range trailing a citation is rejected in favor of the prose", () => {
+  const c = "## Extraction report\n\n**Source:** `a/b` @ `1234567` (pinned x)\n\n### Patterns worth porting\n\n- `libs/pregel/_loop.py:585-590`, `1549`, `1803` — schedule_error_handler raises NotImplementedError in the base class.\n";
+  const { findings } = parseIssue(makeIssue({ comments: [c] }));
+  assert.equal(findings.length, 1);
+  const f = findings[0];
+  assert.notEqual(f.title, "1549 , 1803");
+  assert.match(f.title, /schedule_error_handler/, `expected prose title, got: ${f.title}`);
+  assert.equal(f.citation, "libs/pregel/_loop.py:585-590");
+});
+
+test("fallback title: a de-cited remainder of just '(also )' falls back readably, not '(also )'", () => {
+  const c = "## Extraction report\n\n**Source:** `a/b` @ `1234567` (pinned x)\n\n### Patterns worth porting\n\n- `src/reg.ts:200-228` (also `src/reg.ts:304-315`)\n";
+  const { findings } = parseIssue(makeIssue({ comments: [c] }));
+  assert.equal(findings.length, 1);
+  const f = findings[0];
+  assert.notEqual(f.title, "(also )");
+  assert.notEqual(f.title, "");
+  assert.match(f.title, /[A-Za-z]/, `title should contain a word: ${f.title}`);
+  assert.equal(f.citation, "src/reg.ts:200-228");
+});
+
+test("concise title: a long sentence-title is cut at the first clause boundary, no ellipsis, no mid-word cut", () => {
+  const c = "## Extraction report\n\n**Source:** `a/b` @ `1234567` (pinned x)\n\n### Patterns worth porting\n\n- `src/init.ts:1-20` — LLM is initialized with hard stop sequences at startup. This eliminates a whole class of runaway generation failures downstream.\n";
+  const { findings } = parseIssue(makeIssue({ comments: [c] }));
+  assert.equal(findings.length, 1);
+  const f = findings[0];
+  assert.equal(f.title, "LLM is initialized with hard stop sequences at startup");
+  assert.ok(!f.title.includes("…"), `expected no ellipsis, got: ${f.title}`);
+  assert.ok(f.title.length <= 90, `expected <= ~90 chars, got ${f.title.length}: ${f.title}`);
+  assert.equal(f.citation, "src/init.ts:1-20");
+});
+
+test("concise title: a very long sentence with no clause boundary is cut at a word boundary with an ellipsis", () => {
+  const c = "## Extraction report\n\n**Source:** `a/b` @ `1234567` (pinned x)\n\n### Patterns worth porting\n\n- `src/init.ts:1-20` — the initializer wires together the model runtime and the retry controller and the streaming buffer without any explicit configuration point anywhere\n";
+  const { findings } = parseIssue(makeIssue({ comments: [c] }));
+  assert.equal(findings.length, 1);
+  const f = findings[0];
+  const prose = "the initializer wires together the model runtime and the retry controller and the streaming buffer without any explicit configuration point anywhere";
+  assert.ok(f.title.endsWith("…"), `expected trailing ellipsis, got: ${f.title}`);
+  assert.ok(f.title.length <= 92, `expected ~90-char cut, got ${f.title.length}: ${f.title}`);
+  const head = f.title.slice(0, -1); // drop the "…"
+  // cut at a word boundary: the head is a whole-word prefix of the prose, so
+  // the prose continues with a space right where the title was truncated.
+  assert.ok(prose.startsWith(head + " "), `cut mid-word: ${f.title}`);
+  assert.ok(!head.endsWith(" "), `should not leave a trailing space before the ellipsis: ${f.title}`);
+});
+
 test("fallback title: a protected backtick-quoted field colon is unaffected", () => {
   const c = "## Extraction report\n\n**Source:** `a/b` @ `1234567` (pinned x)\n\n### Patterns worth porting\n\n- `x/y.md:L9-69` — `description:` field deliberately exhaustive covering all cases.\n";
   const { findings } = parseIssue(makeIssue({ comments: [c] }));
