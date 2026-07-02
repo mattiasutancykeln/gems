@@ -3,63 +3,159 @@
 | | |
 |---|---|
 | Source | https://github.com/assafelovic/gpt-researcher |
-| Repo | https://github.com/assafelovic/gpt-researcher @ `92bfc0388c` |
+| Repo | https://github.com/assafelovic/gpt-researcher @ `18d405166948e11b4a0304c0c4ec440bead9e4a5` |
 | Kind | - |
 | Topics | agent, research |
 | License | Apache-2.0 (permissive) |
 | Verdict | keep |
-| Findings | 10 |
+| Findings | 20 |
 | Issue | https://github.com/mattiasutancykeln/gems/issues/3 |
+
+## Implementation decisions
+
+<a id="g3-f001"></a>
+### Two LLM roles are split by cost/capability
+
+`gpt_researcher/config/variables/default.py:4-12` @ 18d4051
+
+a `strategic_llm` (default `o4-mini`) drives planning and sub-query generation, a `smart_llm` (default `gpt-4.1`) writes the report, and a cheap `fast_llm` handles summarization. `gpt_researcher/config/variables/default.py:4-12 `
+
+<a id="g3-f002"></a>
+### Standard research is a single fan-out, not an agent loop
+
+`gpt_researcher/skills/researcher.py:329-365` @ 18d4051
+
+plan sub-queries, then `asyncio.gather` over `_process_sub_query` for all sub-queries concurrently, filter empties, join into one context string `gpt_researcher/skills/researcher.py:329-365 `
+
+<a id="g3-f003"></a>
+### Planning seeds itself
+
+`gpt_researcher/skills/researcher.py:48-87` @ 18d4051
+
+`plan_research` first runs one live search with `retrievers[0]` and feeds those results back into the sub-query LLM prompt so sub-queries are grounded in current web state `gpt_researcher/skills/researcher.py:48-87 `
+
+<a id="g3-f004"></a>
+### Sub-query generation has a 3-step degradation chain
+
+`gpt_researcher/actions/query_processing.py:71-108` @ 18d4051
+
+strategic LLM (no max_tokens) -> strategic LLM with `strategic_token_limit` -> fall back to smart LLM, catching exceptions at each step `gpt_researcher/actions/query_processing.py:71-108 `
+
+<a id="g3-f005"></a>
+### Deep research is recursive tree search
+
+`gpt_researcher/skills/deep_research.py:415-522` @ 18d4051
+
+for each SERP query it spawns a fresh nested `GPTResearcher`, extracts learnings, and if `depth>1` recurses with halved breadth (`new_breadth = max(2, breadth // 2)`) and follow-up questions as the next query `gpt_researcher/skills/deep_research.py:415-522 `
+
+<a id="g3-f006"></a>
+### Retriever resolution falls back to Tavily for any unknown name rather than erroring: get_retriever(r) or get_default_…
+
+`gpt_researcher/actions/retriever.py:156-160` @ 18d4051
+
+Retriever resolution falls back to Tavily for any unknown name rather than erroring: `get_retriever(r) or get_default_retriever()` `gpt_researcher/actions/retriever.py:156-160 `
+
+## Skills, prompts, tools
+
+<a id="g3-f007"></a>
+### Abstain guard against fabrication
+
+`gpt_researcher/skills/writer.py:79-88` @ 18d4051
+
+`write_report` builds the context string and, if empty (all retrievers blocked/empty), returns an explicit "could not gather any source material" message instead of writing a confident sourced-looking report `gpt_researcher/skills/writer.py:79-88 `
+
+<a id="g3-f008"></a>
+### Report prompt hard-requires provenance
+
+`gpt_researcher/prompts.py:273-311` @ 18d4051
+
+for web reports it mandates in-text markdown-hyperlink citations at sentence/paragraph end plus a deduped reference list in the configured format `gpt_researcher/prompts.py:273-311 `
+
+<a id="g3-f009"></a>
+### Optional LLM source curation ranks scraped content by relevance/credibility/currency/objectivity, explicitly prioriti…
+
+`gpt_researcher/skills/curator.py:58-96` @ 18d4051
+
+Optional LLM source curation ranks scraped content by relevance/credibility/currency/objectivity, explicitly prioritizing quantitative data; on any parse error it returns the unranked sources unchanged (fail-open) `gpt_researcher/skills/curator.py:58-96 ` and the prompt `gpt_researcher/prompts.py:315-332 `
+
+<a id="g3-f010"></a>
+### Deep-research query/learning prompts demand strict JSON with an exact schema ( {"query","researchGoal"} , {"insight",…
+
+`gpt_researcher/skills/deep_research.py:259-289` @ 18d4051
+
+Deep-research query/learning prompts demand strict JSON with an exact schema (`{"query","researchGoal"}`, `{"insight","sourceUrl"}`) and ask the model to attach a source URL per learning `gpt_researcher/skills/deep_research.py:259-289,344-374 `
+
+<a id="g3-f011"></a>
+### MCP tool selection uses the strategic LLM (temp 0.0) to pick <=N relevant tools from tool name+description, with a pa…
+
+`gpt_researcher/mcp/tool_selector.py:35-127` @ 18d4051
+
+MCP tool selection uses the strategic LLM (temp 0.0) to pick <=N relevant tools from tool name+description, with a pattern-matching fallback scoring names/descriptions against verbs like search/get/fetch when the LLM output can't be parsed `gpt_researcher/mcp/tool_selector.py:35-127,163-203 `
+
+## Patterns worth porting
+
+<a id="g3-f012"></a>
+### Cost-avoiding compression fast-path
+
+`gpt_researcher/context/compression.py:157-171` @ 18d4051
+
+if total scraped chars < `COMPRESSION_THRESHOLD` (8000) and doc count <= max_results, skip the embeddings/splitter pipeline entirely and return docs directly `gpt_researcher/context/compression.py:157-171 `
+
+<a id="g3-f013"></a>
+### Robust JSON parsing for LLM output
+
+`gpt_researcher/skills/deep_research.py:20-116` @ 18d4051
+
+`json_repair` over multiple regex-extracted candidates (fenced block, bare array, bare object), then a line-oriented `Query:`/`Goal:`/`Learning:` regex fallback so malformed responses still yield structured data `gpt_researcher/skills/deep_research.py:20-116 `
+
+<a id="g3-f014"></a>
+### Recency-preserving context budget
+
+`gpt_researcher/skills/deep_research.py:213-231` @ 18d4051
+
+`trim_context_to_word_limit` iterates the context list in reverse, keeping newest items under a 25k-word cap and truncating the single item if nothing fits yet `gpt_researcher/skills/deep_research.py:213-231 `
+
+<a id="g3-f015"></a>
+### Skip re-scraping content retrievers already return in full
+
+`gpt_researcher/skills/researcher.py:776-834` @ 18d4051
+
+results with `raw_content` >100 chars are treated as prefetched and passed through, only bare URLs go to the scraper `gpt_researcher/skills/researcher.py:776-834 `
 
 ## Open threads / weak spots
 
-<a id="g3-f001"></a>
-### COMPRESSION_THRESHOLD and MAX_CONTEXT_WORDS have no BaseConfig surface
+<a id="g3-f016"></a>
+### Config/threshold drift
 
-`COMPRESSION_THRESHOLD` and `MAX_CONTEXT_WORDS` have no `BaseConfig` surface. Both are hard-coded constants (`8000` chars and `25000` words). `COMPRESSION_THRESHOLD` is env-readable, but neither appears in the TypedDict that documents all configuration. Callers have no programmatic way to tune them.
+`gpt_researcher/context/compression.py:119` @ 18d4051
 
-<a id="g3-f002"></a>
-### GlobalRateLimiter last-write-wins race
+`ContextCompressor` reads `SIMILARITY_THRESHOLD` from the env with a hardcoded fallback of `0.35`, but the config default is `0.42` and is never pushed into the env, so the config value is silently ignored unless the env var is set `gpt_researcher/context/compression.py:119 ` vs `gpt_researcher/config/variables/default.py:6 `
 
-`GlobalRateLimiter` last-write-wins race. Each `WorkerPool.init` calls `global_limiter.configure(rate_limit_delay)`. Multiple concurrent `GPTResearcher` instances that use different delays silently overwrite each other's setting. There's no lock around `configure()`.
+<a id="g3-f017"></a>
+### No verification stage
 
-<a id="g3-f003"></a>
-### visited_urls.clear() in ResearchConductor.conduct_research clears the shared parent set
+`gpt_researcher/skills/deep_research.py:344-374` @ 18d4051
 
-`visited_urls.clear()` in `ResearchConductor.conduct_research` clears the shared parent set. Since deep-research nested researchers receive `visited_urls=self.visited_urls` (the parent's live set), if a nested researcher's `ResearchConductor` ever calls `conduct_research()` directly, it would wipe the parent's tracking.
+learnings get a `sourceUrl` attached but nothing checks the claim is actually supported by the cited source; citations are trusted as emitted by the extraction LLM `gpt_researcher/skills/deep_research.py:344-374 `
 
-<a id="g3-f004"></a>
-### Q&A plan generation is vestigial dead weight
+<a id="g3-f018"></a>
+### Deep research dedups learnings with list(set(...)) , discarding order (and any deterministic report structure) for th…
 
-`generate_research_plan` returns follow-up questions that are immediately answered with a fixed string. Each invocation costs one strategic LLM call for no benefit. Should either be removed or wired to a real user-input surface.
+`gpt_researcher/skills/deep_research.py:533` @ 18d4051
 
-<a id="g3-f005"></a>
-### print() left in SourceCurator.curate_sources
+Deep research dedups learnings with `list(set(...))`, discarding order (and any deterministic report structure) for the sake of uniqueness `gpt_researcher/skills/deep_research.py:533 `
 
-`print()` left in `SourceCurator.curate_sources`. Two bare `print(f"\n\nCurating ...")` and `print(f"\n\nFinal Curated sources ...")` calls remain in production code (`curator.py`). Not behind `self.researcher.verbose`.
+<a id="g3-f019"></a>
+### Curation is off by default ( CURATE_SOURCES: False ), so out-of-the-box the report LLM receives all compressed contex…
 
-<a id="g3-f006"></a>
-### _mcp_results_cache is not invalidated between research sessions
+`gpt_researcher/config/variables/default.py:14` @ 18d4051
 
-`_mcp_results_cache` is not invalidated between research sessions. The cache on `ResearchConductor` persists for the lifetime of the researcher instance. If the same instance is reused for multiple queries (unlikely by design but possible via `conduct_research()` re-invocation), stale MCP results from the first query contaminate later ones.
+Curation is off by default (`CURATE_SOURCES: False`), so out-of-the-box the report LLM receives all compressed context unranked `gpt_researcher/config/variables/default.py:14 `
 
-<a id="g3-f007"></a>
-### Chunk size 1000 / overlap 100 is hardwired
+<a id="g3-f020"></a>
+### Nested deep-research researchers each construct a full GPTResearcher per SERP query with its own retrievers/scraper/L…
 
-`ContextCompressor` and `WrittenContentCompressor` both use the same `RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)`. No config exposure. Different document types (long papers vs. short news) would benefit from different chunk sizes.
+`gpt_researcher/skills/deep_research.py:413-435` @ 18d4051
 
-<a id="g3-f008"></a>
-### asyncio.Lock in GlobalRateLimiter is lazily created without an event-loop guard
-
-`asyncio.Lock` in `GlobalRateLimiter` is lazily created without an event-loop guard. The first caller inside an event loop wins. If two coroutines race to create the lock simultaneously (unlikely but possible at startup), both would pass the `if cls._lock is None` check before either assignment completes — no `asyncio.Lock` guards the lock creation itself.
-
-<a id="g3-f009"></a>
-### Deep research breadth decay is fixed at breadth // 2
-
-Deep research breadth decay is fixed at `breadth // 2`. No config surface for breadth reduction rate. Depth-3 with breadth-8 degenerates to breadth-2 at the leaves regardless of query complexity.
-
-<a id="g3-f010"></a>
-### _current_step is a plain instance string, not a context variable
-
-`_current_step` is a plain instance string, not a context variable. If `conduct_research()` and `write_report()` overlap (e.g., in a streaming setup where the caller begins writing before research fully completes), step attribution becomes incorrect. An `asyncio.contextvars.ContextVar` would be safer.
+Nested deep-research researchers each construct a full `GPTResearcher` per SERP query with its own retrievers/scraper/LLM calls, so cost scales with breadth x depth and is only bounded by an `asyncio.Semaphore(concurrency_limit)` `gpt_researcher/skills/deep_research.py:413-435 `
 

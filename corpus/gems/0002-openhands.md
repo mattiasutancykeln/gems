@@ -3,83 +3,138 @@
 | | |
 |---|---|
 | Source | https://github.com/OpenHands/OpenHands |
-| Repo | https://github.com/OpenHands/OpenHands |
+| Repo | https://github.com/OpenHands/OpenHands @ `ae5b8a995deb68bd00b8f3af0e87e4c2f3c580a6` |
 | Kind | - |
 | Topics | agent |
 | License | none (forbidden) |
 | Verdict | promote |
-| Findings | 10 |
+| Findings | 17 |
 | Issue | https://github.com/mattiasutancykeln/gems/issues/2 |
+
+## Implementation decisions
+
+<a id="g2-f001"></a>
+### The agent runtime has been extracted out of this repo into three pinned PyPI packages ( openhands-sdk , openhands-age…
+
+`pyproject.toml:61-62` @ ae5b8a9
+
+The agent runtime has been extracted out of this repo into three pinned PyPI packages (`openhands-sdk`, `openhands-agent-server`, `openhands-tools`, all `==1.30.0`); this repo (`openhands-ai`) is now the *application server* that orchestrates conversations, sandboxes, git, and MCP rather than owning the agent loop. `pyproject.toml:61-62 `
+
+<a id="g2-f002"></a>
+### litellm and openai are pinned to *exact* versions with inline rationale: a floor would let an untested version slip i…
+
+`pyproject.toml:163-164` @ ae5b8a9
+
+`litellm` and `openai` are pinned to *exact* versions with inline rationale: a floor would let an untested version slip in, and litellm 1.84.1 requires openai 2.33.0. `pyproject.toml:163-164 `
+
+<a id="g2-f003"></a>
+### Each conversation runs against its own sandboxed agent-server; the app-server generates a per-sandbox session_api_key…
+
+`openhands/app_server/sandbox/docker_sandbox_service.py:414-421` @ ae5b8a9
+
+Each conversation runs against its own sandboxed agent-server; the app-server generates a per-sandbox `session_api_key` (base62 of 32 random bytes) and injects it plus a webhook callback URL as indexed env vars into the container. `openhands/app_server/sandbox/docker_sandbox_service.py:414-421 `
+
+<a id="g2-f004"></a>
+### Sandbox readiness is a two-stage check
+
+`openhands/app_server/sandbox/sandbox_service.py:120-140` @ ae5b8a9
+
+poll status until RUNNING, then hit the agent-server `/alive` endpoint before returning, closing the race where the container reports running but the agent server isn't listening yet. `openhands/app_server/sandbox/sandbox_service.py:120-140 `
+
+## Skills, prompts, tools
+
+<a id="g2-f005"></a>
+### Skills are markdown files with YAML frontmatter ( name , type , version , agent , triggers ); triggers are keyword wo…
+
+`skills/add_agent.md:1-17` @ ae5b8a9
+
+Skills are markdown files with YAML frontmatter (`name`, `type`, `version`, `agent`, `triggers`); triggers are keyword words for knowledge skills or slash-commands for task skills. `skills/add_agent.md:1-17 `, `skills/code-review.md:1-4 `
+
+<a id="g2-f006"></a>
+### Trigger type is inferred at load
+
+`openhands/app_server/app_conversation/skill_loader.py:504-511` @ ae5b8a9
+
+any trigger starting with `/` becomes a `TaskTrigger`, otherwise a `KeywordTrigger`. `openhands/app_server/app_conversation/skill_loader.py:504-511 `
+
+<a id="g2-f007"></a>
+### The app-server is a thin proxy for skill loading
+
+`openhands/app_server/app_conversation/skill_loader.py:1-11` @ ae5b8a9
+
+it builds org/sandbox config and POSTs to the agent-server `/api/skills` endpoint, which owns all source-specific loading; failures degrade to an empty skill list rather than raising. `openhands/app_server/app_conversation/skill_loader.py:1-11 `, `:447-492 `
+
+<a id="g2-f008"></a>
+### MCP tools are hosted server-side via FastMCP('mcp', mask_error_details=True) , exposing PR/MR-creation tools per prov…
+
+`openhands/app_server/mcp/mcp_router.py:43-75` @ ae5b8a9
+
+MCP tools are hosted server-side via `FastMCP('mcp', mask_error_details=True)`, exposing PR/MR-creation tools per provider (`create_pr`, `create_mr`, `create_bitbucket_pr`, `create_bitbucket_data_center_pr`, `create_azure_devops_pr`); Tavily search is mounted as a proxy so the API key never enters the sandbox. `openhands/app_server/mcp/mcp_router.py:43-75 `, `:147-424 `
+
+<a id="g2-f009"></a>
+### Skills are attached to the agent by merging into AgentContext.skills via immutable model_copy updates, deduped by nam…
+
+`openhands/app_server/app_conversation/app_conversation_service_base.py:166-211` @ ae5b8a9
+
+Skills are attached to the agent by merging into `AgentContext.skills` via immutable `model_copy` updates, deduped by name with later sources overriding earlier ones. `openhands/app_server/app_conversation/app_conversation_service_base.py:166-211 `
+
+## Patterns worth porting
+
+<a id="g2-f010"></a>
+### Global skill-repo discovery
+
+`openhands/app_server/app_conversation/skill_loader.py:198-217` @ ae5b8a9
+
+for each authenticated git provider, enumerate the user's login plus their orgs/groups and probe convention repos (`owner/.openhands` + `owner/.agents` on GitHub-style, `owner/openhands-config` on GitLab/Azure). Discovery is bounded (`_MAX_ORG_CANDIDATES=30`), URL resolution runs concurrently under a semaphore (`_URL_RESOLVE_CONCURRENCY=8`), and unresolved repos are dropped. `openhands/app_server/app_conversation/skill_loader.py:198-217 `, `:264-370 `
+
+<a id="g2-f011"></a>
+### Confirmation policy is derived from two orthogonal inputs (a boolean confirmation-mode flag and the analyzer string) …
+
+`openhands/app_server/app_conversation/app_conversation_service_base.py:731-742` @ ae5b8a9
+
+Confirmation policy is derived from two orthogonal inputs (a boolean confirmation-mode flag and the analyzer string) rather than a mode matrix: off then `NeverConfirm`, on+llm-analyzer then `ConfirmRisky`, on otherwise then `AlwaysConfirm`. `openhands/app_server/app_conversation/app_conversation_service_base.py:731-742 `
+
+<a id="g2-f012"></a>
+### Workspace teardown is split from sandbox teardown
+
+`openhands/app_server/sandbox/sandbox_service.py:206-221` @ ae5b8a9
+
+`archive_conversation_workspace` (default no-op, overridden by the remote backend) captures a conversation's workspace *while the runtime is still up*, and returns False to keep the sandbox alive for a later capture when a required archive fails. `openhands/app_server/sandbox/sandbox_service.py:206-221 `
+
+<a id="g2-f013"></a>
+### Idle-capacity management
+
+`openhands/app_server/sandbox/sandbox_service.py:223-264` @ ae5b8a9
+
+`pause_old_sandboxes` pages through running sandboxes, sorts oldest-first, and pauses the overflow so `start_sandbox` can always make room by calling `pause_old_sandboxes(max_num_sandboxes - 1)`. `openhands/app_server/sandbox/sandbox_service.py:223-264 `, `openhands/app_server/sandbox/docker_sandbox_service.py:398-399 `
 
 ## Open threads / weak spots
 
-<a id="g2-f001"></a>
-### Context-window error loop detection is a stub
+<a id="g2-f014"></a>
+### The org_configs list is sent alongside a legacy singular org_config (first entry) to stay compatible with older agent…
 
-`stuck_detector.py:264-273`
+`openhands/app_server/app_conversation/skill_loader.py:428-439` @ ae5b8a9
 
-Context-window error loop detection is a stub (`stuck_detector.py:264-273`): pattern 5 of stuck detection is not yet implemented. An agent hitting a context-window error in a loop will not be classified as `STUCK` via this path.
+The `org_configs` list is sent alongside a legacy singular `org_config` (first entry) to stay compatible with older agent-server images — a dual-payload shim that needs removal once all images understand the list form. `openhands/app_server/app_conversation/skill_loader.py:428-439 `
 
-<a id="g2-f002"></a>
-### DelegateTool deprecated since v1.16.0, removed in v1.23.0
+<a id="g2-f015"></a>
+### The WEB_HOST default is hardcoded to app.all-hands.dev and PR-followup links only render in SAAS mode, so self-hosted…
 
-`impl.py:121-252`
+`openhands/app_server/mcp/mcp_router.py:45-46` @ ae5b8a9
 
-`DelegateTool` deprecated since v1.16.0, removed in v1.23.0 (`impl.py:121-252`): multi-agent delegation is being redesigned; any harness port should not depend on `DelegateTool`'s two-phase pattern as the canonical approach.
+The `WEB_HOST` default is hardcoded to `app.all-hands.dev` and PR-followup links only render in SAAS mode, so self-hosted deployments silently get no conversation backlink in generated PRs. `openhands/app_server/mcp/mcp_router.py:45-46 `, `:82-95 `
 
-<a id="g2-f003"></a>
-### Non-native function calling relies on in-context examples with model-specific exclusions
+<a id="g2-f016"></a>
+### Host-network mode plus max_num_sandboxes > 1 is only a runtime warning, not a guard; concurrent sandboxes will collid…
 
-`non_native_fc.py:39-63`
+`openhands/app_server/sandbox/docker_sandbox_service.py:390-396` @ ae5b8a9
 
-Non-native function calling relies on in-context examples with model-specific exclusions (`non_native_fc.py:39-63`): the exclusion list (`openhands-lm`, `devstral`, `nemotron`) is hard-coded. New models that handle tool prompting differently require manual additions.
+Host-network mode plus `max_num_sandboxes > 1` is only a runtime warning, not a guard; concurrent sandboxes will collide on the same host ports. `openhands/app_server/sandbox/docker_sandbox_service.py:390-396 `
 
-<a id="g2-f004"></a>
-### Tool argument repair is LLM-provider-specific and brittle
+<a id="g2-f017"></a>
+### Skill-loading failures are broadly swallowed and logged at debug/warning; a misconfigured provider silently yields fe…
 
-`utils.py:68-174`
+`openhands/app_server/app_conversation/skill_loader.py:481-492` @ ae5b8a9
 
-Tool argument repair is LLM-provider-specific and brittle (`utils.py:68-174`): `fix_malformed_tool_arguments` has explicit branches for GLM 4.6, kimi, and minimax. Each new broken provider requires a new branch.
-
-<a id="g2-f005"></a>
-### Hard context reset loses the entire conversation history
-
-`llm_summarizing_condenser.py:263-306`
-
-Hard context reset loses the entire conversation history (`llm_summarizing_condenser.py:263-306`): the fallback is last-resort and intentionally lossy; if the summarizer LLM also fails (e.g., rate limit), the agent may be unable to recover from a HARD condensation requirement.
-
-<a id="g2-f006"></a>
-### RouterLLM.__getattr__ silent fallback to first LLM
-
-`router/base.py:107-111`
-
-`RouterLLM.getattr` silent fallback to first LLM (`router/base.py:107-111`): attribute lookup failures fall through to the first LLM in the routing dict without warning. Misconfigured routing (e.g., wrong model key) fails silently.
-
-<a id="g2-f007"></a>
-### Jinja2 template cache is per-process, not distributed
-
-`tmp/oh-sdk/openhands/sdk/context/prompts/prompt.py:64-70`
-
-Jinja2 template cache is per-process, not distributed (`/tmp/oh-sdk/openhands/sdk/context/prompts/prompt.py:64-70`): in horizontally scaled deployments, each process warms its own cache independently. Not a correctness issue but a cold-start latency concern.
-
-<a id="g2-f008"></a>
-### ObservationUniquenessProperty registration order is a silent invariant
-
-`observation_uniqueness.py:18-74`
-
-`ObservationUniquenessProperty` registration order is a silent invariant (`observation_uniqueness.py:18-74`): must run before `ToolCallMatchingProperty` to avoid matched-but-duplicate observations causing pairing failures. This ordering is not enforced by type system.
-
-<a id="g2-f009"></a>
-### minimum_progress guard fixed at 10%
-
-`llm_summarizing_condenser.py:55-60`
-
-`minimum_progress` guard fixed at 10% (`llm_summarizing_condenser.py:55-60`): no configuration surface. In conversations with slow event growth, this threshold may cause repeated condensation failures before the window is actually full.
-
-<a id="g2-f010"></a>
-### streaming deltas not persisted
-
-`event_service.py:576-600`
-
-`streaming deltas not persisted` (`event_service.py:576-600`): streaming delta events are published to pub/sub but never written to `ConversationState.events`. If a subscriber crashes mid-stream, the partial LLM output is unrecoverable from the event log.
+Skill-loading failures are broadly swallowed and logged at debug/warning; a misconfigured provider silently yields fewer skills with no user-facing signal. `openhands/app_server/app_conversation/skill_loader.py:481-492 `, `openhands/app_server/app_conversation/app_conversation_service_base.py:161-164 `
 

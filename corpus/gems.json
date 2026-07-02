@@ -21,7 +21,7 @@
     "title": "OpenHands",
     "url": "https://github.com/OpenHands/OpenHands",
     "repo": "OpenHands/OpenHands",
-    "sha": null,
+    "sha": "ae5b8a995deb68bd00b8f3af0e87e4c2f3c580a6",
     "source": null,
     "topics": [
       "agent"
@@ -31,14 +31,14 @@
     "stage": "extracted",
     "license": "none",
     "codeReuse": "forbidden",
-    "findingCount": 10
+    "findingCount": 17
   },
   {
     "number": 3,
     "title": "gpt-researcher",
     "url": "https://github.com/assafelovic/gpt-researcher",
     "repo": "assafelovic/gpt-researcher",
-    "sha": "92bfc0388c",
+    "sha": "18d405166948e11b4a0304c0c4ec440bead9e4a5",
     "source": null,
     "topics": [
       "agent",
@@ -49,14 +49,14 @@
     "stage": "extracted",
     "license": "Apache-2.0",
     "codeReuse": "permissive",
-    "findingCount": 10
+    "findingCount": 20
   },
   {
     "number": 4,
-    "title": "pulse",
+    "title": "Imbad0202/academic-research-skills — academic research skills for Claude Code",
     "url": "https://github.com/Imbad0202/academic-research-skills/pulse",
     "repo": "Imbad0202/academic-research-skills",
-    "sha": null,
+    "sha": "95a7a94f225315a96d5f3fb3cf4a27a7dd058dfa",
     "source": null,
     "topics": [
       "research"
@@ -66,14 +66,14 @@
     "stage": "extracted",
     "license": "none",
     "codeReuse": "forbidden",
-    "findingCount": 6
+    "findingCount": 17
   },
   {
     "number": 5,
     "title": "ToolUniverse",
     "url": "https://github.com/mims-harvard/ToolUniverse",
     "repo": "mims-harvard/ToolUniverse",
-    "sha": "be6a89a3b8",
+    "sha": "9b7ff91ddb45b567cac2fa8ea31b82851e877617",
     "source": null,
     "topics": [
       "agent",
@@ -84,7 +84,7 @@
     "stage": "extracted",
     "license": "Apache-2.0",
     "codeReuse": "permissive",
-    "findingCount": 5
+    "findingCount": 18
   },
   {
     "number": 6,
@@ -109,7 +109,7 @@
     "title": "texlab",
     "url": "https://github.com/latex-lsp/texlab",
     "repo": "latex-lsp/texlab",
-    "sha": null,
+    "sha": "90836b9430639688576d52ca2dbc2f4216945d3b",
     "source": null,
     "topics": [
       "infra"
@@ -119,7 +119,7 @@
     "stage": "extracted",
     "license": "GPL-3.0",
     "codeReuse": "ideas-only",
-    "findingCount": 4
+    "findingCount": 22
   },
   {
     "number": 8,
@@ -281,15 +281,15 @@
     "title": "archestra",
     "url": "https://github.com/archestra-ai/archestra",
     "repo": "archestra-ai/archestra",
-    "sha": null,
+    "sha": "0773240758a392152e5bccb538ccfb6762026b52",
     "source": null,
     "topics": [],
     "verdict": null,
     "quality": "normal",
-    "stage": "raw",
+    "stage": "extracted",
     "license": "none",
     "codeReuse": "forbidden",
-    "findingCount": 0
+    "findingCount": 18
   },
   {
     "number": 18,
@@ -362,5 +362,594 @@
     "license": "none",
     "codeReuse": "forbidden",
     "findingCount": 89
+  },
+  {
+    "number": 22,
+    "title": "data-to-paper",
+    "url": "https://github.com/Technion-Kishony-lab/data-to-paper",
+    "repo": "Technion-Kishony-lab/data-to-paper",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "infra",
+      "research"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "MIT",
+    "codeReuse": "permissive",
+    "findingCount": 0
+  },
+  {
+    "number": 23,
+    "title": "restate",
+    "url": "https://github.com/restatedev/restate",
+    "repo": "restatedev/restate",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "infra"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "none",
+    "codeReuse": "forbidden",
+    "findingCount": 0
+  },
+  {
+    "number": 24,
+    "title": "dbos-transact-py",
+    "url": "https://github.com/dbos-inc/dbos-transact-py",
+    "repo": "dbos-inc/dbos-transact-py",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "infra"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "MIT",
+    "codeReuse": "permissive",
+    "findingCount": 0
+  },
+  {
+    "number": 25,
+    "title": "in-toto",
+    "url": "https://github.com/in-toto/in-toto",
+    "repo": "in-toto/in-toto",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "infra"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "none",
+    "codeReuse": "forbidden",
+    "findingCount": 0
+  },
+  {
+    "number": 26,
+    "title": "OpenLineage",
+    "url": "https://github.com/OpenLineage/OpenLineage",
+    "repo": "OpenLineage/OpenLineage",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "infra"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "Apache-2.0",
+    "codeReuse": "permissive",
+    "findingCount": 0
+  },
+  {
+    "number": 27,
+    "title": "datalad",
+    "url": "https://github.com/datalad/datalad",
+    "repo": "datalad/datalad",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "infra"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "none",
+    "codeReuse": "forbidden",
+    "findingCount": 0
+  },
+  {
+    "number": 28,
+    "title": "dolt",
+    "url": "https://github.com/dolthub/dolt",
+    "repo": "dolthub/dolt",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "infra"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "Apache-2.0",
+    "codeReuse": "permissive",
+    "findingCount": 0
+  },
+  {
+    "number": 29,
+    "title": "kitops",
+    "url": "https://github.com/kitops-ml/kitops",
+    "repo": "kitops-ml/kitops",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "infra"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "Apache-2.0",
+    "codeReuse": "permissive",
+    "findingCount": 0
+  },
+  {
+    "number": 30,
+    "title": "microsandbox",
+    "url": "https://github.com/microsandbox/microsandbox",
+    "repo": "microsandbox/microsandbox",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "infra"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "Apache-2.0",
+    "codeReuse": "permissive",
+    "findingCount": 0
+  },
+  {
+    "number": 31,
+    "title": "E2B",
+    "url": "https://github.com/e2b-dev/E2B",
+    "repo": "e2b-dev/E2B",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "infra"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "Apache-2.0",
+    "codeReuse": "permissive",
+    "findingCount": 0
+  },
+  {
+    "number": 32,
+    "title": "letta",
+    "url": "https://github.com/letta-ai/letta",
+    "repo": "letta-ai/letta",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "agent"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "Apache-2.0",
+    "codeReuse": "permissive",
+    "findingCount": 0
+  },
+  {
+    "number": 33,
+    "title": "SWE-agent",
+    "url": "https://github.com/SWE-agent/SWE-agent",
+    "repo": "SWE-agent/SWE-agent",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "agent"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "MIT",
+    "codeReuse": "permissive",
+    "findingCount": 0
+  },
+  {
+    "number": 34,
+    "title": "pydantic-ai",
+    "url": "https://github.com/pydantic/pydantic-ai",
+    "repo": "pydantic/pydantic-ai",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "agent"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "MIT",
+    "codeReuse": "permissive",
+    "findingCount": 0
+  },
+  {
+    "number": 35,
+    "title": "goose",
+    "url": "https://github.com/block/goose",
+    "repo": "block/goose",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "agent"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "Apache-2.0",
+    "codeReuse": "permissive",
+    "findingCount": 0
+  },
+  {
+    "number": 36,
+    "title": "Shannon",
+    "url": "https://github.com/Kocoro-lab/Shannon",
+    "repo": "Kocoro-lab/Shannon",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "agent",
+      "infra"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "MIT",
+    "codeReuse": "permissive",
+    "findingCount": 0
+  },
+  {
+    "number": 37,
+    "title": "dspy",
+    "url": "https://github.com/stanfordnlp/dspy",
+    "repo": "stanfordnlp/dspy",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "agent"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "MIT",
+    "codeReuse": "permissive",
+    "findingCount": 0
+  },
+  {
+    "number": 38,
+    "title": "composio",
+    "url": "https://github.com/ComposioHQ/composio",
+    "repo": "ComposioHQ/composio",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "agent"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "MIT",
+    "codeReuse": "permissive",
+    "findingCount": 0
+  },
+  {
+    "number": 39,
+    "title": "humanlayer",
+    "url": "https://github.com/humanlayer/humanlayer",
+    "repo": "humanlayer/humanlayer",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "agent"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "none",
+    "codeReuse": "forbidden",
+    "findingCount": 0
+  },
+  {
+    "number": 40,
+    "title": "inspect_ai",
+    "url": "https://github.com/UKGovernmentBEIS/inspect_ai",
+    "repo": "UKGovernmentBEIS/inspect_ai",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "eval"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "MIT",
+    "codeReuse": "permissive",
+    "findingCount": 0
+  },
+  {
+    "number": 41,
+    "title": "impossiblebench",
+    "url": "https://github.com/safety-research/impossiblebench",
+    "repo": "safety-research/impossiblebench",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "eval"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "MIT",
+    "codeReuse": "permissive",
+    "findingCount": 0
+  },
+  {
+    "number": 42,
+    "title": "tau-bench",
+    "url": "https://github.com/sierra-research/tau-bench",
+    "repo": "sierra-research/tau-bench",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "eval"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "MIT",
+    "codeReuse": "permissive",
+    "findingCount": 0
+  },
+  {
+    "number": 43,
+    "title": "vivaria",
+    "url": "https://github.com/METR/vivaria",
+    "repo": "METR/vivaria",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "eval",
+      "infra"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "MIT",
+    "codeReuse": "permissive",
+    "findingCount": 0
+  },
+  {
+    "number": 44,
+    "title": "TheAgentCompany",
+    "url": "https://github.com/TheAgentCompany/TheAgentCompany",
+    "repo": "TheAgentCompany/TheAgentCompany",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "eval"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "MIT",
+    "codeReuse": "permissive",
+    "findingCount": 0
+  },
+  {
+    "number": 45,
+    "title": "deep_research_bench",
+    "url": "https://github.com/Ayanami0730/deep_research_bench",
+    "repo": "Ayanami0730/deep_research_bench",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "eval",
+      "research"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "Apache-2.0",
+    "codeReuse": "permissive",
+    "findingCount": 0
+  },
+  {
+    "number": 46,
+    "title": "Mind2Web-2",
+    "url": "https://github.com/OSU-NLP-Group/Mind2Web-2",
+    "repo": "OSU-NLP-Group/Mind2Web-2",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "eval"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "MIT",
+    "codeReuse": "permissive",
+    "findingCount": 0
+  },
+  {
+    "number": 47,
+    "title": "verifiers",
+    "url": "https://github.com/PrimeIntellect-ai/verifiers",
+    "repo": "PrimeIntellect-ai/verifiers",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "eval"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "MIT",
+    "codeReuse": "permissive",
+    "findingCount": 0
+  },
+  {
+    "number": 48,
+    "title": "openevolve",
+    "url": "https://github.com/algorithmicsuperintelligence/openevolve",
+    "repo": "algorithmicsuperintelligence/openevolve",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "agent",
+      "research"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "Apache-2.0",
+    "codeReuse": "permissive",
+    "findingCount": 0
+  },
+  {
+    "number": 49,
+    "title": "Co-Scientist",
+    "url": "https://github.com/Kaimen-Inc/Co-Scientist",
+    "repo": "Kaimen-Inc/Co-Scientist",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "agent",
+      "research"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "Apache-2.0",
+    "codeReuse": "permissive",
+    "findingCount": 0
+  },
+  {
+    "number": 50,
+    "title": "AI-Researcher",
+    "url": "https://github.com/HKUDS/AI-Researcher",
+    "repo": "HKUDS/AI-Researcher",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "agent",
+      "research"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "none",
+    "codeReuse": "forbidden",
+    "findingCount": 0
+  },
+  {
+    "number": 51,
+    "title": "ResearchGym",
+    "url": "https://github.com/Anikethh/ResearchGym",
+    "repo": "Anikethh/ResearchGym",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "eval",
+      "research"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "none",
+    "codeReuse": "forbidden",
+    "findingCount": 0
+  },
+  {
+    "number": 52,
+    "title": "CellVoyager",
+    "url": "https://github.com/zou-group/CellVoyager",
+    "repo": "zou-group/CellVoyager",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "research"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "MIT",
+    "codeReuse": "permissive",
+    "findingCount": 0
+  },
+  {
+    "number": 53,
+    "title": "BioDiscoveryAgent",
+    "url": "https://github.com/snap-stanford/BioDiscoveryAgent",
+    "repo": "snap-stanford/BioDiscoveryAgent",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "agent",
+      "research"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "MIT",
+    "codeReuse": "permissive",
+    "findingCount": 0
+  },
+  {
+    "number": 54,
+    "title": "research-town",
+    "url": "https://github.com/ulab-uiuc/research-town",
+    "repo": "ulab-uiuc/research-town",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "agent",
+      "research"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "Apache-2.0",
+    "codeReuse": "permissive",
+    "findingCount": 0
+  },
+  {
+    "number": 55,
+    "title": "k-dense-byok",
+    "url": "https://github.com/K-Dense-AI/k-dense-byok",
+    "repo": "K-Dense-AI/k-dense-byok",
+    "sha": null,
+    "source": "repo",
+    "topics": [
+      "agent",
+      "research"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "MIT",
+    "codeReuse": "permissive",
+    "findingCount": 0
   }
 ]
