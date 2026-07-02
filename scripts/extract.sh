@@ -250,6 +250,7 @@ Rules — these are not suggestions:
 4. Quote at most 3 lines per finding, fenced with the file's language.
 5. Skip findings you cannot cite precisely. Quality over quantity.
 6. Output ONLY the four sections below in markdown — no preamble, no closing remarks.
+7. Extract the reusable IDEA, not the source text. Algorithms, techniques, and design decisions ("uses a treap keyed on priority", "gates the budget check before validity") are facts — freely reusable regardless of the repo's license — so state them in your own words. The <=3-line quote in rule 4 is illustration only: never reproduce a whole function, type, or file, and never paraphrase one line-for-line. Every finding must be something a reader can clean-room reimplement from your description; the downstream license/codeReuse flag governs whether the source *code* itself may be copied, but the idea is always fair game.
 
 ### Implementation decisions
 Non-obvious choices that pay off. ("Why this, not the naive thing?")
@@ -351,6 +352,7 @@ Rules — these are not suggestions:
 4. Quote at most 3 lines per finding, fenced with the file's language.
 5. Skip findings you cannot cite precisely. Quality over quantity.
 6. Output ONLY the four sections below in markdown — no preamble, no closing remarks.
+7. Extract the reusable IDEA, not the source text. Algorithms, techniques, and design decisions ("uses a treap keyed on priority", "gates the budget check before validity") are facts — freely reusable regardless of the repo's license — so state them in your own words. The <=3-line quote in rule 4 is illustration only: never reproduce a whole function, type, or file, and never paraphrase one line-for-line. Every finding must be something a reader can clean-room reimplement from your description; the downstream license/codeReuse flag governs whether the source *code* itself may be copied, but the idea is always fair game.
 
 ## Implementation decisions
 Non-obvious choices that pay off. ("Why this, not the naive thing?")
