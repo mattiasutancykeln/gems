@@ -68,6 +68,30 @@ test("server exposes 5 tools and answers a query", async () => {
   } finally { await client.close(); }
 });
 
+test("gems_query's topic enum reflects only the topics present in the corpus", async () => {
+  const client = await connect(makeCorpus());
+  try {
+    const { tools } = await client.listTools();
+    const queryTool = tools.find((t) => t.name === "gems_query");
+    const topicSchema = queryTool.inputSchema.properties.topic;
+    assert.deepEqual(topicSchema.enum, ["agent"]);       // the only topic present in makeCorpus()
+    assert.ok(!topicSchema.enum.includes("infra"));      // no finding in this corpus carries "infra"
+    assert.ok(!topicSchema.enum.includes("ux"));
+  } finally { await client.close(); }
+});
+
+test("a query result carries a scrapeable finding id that gems_get can resolve", async () => {
+  const client = await connect(makeCorpus());
+  try {
+    const res = await client.callTool({ name: "gems_query", arguments: { q: "claim queue file locks" } });
+    const text = res.content[0].text;
+    const match = text.match(/g\d+-f\d+/);
+    assert.ok(match, "expected a finding id like g1-f001 to appear in the rendered result");
+    const got = await client.callTool({ name: "gems_get", arguments: { id: match[0] } });
+    assert.doesNotMatch(got.content[0].text, /No finding with id/);
+  } finally { await client.close(); }
+});
+
 test("empty findings.jsonl: server still starts and a query returns actionable empty-state text", async () => {
   const client = await connect(makeEmptyCorpus());
   try {

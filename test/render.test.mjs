@@ -17,9 +17,9 @@ const hit = (id, gem, cluster, over = {}) => ({
   score: 3.2, ...over,
 });
 
-test("full block: rank, quality marker, category, breadcrumb, citation, license words, issue link", () => {
+test("full block: rank, quality marker, category, id, breadcrumb, citation, license words, issue link", () => {
   const md = renderHits([hit("g21-f007", 21, "c042")], { gemsByNumber });
-  assert.match(md, /### 1\. Budget-before-validity check\s+\[high\] pattern/);
+  assert.match(md, /### 1\. Budget-before-validity check\s+\[high\] pattern · g21-f007/);
   assert.match(md, /SciAgentArena \(gem #21\) · topics: eval/);
   assert.match(md, /`scorers\/oracle_budget\.py:147-153` @ ce27b8c/);
   assert.match(md, /License: none - FORBIDDEN to copy code/);
@@ -56,17 +56,68 @@ test("cluster with 2+ hits: compare header + compact siblings, nothing dropped",
     hit("g20-f009", 20, "c099", { title: "Dead-end registry", clusterLabel: "dead-end registry" }),
   ], { gemsByNumber });
   assert.match(md, /2 takes on "budget-gated verification" - compare:/);
-  assert.match(md, /Multi-seed noise gate .* `ROLE-GPU\.md:916-927`/);
+  assert.match(md, /Multi-seed noise gate — g20-f003 · gem #20.*`ROLE-GPU\.md:916-927`/);
   assert.match(md, /Dead-end registry/);                       // singleton still fully rendered
   const full = md.match(/^### \d+\./gm);
   assert.equal(full.length, 2);                                 // 2 full blocks (cluster best + singleton)
 });
 
-test("empty state is actionable", () => {
+test("full block shows term-match coverage for short keyword queries but omits it for long claims", () => {
+  const shortHit = hit("g21-f007", 21, "c042", { matched: 2, queryTermCount: 4 });
+  const mdShort = renderHits([shortHit], { gemsByNumber });
+  assert.match(mdShort, /matched 2\/4 terms/);
+
+  const longHit = hit("g21-f008", 21, "c043", { matched: 3, queryTermCount: 9 });
+  const mdLong = renderHits([longHit], { gemsByNumber });
+  assert.doesNotMatch(mdLong, /matched \d+\/\d+ terms/);
+});
+
+test("low-confidence banner fires when the top hit covers less than half the query terms", () => {
+  const weakHit = hit("g21-f007", 21, "c042", { matched: 1, queryTermCount: 4 });
+  const md = renderHits([weakHit], { gemsByNumber });
+  assert.match(md, /^Note: weak matches - the top result covers only 1 of 4 query terms/);
+
+  const strongHit = hit("g21-f009", 21, "c044", { matched: 3, queryTermCount: 4 });
+  const mdStrong = renderHits([strongHit], { gemsByNumber });
+  assert.doesNotMatch(mdStrong, /weak matches/);
+});
+
+test("no banner or term-match note when matched/queryTermCount are absent (gems_get, gems_inspire path)", () => {
+  const plain = hit("g21-f007", 21, "c042");
+  assert.equal(plain.matched, undefined);
+  assert.equal(plain.queryTermCount, undefined);
+  const md = renderHits([plain], { gemsByNumber });
+  assert.doesNotMatch(md, /weak matches/);
+  assert.doesNotMatch(md, /matched \d+\/\d+ terms/);
+});
+
+test("empty state leads with retry guidance, then topics, then the human submit link last", () => {
   const md = renderEmpty({ q: "quantum", findings: [hit("g21-f007", 21, "c042")], issueFormUrl: "https://github.com/mattiasutancykeln/gems/issues/new?template=gem.yml" });
-  assert.match(md, /No findings for "quantum"/);
+  assert.match(md, /^No findings for "quantum"\. Try: remove filters, broaden the query, or call gems_facets for the exact topic\/category\/codeReuse vocabulary\./);
   assert.match(md, /Available topics: eval/);
-  assert.match(md, /issues\/new\?template=gem\.yml/);
+  const lines = md.trim().split("\n");
+  assert.match(lines.at(-1), /^If this is a real gap a human can add it: .*issues\/new\?template=gem\.yml$/);
+  assert.doesNotMatch(md, /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u);
+});
+
+test("empty state names a filter value with zero findings in the corpus", () => {
+  const md = renderEmpty({
+    q: "quantum",
+    findings: [hit("g21-f007", 21, "c042")],
+    issueFormUrl: "https://github.com/mattiasutancykeln/gems/issues/new?template=gem.yml",
+    filters: { topic: "quantum-computing" },
+  });
+  assert.match(md, /No findings in the corpus match topic="quantum-computing"/);
+});
+
+test("empty state says nothing extra when the passed filter value exists in the corpus", () => {
+  const md = renderEmpty({
+    q: "quantum",
+    findings: [hit("g21-f007", 21, "c042")],
+    issueFormUrl: "https://github.com/mattiasutancykeln/gems/issues/new?template=gem.yml",
+    filters: { topic: "eval" },
+  });
+  assert.doesNotMatch(md, /No findings in the corpus match/);
 });
 
 test("snippet truncates at word boundary with ellipsis", () => {

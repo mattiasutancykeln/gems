@@ -30,3 +30,9 @@ test("deterministic tie-break by id", () => {
   const idx = buildIndex([{ id: "b", text: "same words" }, { id: "a", text: "same words" }]);
   assert.deepEqual(search(idx, "same words").map((h) => h.id), ["a", "b"]);
 });
+
+test("stopwords are dropped from tokenize, so a pure-stopword query has no terms and no results", () => {
+  assert.deepEqual(tokenize("the a an of to and is are"), []);
+  const idx = buildIndex(docs);
+  assert.deepEqual(search(idx, "the a an of"), []);
+});

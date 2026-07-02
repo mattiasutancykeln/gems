@@ -35,13 +35,16 @@ async function main() {
   const retriever = createRetriever({ findings });
   const clusters = new Set(findings.map((f) => f.clusterId)).size;
 
-  const asResult = (hits, q) => ({
-    content: [{ type: "text", text: hits.length ? renderHits(hits, { gemsByNumber }) : renderEmpty({ q, findings, issueFormUrl: ISSUE_FORM }) }],
+  const asResult = (hits, q, filters) => ({
+    content: [{ type: "text", text: hits.length ? renderHits(hits, { gemsByNumber }) : renderEmpty({ q, findings, issueFormUrl: ISSUE_FORM, filters }) }],
   });
 
   const server = new McpServer({ name: "gems", version: "1.0.0" });
-  const topicEnum = z.enum(["agent", "eval", "infra", "ux", "research"]).optional()
-    .describe("Filter by topic label");
+  // Advertise only the topics actually present in the loaded corpus so the
+  // tool schema never offers a filter value that can return zero results.
+  const topicValues = [...new Set(findings.flatMap((f) => f.topic))].sort();
+  const topicEnum = (topicValues.length ? z.enum(topicValues) : z.string()).optional()
+    .describe("Filter by topic label (values reflect the current corpus)");
 
   server.registerTool("gems_query", {
     title: "Search the gems corpus",
@@ -54,7 +57,7 @@ async function main() {
       quality: z.enum(["high", "normal"]).optional(),
       k: z.number().int().min(1).max(25).optional().describe("Max results, default 10"),
     },
-  }, async ({ q, k = 10, ...filters }) => asResult(retriever.query({ q, k, ...filters }), q));
+  }, async ({ q, k = 10, ...filters }) => asResult(retriever.query({ q, k, ...filters }), q, filters));
 
   server.registerTool("gems_ground", {
     title: "Ground a claim in cited findings",
@@ -64,7 +67,7 @@ async function main() {
       topic: topicEnum,
       k: z.number().int().min(1).max(15).optional().describe("Max results, default 6"),
     },
-  }, async ({ claim, topic, k = 6 }) => asResult(retriever.ground({ claim, topic, k }), claim));
+  }, async ({ claim, topic, k = 6 }) => asResult(retriever.ground({ claim, topic, k }), claim, { topic }));
 
   server.registerTool("gems_inspire", {
     title: "Get inspiration from standout findings",
@@ -73,7 +76,7 @@ async function main() {
       topic: topicEnum,
       k: z.number().int().min(1).max(15).optional().describe("Sample size, default 5"),
     },
-  }, async ({ topic, k = 5 }) => asResult(retriever.inspire({ topic, k }), topic ?? "inspiration"));
+  }, async ({ topic, k = 5 }) => asResult(retriever.inspire({ topic, k }), topic ?? "inspiration", { topic }));
 
   server.registerTool("gems_facets", {
     title: "List the gems corpus facets",

@@ -36,6 +36,25 @@ test("query never dedups near-identical hits", () => {
   assert.ok(ids.includes("g1-f001") && ids.includes("g2-f001"));
 });
 
+test("query hits carry matched and queryTermCount reflecting the tokenized query", () => {
+  const r = createRetriever({ findings });
+  const hits = r.query({ q: "file locks claim queue" });
+  assert.ok(hits.length > 0);
+  for (const h of hits) {
+    assert.equal(typeof h.matched, "number");
+    assert.equal(h.queryTermCount, 4); // file, locks, claim, queue - all distinct, none are stopwords
+    assert.ok(h.matched <= h.queryTermCount);
+  }
+});
+
+test("a gibberish token alongside one real term still surfaces a partial-coverage hit", () => {
+  const r = createRetriever({ findings });
+  const hits = r.query({ q: "zzzznotarealword claim" });
+  assert.ok(hits.length > 0);
+  assert.equal(hits[0].queryTermCount, 2);
+  assert.equal(hits[0].matched, 1);
+});
+
 test("ground defaults to k=6 and uses claim text", () => {
   const r = createRetriever({ findings });
   const hits = r.ground({ claim: "we should persist failed directions" });
