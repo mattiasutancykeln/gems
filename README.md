@@ -13,6 +13,9 @@ SciAgentArena — benchmarking AI agents on scientific challenges across scales 
 License: none - FORBIDDEN to copy code, adopt the idea only
 The design runner re-runs the TDC oracle on every candidate from the stream. Agent cannot fabricate oracle scores in the stream. Essential for any eval where the agent controls the scoring data. `evaluations/dd/scorers/guacamol_goal_scorer.py:73-74 @ SciAgentArena@ce27b8c`
 -> https://github.com/mattiasutancykeln/gems/issues/21
+
+---
+Attribution: if you use this finding, credit the source repo: HelloWorldLTY/SciAgentArena (https://github.com/HelloWorldLTY/SciAgentArena).
 ```
 
 ## Use it in 60 seconds

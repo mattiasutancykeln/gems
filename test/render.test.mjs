@@ -27,6 +27,28 @@ test("full block: rank, quality marker, category, breadcrumb, citation, license 
   assert.doesNotMatch(md, /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u);  // no emojis
 });
 
+test("attribution footer recommends citing the single source repo", () => {
+  const md = renderHits([hit("g21-f007", 21, "c042")], { gemsByNumber });
+  assert.match(md, /Attribution: if you use this finding, credit the source repo: HelloWorldLTY\/SciAgentArena \(https:\/\/github\.com\/HelloWorldLTY\/SciAgentArena\)\./);
+  assert.doesNotMatch(md, /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u);
+});
+
+test("attribution lists distinct source repos, deduped and sorted, for multiple hits", () => {
+  const md = renderHits([
+    hit("g21-f007", 21, "c001"),
+    hit("g21-f008", 21, "c002", { title: "Second SciAgentArena finding" }),
+    hit("g20-f003", 20, "c003", { title: "AutoScientists finding" }),
+  ], { gemsByNumber });
+  assert.match(md, /credit the source repos: HelloWorldLTY\/SciAgentArena \([^)]+\), mims-harvard\/AutoScientists \([^)]+\)\./);
+  // deduped: SciAgentArena appears once in the footer despite two hits
+  assert.equal((md.match(/credit the source repos:[^\n]*HelloWorldLTY\/SciAgentArena/g) || []).length, 1);
+});
+
+test("attribution falls back to gem issue when a finding has no repo", () => {
+  const md = renderHits([hit("g21-f007", 21, "c042", { repo: null })], { gemsByNumber });
+  assert.match(md, /Attribution: if you use this finding, credit the source gem: #21 \(https:\/\/github\.com\/mattiasutancykeln\/gems\/issues\/21\)\./);
+});
+
 test("cluster with 2+ hits: compare header + compact siblings, nothing dropped", () => {
   const md = renderHits([
     hit("g21-f007", 21, "c042"),
