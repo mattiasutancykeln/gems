@@ -850,7 +850,7 @@
     "title": "AI-Researcher",
     "url": "https://github.com/HKUDS/AI-Researcher",
     "repo": "HKUDS/AI-Researcher",
-    "sha": "f9a6f8480860c193afff600eeffe3defcee8a978",
+    "sha": null,
     "source": "repo",
     "topics": [
       "agent",
@@ -861,7 +861,7 @@
     "stage": "raw",
     "license": "none",
     "codeReuse": "forbidden",
-    "findingCount": 32
+    "findingCount": 0
   },
   {
     "number": 51,
@@ -951,5 +951,23 @@
     "license": "MIT",
     "codeReuse": "permissive",
     "findingCount": 0
+  },
+  {
+    "number": 56,
+    "title": "The Last Human-Written Paper — Agent-Native Research Artifacts (ARA)",
+    "url": "https://arxiv.org/abs/2604.24658",
+    "repo": null,
+    "sha": null,
+    "source": "paper",
+    "topics": [
+      "agent",
+      "research"
+    ],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "extracted",
+    "license": "none",
+    "codeReuse": "forbidden",
+    "findingCount": 34
   }
 ]
