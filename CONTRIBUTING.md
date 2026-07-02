@@ -17,8 +17,8 @@ The highest-value contribution: turn a summarized gem into a cited extraction re
 | Role | When | What you do |
 | --- | --- | --- |
 | **Scout** | You see a link | Add it as `stage:raw`. Done. |
-| **Synthesizer** | Inbox feels heavy | Run `mine.sh` to flip `raw → summarized` |
-| **Extractor** | A summarized item looks load-bearing | Run `extract.sh <#>` to flip `summarized → extracted` (expensive) |
+| **Synthesizer** | Inbox feels heavy | Run `mine.sh` to flip `raw -> summarized` |
+| **Extractor** | A summarized item looks load-bearing | Run `extract.sh <#>` to flip `summarized -> extracted` (expensive) |
 
 You can be all three. The roles are about *what you're doing right now*, not who you are.
 
@@ -33,7 +33,7 @@ Pick one of:
 ~/gems/scripts/add.sh https://example.com/cool-thing "looks like a cleaner take on X"
 
 # Web/mobile
-# https://github.com/mattiasutancykeln/gems → New Issue → "Gem"
+# https://github.com/mattiasutancykeln/gems -> New Issue -> "Gem"
 ```
 
 ### What belongs in the inbox
@@ -58,7 +58,7 @@ Pick one of:
 
 ---
 
-## Synthesizing — `raw → summarized`
+## Synthesizing — `raw -> summarized`
 
 Run anytime the inbox has fresh `stage:raw` items.
 
@@ -85,7 +85,7 @@ The Synthesizer pass is cheap (≈1 LLM call per item). Don't be precious about 
 
 ---
 
-## Extraction — `summarized → extracted` (deep, expensive)
+## Extraction — `summarized -> extracted` (deep, expensive)
 
 This is the load-bearing stage. The output is a structured technical report that a future agent (or a planner writing a shepherd implementation plan) can consume without going back to the source.
 
@@ -133,7 +133,7 @@ What it does:
 3. **Selects files** using ranked heuristics — agents, skills, tools, prompts, dispatchers, configs, key entry points. Capped by `--max-files`.
 4. **Dispatches parallel subagents.** Each worker is a separate `claude -p` process that receives the **full contents** of its assigned files and the extraction prompt. Workers run concurrently, capped by `--workers`.
 5. **Coordinator pass** merges, dedups, ranks, and produces the final comment.
-6. **Relabels** `stage:summarized → stage:extracted` (passing through `stage:extracting` while the script is running, so a parallel run won't double-process).
+6. **Relabels** `stage:summarized -> stage:extracted` (passing through `stage:extracting` while the script is running, so a parallel run won't double-process).
 
 ### Citation contract (strict)
 
