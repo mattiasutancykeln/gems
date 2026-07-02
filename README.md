@@ -2,7 +2,7 @@
 
 A mined, cited, searchable corpus of the best implementation patterns from open-source agent and research repos - queryable by your coding agent over MCP.
 
-<!-- stats:start -->**21 gems · 1264 findings · 1232 clusters** - MIT licensed<!-- stats:end -->
+<!-- stats:start -->**21 gems · 1264 findings · 1231 clusters** - MIT licensed<!-- stats:end -->
 
 Every finding is anchored to an exact `path:line-range @ sha` citation and carries a license flag so your agent knows whether it may copy code or only adopt the idea. Example hit, exactly as the MCP returns it:
 
@@ -11,7 +11,7 @@ Every finding is anchored to an exact `path:line-range @ sha` citation and carri
 SciAgentArena — benchmarking AI agents on scientific challenges across scales (gem #21) · topics: eval, research
 `evaluations/dd/scorers/guacamol_goal_scorer.py:73-74` @ ce27b8c
 License: none - FORBIDDEN to copy code, adopt the idea only
-**Re-evaluate oracle at scoring time; never trust agent-reported scores.** The design runner re-runs the TDC oracle on every candidate from the stream. Agent cannot fabricate oracle scores in the stream. Essential for any eval where the agent controls the scoring data.…
+The design runner re-runs the TDC oracle on every candidate from the stream. Agent cannot fabricate oracle scores in the stream. Essential for any eval where the agent controls the scoring data. `evaluations/dd/scorers/guacamol_goal_scorer.py:73-74 @ SciAgentArena@ce27b8c`
 -> https://github.com/mattiasutancykeln/gems/issues/21
 ```
 

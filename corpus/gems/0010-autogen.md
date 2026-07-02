@@ -151,7 +151,7 @@
 
 `python/packages/autogen-agentchat/src/autogen_agentchat/base/_termination.py:79-85` @ 027ecf0
 
-`python/packages/autogen-agentchat/src/autogen_agentchat/base/_termination.py:79-85` — `TerminationCondition` combines via operator overload (`__and__`, `__or__`), not factory methods, embedding composition into the condition type itself and enabling chaining.
+`python/packages/autogen-agentchat/src/autogen_agentchat/base/_termination.py:79-85` — `TerminationCondition` combines via operator overload (`and`, `or`), not factory methods, embedding composition into the condition type itself and enabling chaining.
 
 ## Skills, prompts, tools
 
@@ -288,42 +288,42 @@
 
 `python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_base_group_chat.py:114-128` @ 027ecf0
 
-**Multi-topic pub/sub for agent coordination** (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_base_group_chat.py:114-128` + `_base_group_chat_manager.py:196-243`): Use separate topic types for broadcast, direct manager comms, per-agent responses, and output aggregation. Participants subscribe to both their direct topic and a shared group topic. The orchestrator's subscription grants visibility into all three domains without coupling to individual agent runtimes.
+Multi-topic pub/sub for agent coordination (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_base_group_chat.py:114-128` + `_base_group_chat_manager.py:196-243`): Use separate topic types for broadcast, direct manager comms, per-agent responses, and output aggregation. Participants subscribe to both their direct topic and a shared group topic. The orchestrator's subscription grants visibility into all three domains without coupling to individual agent runtimes.
 
 <a id="g10-f040"></a>
 ### Structured completion contract via ledger
 
 `python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_magentic_one/_magentic_one_orchestrator.py:318-384` @ 027ecf0
 
-**Structured completion contract via ledger** (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_magentic_one/_magentic_one_orchestrator.py:318-384`): JSON ledger with retry loop and field validation is the canonical completion/handoff protocol. On any parse/validation failure, logs and retries up to `_max_json_retries` times before raising. This is the most portable structured-output harness in the repo.
+Structured completion contract via ledger (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_magentic_one/_magentic_one_orchestrator.py:318-384`): JSON ledger with retry loop and field validation is the canonical completion/handoff protocol. On any parse/validation failure, logs and retries up to `_max_json_retries` times before raising. This is the most portable structured-output harness in the repo.
 
 <a id="g10-f041"></a>
 ### Stall detection and replanning
 
 `python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_magentic_one/_magentic_one_orchestrator.py:392-406` @ 027ecf0
 
-**Stall detection and replanning** (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_magentic_one/_magentic_one_orchestrator.py:392-406`): Increments `_n_stalls` if progress not made or loop detected; decrements on progress. At threshold, triggers outer-loop re-entry (replanning) instead of terminal escalation. Enables recovery without human intervention.
+Stall detection and replanning (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_magentic_one/_magentic_one_orchestrator.py:392-406`): Increments `_n_stalls` if progress not made or loop detected; decrements on progress. At threshold, triggers outer-loop re-entry (replanning) instead of terminal escalation. Enables recovery without human intervention.
 
 <a id="g10-f042"></a>
 ### Active speaker tracking for multi-agent synchronization
 
 `python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_base_group_chat_manager.py:152-156` @ 027ecf0
 
-**Active speaker tracking for multi-agent synchronization** (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_base_group_chat_manager.py:152-156`): Track in-flight agents in a list; each response removes the agent. Once empty, proceed to next speakers. Avoids explicit barriers while supporting parallel agent turns.
+Active speaker tracking for multi-agent synchronization (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_base_group_chat_manager.py:152-156`): Track in-flight agents in a list; each response removes the agent. Once empty, proceed to next speakers. Avoids explicit barriers while supporting parallel agent turns.
 
 <a id="g10-f043"></a>
 ### Serializable exception protocol
 
 `python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_events.py:10-36` @ 027ecf0
 
-**Serializable exception protocol** (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_events.py:10-36`): Convert remote agent errors to `SerializableException` carrying type, message, and traceback. Publish as `GroupChatError` event. Parent can inspect, log, or propagate with full debugging context. Traceback preserved across process boundaries.
+Serializable exception protocol (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_events.py:10-36`): Convert remote agent errors to `SerializableException` carrying type, message, and traceback. Publish as `GroupChatError` event. Parent can inspect, log, or propagate with full debugging context. Traceback preserved across process boundaries.
 
 <a id="g10-f044"></a>
 ### Buffered message queues in worker agents
 
 `python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_chat_agent_container.py:53` @ 027ecf0
 
-**Buffered message queues in worker agents** (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_chat_agent_container.py:53,86-192`): Buffer incoming messages in event handlers (async, non-blocking), execute in RPC handler triggered by explicit request. Separates reception from execution, provides implicit backpressure, and allows the orchestrator to enforce ordering.
+Buffered message queues in worker agents (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_chat_agent_container.py:53,86-192`): Buffer incoming messages in event handlers (async, non-blocking), execute in RPC handler triggered by explicit request. Separates reception from execution, provides implicit backpressure, and allows the orchestrator to enforce ordering.
 
 Other takes: [gem #9](0009-scienceclaw.md#g9-f007), [gem #18](0018-arbor.md#g18-f028)
 
@@ -332,70 +332,70 @@ Other takes: [gem #9](0009-scienceclaw.md#g9-f007), [gem #18](0018-arbor.md#g18-
 
 `python/packages/autogen-agentchat/src/autogen_agentchat/tools/_agent.py:20-83` @ 027ecf0
 
-**Agents/teams as tools (inversion pattern)** (`python/packages/autogen-agentchat/src/autogen_agentchat/tools/_agent.py:20-83` + `_task_runner_tool.py:42-52`): Wrap agents and teams as `FunctionTool`-compatible callables. `run_stream()` is a transparent passthrough preserving streaming events. The final `TaskResult` is the canonical completion signal. Enables hierarchical composition without special orchestration code.
+Agents/teams as tools (inversion pattern) (`python/packages/autogen-agentchat/src/autogen_agentchat/tools/_agent.py:20-83` + `_task_runner_tool.py:42-52`): Wrap agents and teams as `FunctionTool`-compatible callables. `run_stream()` is a transparent passthrough preserving streaming events. The final `TaskResult` is the canonical completion signal. Enables hierarchical composition without special orchestration code.
 
 <a id="g10-f046"></a>
 ### Cancellation token with fan-out callbacks
 
 `python/packages/autogen-core/src/autogen_core/_cancellation_token.py:14-46` @ 027ecf0
 
-**Cancellation token with fan-out callbacks** (`python/packages/autogen-core/src/autogen_core/_cancellation_token.py:14-46`): Single shared token with callback registration allows cancellation signals to fan-out to all linked futures. Callbacks invoked under lock; new callbacks can be added after cancellation (idempotency lines 30-31). No special message passing required for cascade.
+Cancellation token with fan-out callbacks (`python/packages/autogen-core/src/autogen_core/_cancellation_token.py:14-46`): Single shared token with callback registration allows cancellation signals to fan-out to all linked futures. Callbacks invoked under lock; new callbacks can be added after cancellation (idempotency lines 30-31). No special message passing required for cascade.
 
 <a id="g10-f047"></a>
 ### Name-based agent addressing in state
 
 `python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_base_group_chat.py:782-825` @ 027ecf0
 
-**Name-based agent addressing in state** (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_base_group_chat.py:782-825`): Save agent state keyed by `agent.name` rather than ephemeral agent IDs. Makes state snapshots portable across runtime instances and team reincarnations without a mapping layer.
+Name-based agent addressing in state (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_base_group_chat.py:782-825`): Save agent state keyed by `agent.name` rather than ephemeral agent IDs. Makes state snapshots portable across runtime instances and team reincarnations without a mapping layer.
 
 <a id="g10-f048"></a>
 ### Stateful agent reset boundary
 
 `python/packages/autogen-agentchat/src/autogen_agentchat/agents/_society_of_mind_agent.py:243-250` @ 027ecf0
 
-**Stateful agent reset boundary** (`python/packages/autogen-agentchat/src/autogen_agentchat/agents/_society_of_mind_agent.py:243-250` + `_base_chat_agent.py:215-216`): Orchestrators call `reset()` explicitly after orchestration, wiping agent state and model context. Makes state lifecycle explicit, prevents cross-turn pollution in nested orchestration.
+Stateful agent reset boundary (`python/packages/autogen-agentchat/src/autogen_agentchat/agents/_society_of_mind_agent.py:243-250` + `_base_chat_agent.py:215-216`): Orchestrators call `reset()` explicitly after orchestration, wiping agent state and model context. Makes state lifecycle explicit, prevents cross-turn pollution in nested orchestration.
 
 <a id="g10-f049"></a>
 ### Lazy runtime initialization with custom injection
 
 `python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_base_group_chat.py:135-142` @ 027ecf0
 
-**Lazy runtime initialization with custom injection** (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_base_group_chat.py:135-142,487-528,645-648`): Accept `runtime=None`, create `SingleThreadedAgentRuntime` on demand. Supports both embedded runs (default) and injected runtimes (fleet mode, shared execution). `_embedded_runtime` flag controls lifecycle.
+Lazy runtime initialization with custom injection (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_base_group_chat.py:135-142,487-528,645-648`): Accept `runtime=None`, create `SingleThreadedAgentRuntime` on demand. Supports both embedded runs (default) and injected runtimes (fleet mode, shared execution). `_embedded_runtime` flag controls lifecycle.
 
 <a id="g10-f050"></a>
 ### Retry loop for LLM-driven speaker selection
 
 `python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_selector_group_chat.py:232-308` @ 027ecf0
 
-**Retry loop for LLM-driven speaker selection** (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_selector_group_chat.py:232-308`): If model returns 0 or >1 mentions, or selects previous speaker when disallowed, re-prompt with corrective feedback up to `max_selector_attempts`. Fallback to previous speaker or first participant.
+Retry loop for LLM-driven speaker selection (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_selector_group_chat.py:232-308`): If model returns 0 or >1 mentions, or selects previous speaker when disallowed, re-prompt with corrective feedback up to `max_selector_attempts`. Fallback to previous speaker or first participant.
 
 <a id="g10-f051"></a>
 ### Component-based config serialization
 
 `python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_base_group_chat.py:794-834` @ 027ecf0
 
-**Component-based config serialization** (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_base_group_chat.py:794-834` + `_society_of_mind_agent.py:282-302`): Agents, teams, termination conditions, and message factories implement `dump_component()` -> config and `load_component(config)` -> instance. Enables JSON persistence with full type safety across all orchestration primitives.
+Component-based config serialization (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_base_group_chat.py:794-834` + `_society_of_mind_agent.py:282-302`): Agents, teams, termination conditions, and message factories implement `dump_component()` -> config and `load_component(config)` -> instance. Enables JSON persistence with full type safety across all orchestration primitives.
 
 <a id="g10-f052"></a>
 ### Candidate filtering before LLM speaker selection
 
 `python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_selector_group_chat.py:180-199` @ 027ecf0
 
-**Candidate filtering before LLM speaker selection** (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_selector_group_chat.py:180-199`): Optional custom candidate function runs before model-based selection. Fallback logic filters previous speaker unless `allow_repeated_speaker=True`. Ensures speaker pool is controlled before LLM sees it.
+Candidate filtering before LLM speaker selection (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_selector_group_chat.py:180-199`): Optional custom candidate function runs before model-based selection. Fallback logic filters previous speaker unless `allow_repeated_speaker=True`. Ensures speaker pool is controlled before LLM sees it.
 
 <a id="g10-f053"></a>
 ### State as flat agent-name -> state dict
 
 `python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_magentic_one/_magentic_one_orchestrator.py:225-245` @ 027ecf0
 
-**State as flat agent-name -> state dict** (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_magentic_one/_magentic_one_orchestrator.py:225-245`): Orchestrator state captures message thread, turn count, task, facts, plan, round count, stall count. Flat structure simplifies restore logic and avoids index fragility when participant order changes.
+State as flat agent-name -> state dict (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_magentic_one/_magentic_one_orchestrator.py:225-245`): Orchestrator state captures message thread, turn count, task, facts, plan, round count, stall count. Flat structure simplifies restore logic and avoids index fragility when participant order changes.
 
 <a id="g10-f054"></a>
 ### Explicit publish-message pattern for audit
 
 `python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_base_group_chat_manager.py:104-129` @ 027ecf0
 
-**Explicit publish-message pattern for audit** (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_base_group_chat_manager.py:104-129`): Every internal message (agent response, speaker selection, termination) is published to the output topic before being acted upon. Real-time observers see orchestration decisions without modifying orchestrator code.
+Explicit publish-message pattern for audit (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_base_group_chat_manager.py:104-129`): Every internal message (agent response, speaker selection, termination) is published to the output topic before being acted upon. Real-time observers see orchestration decisions without modifying orchestrator code.
 
 ## Open threads / weak spots
 

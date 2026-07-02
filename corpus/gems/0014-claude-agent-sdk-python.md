@@ -32,7 +32,7 @@
 
 `src/claude_agent_sdk/types.py:1760-1771` @ 7c37e34
 
-`src/claude_agent_sdk/types.py:1760-1771` — Hooks dispatch **concurrently** for the same event; multiple matchers fire in parallel with no sequential ordering guarantee. Hook callbacks must be designed as independent functions.
+`src/claude_agent_sdk/types.py:1760-1771` — Hooks dispatch concurrently for the same event; multiple matchers fire in parallel with no sequential ordering guarantee. Hook callbacks must be designed as independent functions.
 
 <a id="g14-f004"></a>
 ### Task control is minimal
@@ -225,105 +225,105 @@
 
 `src/claude_agent_sdk/types.py:289-306` @ 7c37e34
 
-**Subagent context mixin for fleet attribution:** `_SubagentContextMixin` (optional `agent_id` and `agent_type` fields) mixed into tool-lifecycle hook inputs attributes interleaved parallel tool calls to the correct sub-agent — no explicit fleet registry needed (`src/claude_agent_sdk/types.py:289-306`).
+`_SubagentContextMixin` (optional `agent_id` and `agent_type` fields) mixed into tool-lifecycle hook inputs attributes interleaved parallel tool calls to the correct sub-agent — no explicit fleet registry needed (`src/claude_agent_sdk/types.py:289-306`).
 
 <a id="g14-f031"></a>
 ### Task-level usage rollup
 
 `src/claude_agent_sdk/types.py:1047-1111` @ 7c37e34
 
-**Task-level usage rollup:** `TaskProgress` messages carry `total_tokens`, `tool_uses`, `duration_ms`, and `tool_use_id` — parent can aggregate child resource consumption without a separate accounting layer (`src/claude_agent_sdk/types.py:1047-1111`).
+`TaskProgress` messages carry `total_tokens`, `tool_uses`, `duration_ms`, and `tool_use_id` — parent can aggregate child resource consumption without a separate accounting layer (`src/claude_agent_sdk/types.py:1047-1111`).
 
 <a id="g14-f032"></a>
 ### Inflight request tracking with cancellation
 
 `_internal/query.py:236-245` @ 7c37e34
 
-**Inflight request tracking with cancellation:** `_internal/query.py:236-245` maps `request_id` to `TaskHandle`; done callback cleans up the mapping; cancellation propagates via `control_cancel_request` with `request_id`, allowing selective child cancellation by ID.
+`_internal/query.py:236-245` maps `request_id` to `TaskHandle`; done callback cleans up the mapping; cancellation propagates via `control_cancel_request` with `request_id`, allowing selective child cancellation by ID.
 
 <a id="g14-f033"></a>
 ### Deferred tool use for human-in-the-loop
 
 `src/claude_agent_sdk/types.py:1130-1142` @ 7c37e34
 
-**Deferred tool use for human-in-the-loop:** `DeferredToolUse` (id, name, input dict) surfaces when a PreToolUse hook returns `"defer"`, halting the run and allowing the caller to inspect and decide resumption (`src/claude_agent_sdk/types.py:1130-1142`).
+`DeferredToolUse` (id, name, input dict) surfaces when a PreToolUse hook returns `"defer"`, halting the run and allowing the caller to inspect and decide resumption (`src/claude_agent_sdk/types.py:1130-1142`).
 
 <a id="g14-f034"></a>
 ### Session store append/load contract
 
 `src/claude_agent_sdk/types.py:1392-1428` @ 7c37e34
 
-**Session store append/load contract:** `append` called after local write succeeds (durability guaranteed); entries carry `uuid` idempotency keys; `load` returns full session or `None`. Batched or eager flush — adapters decouple from flush timing (`src/claude_agent_sdk/types.py:1392-1428`).
+`append` called after local write succeeds (durability guaranteed); entries carry `uuid` idempotency keys; `load` returns full session or `None`. Batched or eager flush — adapters decouple from flush timing (`src/claude_agent_sdk/types.py:1392-1428`).
 
 <a id="g14-f035"></a>
 ### SessionKey struct with subpath for subagent transcripts
 
 `src/claude_agent_sdk/types.py:1276-1296` @ 7c37e34
 
-**SessionKey struct with subpath for subagent transcripts:** `project_key/session_id[/subpath]` mirrors on-disk structure; multi-tenant deployments override `project_key` with a tenant ID; long paths are hashed for portability (`src/claude_agent_sdk/types.py:1276-1296`).
+`project_key/session_id[/subpath]` mirrors on-disk structure; multi-tenant deployments override `project_key` with a tenant ID; long paths are hashed for portability (`src/claude_agent_sdk/types.py:1276-1296`).
 
 <a id="g14-f036"></a>
 ### Store-to-filesystem materialization for subprocess CLI
 
 `src/claude_agent_sdk/_internal/session_resume.py:123-193` @ 7c37e34
 
-**Store-to-filesystem materialization for subprocess CLI:** Load from store, write temp `CLAUDE_CONFIG_DIR`, copy auth files, conditionally materialize subagent transcripts (only if store implements `list_subkeys`), return cleanup coroutine — isolates store logic from file-only CLI path (`src/claude_agent_sdk/_internal/session_resume.py:123-193`).
+Load from store, write temp `CLAUDE_CONFIG_DIR`, copy auth files, conditionally materialize subagent transcripts (only if store implements `list_subkeys`), return cleanup coroutine — isolates store logic from file-only CLI path (`src/claude_agent_sdk/_internal/session_resume.py:123-193`).
 
 <a id="g14-f037"></a>
 ### Subpath safety validation
 
 `src/claude_agent_sdk/_internal/session_resume.py:504-536` @ 7c37e34
 
-**Subpath safety validation:** `_is_safe_subpath` rejects absolute, `..`, NUL bytes, drive prefixes, validates resolution under parent — applies to any store-to-filesystem materialization (`src/claude_agent_sdk/_internal/session_resume.py:504-536`).
+`_is_safe_subpath` rejects absolute, `..`, NUL bytes, drive prefixes, validates resolution under parent — applies to any store-to-filesystem materialization (`src/claude_agent_sdk/_internal/session_resume.py:504-536`).
 
 <a id="g14-f038"></a>
 ### Bounded concurrency for store enumeration
 
 `src/claude_agent_sdk/_internal/sessions.py:1539-1549` @ 7c37e34
 
-**Bounded concurrency for store enumeration:** `anyio.CapacityLimiter(16)` limits concurrent `load()` calls; per-entry exception handling degrades to empty summary (not whole-list failure) — prevents connection pool exhaustion with graceful degradation (`src/claude_agent_sdk/_internal/sessions.py:1539-1549`).
+`anyio.CapacityLimiter(16)` limits concurrent `load()` calls; per-entry exception handling degrades to empty summary (not whole-list failure) — prevents connection pool exhaustion with graceful degradation (`src/claude_agent_sdk/_internal/sessions.py:1539-1549`).
 
 <a id="g14-f039"></a>
 ### Lite metadata from head/tail slices
 
 `src/claude_agent_sdk/_internal/sessions.py:341-350` @ 7c37e34
 
-**Lite metadata from head/tail slices:** 65KB head + 65KB tail buffers + regex field extraction avoids full JSONL parse for catalog operations; field-search precedence models multi-source fallback (`src/claude_agent_sdk/_internal/sessions.py:341-350`).
+65KB head + 65KB tail buffers + regex field extraction avoids full JSONL parse for catalog operations; field-search precedence models multi-source fallback (`src/claude_agent_sdk/_internal/sessions.py:341-350`).
 
 <a id="g14-f040"></a>
 ### Incremental summary sidecar on append
 
 `src/claude_agent_sdk/_internal/session_store.py:64-81` @ 7c37e34
 
-**Incremental summary sidecar on append:** `fold_session_summary()` called on every `append()`, stamped with storage write time; enables staleness check without re-reading source entries (`src/claude_agent_sdk/_internal/session_store.py:64-81`).
+`fold_session_summary()` called on every `append()`, stamped with storage write time; enables staleness check without re-reading source entries (`src/claude_agent_sdk/_internal/session_store.py:64-81`).
 
 <a id="g14-f041"></a>
 ### Conversation chain from uuid/parentUuid links
 
 `src/claude_agent_sdk/_internal/sessions.py:931-1020` @ 7c37e34
 
-**Conversation chain from uuid/parentUuid links:** Index -> find terminals -> pick best leaf by type + position -> walk `parentUuid` backward -> reverse; `logicalParentUuid` skip prevents post-compaction duplication (`src/claude_agent_sdk/_internal/sessions.py:931-1020`).
+Index -> find terminals -> pick best leaf by type + position -> walk `parentUuid` backward -> reverse; `logicalParentUuid` skip prevents post-compaction duplication (`src/claude_agent_sdk/_internal/sessions.py:931-1020`).
 
 <a id="g14-f042"></a>
 ### JSON message buffer with speculative parsing
 
 `src/claude_agent_sdk/_internal/transport/subprocess_cli.py:636-694` @ 7c37e34
 
-**JSON message buffer with speculative parsing:** Non-JSON lines mid-parse are discarded; lines not starting with `{` when buffer is empty are skipped (preventing `[SandboxDebug]` prefix corruption); buffer size limit raises `SDKJSONDecodeError` with context (`src/claude_agent_sdk/_internal/transport/subprocess_cli.py:636-694`).
+Non-JSON lines mid-parse are discarded; lines not starting with `{` when buffer is empty are skipped (preventing `[SandboxDebug]` prefix corruption); buffer size limit raises `SDKJSONDecodeError` with context (`src/claude_agent_sdk/_internal/transport/subprocess_cli.py:636-694`).
 
 <a id="g14-f043"></a>
 ### Permission callback requires streaming mode
 
 `src/claude_agent_sdk/client.py:159-178` @ 7c37e34
 
-**Permission callback requires streaming mode:** `can_use_tool` auto-sets permission mode to "stdio"; mutually exclusive with `permission_prompt_tool_name`; raises immediately if set with a string prompt — enforces bidirectional control protocol routing (`src/claude_agent_sdk/client.py:159-178`).
+`can_use_tool` auto-sets permission mode to "stdio"; mutually exclusive with `permission_prompt_tool_name`; raises immediately if set with a string prompt — enforces bidirectional control protocol routing (`src/claude_agent_sdk/client.py:159-178`).
 
 <a id="g14-f044"></a>
 ### Filesystem-backed agent loading via setting_sources
 
 `examples/filesystem_agents.py:28-68` @ 7c37e34
 
-**Filesystem-backed agent loading via setting_sources:** `setting_sources=["project"]` triggers agent discovery from `.claude/agents/*.md`; agents surface in an "init" `SystemMessage` so orchestrator can inspect available agents without hardcoding (`examples/filesystem_agents.py:28-68`).
+`setting_sources=["project"]` triggers agent discovery from `.claude/agents/*.md`; agents surface in an "init" `SystemMessage` so orchestrator can inspect available agents without hardcoding (`examples/filesystem_agents.py:28-68`).
 
 ## Open threads / weak spots
 

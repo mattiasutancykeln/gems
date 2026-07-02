@@ -39,7 +39,7 @@
 
 `src/smolagents/agents.py:868-890` @ e8b988d
 
-`src/smolagents/agents.py:868-890` — Managed agent `__call__` wraps `agent.run()` output with a prompt template; the `provide_run_summary` flag controls whether the full work log (raw memory messages) is appended. No pagination or size guard exists on the appended log.
+`src/smolagents/agents.py:868-890` — Managed agent `call` wraps `agent.run()` output with a prompt template; the `provide_run_summary` flag controls whether the full work log (raw memory messages) is appended. No pagination or size guard exists on the appended log.
 
 <a id="g13-f005"></a>
 ### State variable substitution at tool call time
@@ -81,7 +81,7 @@
 
 `src/smolagents/models.py:1174-1183` @ e8b988d
 
-`src/smolagents/models.py:1174-1183` — Retry policy: `RateLimiter` throttles before call; `Retrying` handles post-call retries with exponential backoff, jitter, and predicate-based conditions (`is_rate_limit_error` matching "429", "rate limit", "too many requests"). Both concerns are separate objects composed at `ApiModel.__init__`.
+`src/smolagents/models.py:1174-1183` — Retry policy: `RateLimiter` throttles before call; `Retrying` handles post-call retries with exponential backoff, jitter, and predicate-based conditions (`is_rate_limit_error` matching "429", "rate limit", "too many requests"). Both concerns are separate objects composed at `ApiModel.init`.
 
 <a id="g13-f011"></a>
 ### Final answer serialization uses explicit prefix-based format ( "safe:" or "pickle:" ) to distinguish modes at deseria…
@@ -123,7 +123,7 @@
 
 `src/smolagents/tool_validation.py:157-263` @ e8b988d
 
-`src/smolagents/tool_validation.py:157-263` — Tool validation enforces class-level immutability: class attributes must be literals/dicts, `__init__` parameters must have defaults, all methods self-contained referencing only declared names. Prevents tool state from hiding in init args, ensuring reproducibility across orchestrator boundaries.
+`src/smolagents/tool_validation.py:157-263` — Tool validation enforces class-level immutability: class attributes must be literals/dicts, `init` parameters must have defaults, all methods self-contained referencing only declared names. Prevents tool state from hiding in init args, ensuring reproducibility across orchestrator boundaries.
 
 <a id="g13-f017"></a>
 ### Stream delta agglomeration collects partial tool-call state across index keys, concatenating arguments incrementally …
@@ -253,112 +253,112 @@
 
 `src/smolagents/agents.py:416-434` @ e8b988d
 
-`src/smolagents/agents.py:416-434` — **Callback registry keyed by MemoryStep class type.** `step_callbacks[ActionStep]`, `step_callbacks[PlanningStep]`, etc. enable selective instrumentation per step kind without monolithic if/else dispatch. Combined with `inspect.signature` at `src/smolagents/memory.py:280-317` for backwards-compatible multi-argument callback contracts.
+`src/smolagents/agents.py:416-434` — Callback registry keyed by MemoryStep class type. `step_callbacks[ActionStep]`, `step_callbacks[PlanningStep]`, etc. enable selective instrumentation per step kind without monolithic if/else dispatch. Combined with `inspect.signature` at `src/smolagents/memory.py:280-317` for backwards-compatible multi-argument callback contracts.
 
 <a id="g13-f035"></a>
 ### MemoryStep polymorphism with to_messages() contract
 
 `src/smolagents/memory.py:42-150` @ e8b988d
 
-`src/smolagents/memory.py:42-150` — **MemoryStep polymorphism with `to_messages()` contract.** Each step type (`ActionStep`, `PlanningStep`, `TaskStep`, `SystemPromptStep`, `FinalAnswerStep`) implements `to_messages()` that reconstructs its own `ChatMessage` sequence for context reinjection. Agent replays history without storing raw model exchanges.
+`src/smolagents/memory.py:42-150` — MemoryStep polymorphism with `to_messages()` contract. Each step type (`ActionStep`, `PlanningStep`, `TaskStep`, `SystemPromptStep`, `FinalAnswerStep`) implements `to_messages()` that reconstructs its own `ChatMessage` sequence for context reinjection. Agent replays history without storing raw model exchanges.
 
 <a id="g13-f036"></a>
 ### SafeSerializer prefix pattern
 
 `src/smolagents/remote_executors.py:115-131` @ e8b988d
 
-`src/smolagents/remote_executors.py:115-131` — **SafeSerializer prefix pattern.** Serialize variables as a prefixed string (`"safe:"` / `"pickle:"`), transmit and deserialize in a single code block sent to the remote executor, with `allow_pickle` baked into the generated deserializer code at generation time. Decouples serialization policy from deserialization discovery.
+`src/smolagents/remote_executors.py:115-131` — SafeSerializer prefix pattern. Serialize variables as a prefixed string (`"safe:"` / `"pickle:"`), transmit and deserialize in a single code block sent to the remote executor, with `allow_pickle` baked into the generated deserializer code at generation time. Decouples serialization policy from deserialization discovery.
 
 <a id="g13-f037"></a>
 ### Executor factory pattern
 
 `src/smolagents/agents.py:1598-1618` @ e8b988d
 
-`src/smolagents/agents.py:1598-1618` — **Executor factory pattern.** `create_python_executor()` routes to `LocalPythonExecutor` or remote variants (Blaxel/E2B/Modal/Docker) based on `executor_type` enum. `cleanup()` ensures resource release. Runtime selection without agent template changes.
+`src/smolagents/agents.py:1598-1618` — Executor factory pattern. `create_python_executor()` routes to `LocalPythonExecutor` or remote variants (Blaxel/E2B/Modal/Docker) based on `executor_type` enum. `cleanup()` ensures resource release. Runtime selection without agent template changes.
 
 <a id="g13-f038"></a>
 ### WebSocket Jupyter kernel protocol for async execution tracking
 
 `src/smolagents/remote_executors.py:450-525` @ e8b988d
 
-`src/smolagents/remote_executors.py:450-525` — **WebSocket Jupyter kernel protocol for async execution tracking.** Send UUID-stamped `execute_request`, loop filtering incoming messages by `parent_header.msg_id` until `status == "idle"`, handle stream/execute_result/error/status types with early exit on `FinalAnswerException`. Clean protocol implementation with explicit message-type dispatch.
+`src/smolagents/remote_executors.py:450-525` — WebSocket Jupyter kernel protocol for async execution tracking. Send UUID-stamped `execute_request`, loop filtering incoming messages by `parent_header.msg_id` until `status == "idle"`, handle stream/execute_result/error/status types with early exit on `FinalAnswerException`. Clean protocol implementation with explicit message-type dispatch.
 
 <a id="g13-f039"></a>
 ### Operation counting for runaway detection
 
 `src/smolagents/local_python_executor.py:1444-1449` @ e8b988d
 
-`src/smolagents/local_python_executor.py:1444-1449` — **Operation counting for runaway detection.** Each AST node evaluation increments a counter in the state dict; exceeding `MAX_OPERATIONS` (10M) raises an error mentioning infinite loops. Simpler than instrumentation; catches loops and recursive calls at evaluation level.
+`src/smolagents/local_python_executor.py:1444-1449` — Operation counting for runaway detection. Each AST node evaluation increments a counter in the state dict; exceeding `MAX_OPERATIONS` (10M) raises an error mentioning infinite loops. Simpler than instrumentation; catches loops and recursive calls at evaluation level.
 
 <a id="g13-f040"></a>
 ### Managed agent bootstrapping from parent
 
 `src/smolagents/agents.py:369-388` @ e8b988d
 
-`src/smolagents/agents.py:369-388` — **Managed agent bootstrapping from parent.** `inputs`/`output_type` set at parent init time, not at child construction. Enables parent to standardize child interface without modifying child code.
+`src/smolagents/agents.py:369-388` — Managed agent bootstrapping from parent. `inputs`/`output_type` set at parent init time, not at child construction. Enables parent to standardize child interface without modifying child code.
 
 <a id="g13-f041"></a>
 ### Centralized parameter preparation
 
 `src/smolagents/models.py:452-551` @ e8b988d
 
-`src/smolagents/models.py:452-551` — **Centralized parameter preparation.** Single method handles message conversion, role translation, tool schema generation, and kwarg merging. Callers pass minimal args; preparation normalizes for downstream APIs (OpenAI, Bedrock, vLLM, etc.).
+`src/smolagents/models.py:452-551` — Centralized parameter preparation. Single method handles message conversion, role translation, tool schema generation, and kwarg merging. Callers pass minimal args; preparation normalizes for downstream APIs (OpenAI, Bedrock, vLLM, etc.).
 
 <a id="g13-f042"></a>
 ### Composable retry/rate-limit pattern
 
 `src/smolagents/utils.py:497-607` @ e8b988d
 
-`src/smolagents/utils.py:497-607` — **Composable retry/rate-limit pattern.** `RateLimiter` (fixed interval or disabled) and `Retrying` (exponential backoff + predicate + logging hooks) are separate concerns combined at model init. Predicate-based retry enables provider-agnostic conditions.
+`src/smolagents/utils.py:497-607` — Composable retry/rate-limit pattern. `RateLimiter` (fixed interval or disabled) and `Retrying` (exponential backoff + predicate + logging hooks) are separate concerns combined at model init. Predicate-based retry enables provider-agnostic conditions.
 
 <a id="g13-f043"></a>
 ### Augmented assignment via uniform set_value
 
 `src/smolagents/local_python_executor.py:668-707` @ e8b988d
 
-`src/smolagents/local_python_executor.py:668-707` — **Augmented assignment via uniform set_value.** Fetch current value (from state/subscript/attribute), apply operation, use `set_value` uniformly across names, tuples, subscripts, and attributes. Avoids code duplication across `+=` `-=` `*=` etc.
+`src/smolagents/local_python_executor.py:668-707` — Augmented assignment via uniform set_value. Fetch current value (from state/subscript/attribute), apply operation, use `set_value` uniformly across names, tuples, subscripts, and attributes. Avoids code duplication across `+=` `-=` `*=` etc.
 
 <a id="g13-f044"></a>
 ### Layered function lookup with close-match suggestions
 
 `src/smolagents/local_python_executor.py:825-918` @ e8b988d
 
-`src/smolagents/local_python_executor.py:825-918` — **Layered function lookup with close-match suggestions.** `evaluate_call` dispatch: state -> static_tools -> custom_tools -> ERRORS, with `difflib` close-match suggestions for LLM debugging of typos.
+`src/smolagents/local_python_executor.py:825-918` — Layered function lookup with close-match suggestions. `evaluate_call` dispatch: state -> static_tools -> custom_tools -> ERRORS, with `difflib` close-match suggestions for LLM debugging of typos.
 
 <a id="g13-f045"></a>
 ### AST visitor with in_method context flag
 
 `src/smolagents/tool_validation.py:172-224` @ e8b988d
 
-`src/smolagents/tool_validation.py:172-224` — **AST visitor with `in_method` context flag.** `ClassLevelChecker` uses a single visitor with a boolean flag to distinguish class-level vs method-level checks, separating concerns without duplication.
+`src/smolagents/tool_validation.py:172-224` — AST visitor with `in_method` context flag. `ClassLevelChecker` uses a single visitor with a boolean flag to distinguish class-level vs method-level checks, separating concerns without duplication.
 
 <a id="g13-f046"></a>
 ### Dual-mode serialization with explicit fallback
 
 `src/smolagents/serialization.py:267-292` @ e8b988d
 
-`src/smolagents/serialization.py:267-292` — **Dual-mode serialization with explicit fallback.** JSON-safe is primary; pickle is opt-in with `FutureWarning`. Prefix tagging enables router/deserializer to auto-detect format without guessing.
+`src/smolagents/serialization.py:267-292` — Dual-mode serialization with explicit fallback. JSON-safe is primary; pickle is opt-in with `FutureWarning`. Prefix tagging enables router/deserializer to auto-detect format without guessing.
 
 <a id="g13-f047"></a>
 ### Model factory with provider branching
 
 `src/smolagents/cli.py:188-216` @ e8b988d
 
-`src/smolagents/cli.py:188-216` — **Model factory with provider branching.** `load_model()` centralizes model instantiation across OpenAI, LiteLLM, Transformers, and `InferenceClient`, each with distinct configuration (api_key source, api_base, device_map). Swappable at runtime without agent template changes.
+`src/smolagents/cli.py:188-216` — Model factory with provider branching. `load_model()` centralizes model instantiation across OpenAI, LiteLLM, Transformers, and `InferenceClient`, each with distinct configuration (api_key source, api_base, device_map). Swappable at runtime without agent template changes.
 
 <a id="g13-f048"></a>
 ### Composable TokenUsage and Timing dataclasses
 
 `src/smolagents/monitoring.py:36-79` @ e8b988d
 
-`src/smolagents/monitoring.py:36-79` — **Composable `TokenUsage` and `Timing` dataclasses.** `TokenUsage` auto-computes `total_tokens` in `__post_init__`; `Timing.duration` is a lazy property. Both provide `.dict()` for JSON export, decoupling observation from representation.
+`src/smolagents/monitoring.py:36-79` — Composable `TokenUsage` and `Timing` dataclasses. `TokenUsage` auto-computes `total_tokens` in `post_init`; `Timing.duration` is a lazy property. Both provide `.dict()` for JSON export, decoupling observation from representation.
 
 <a id="g13-f049"></a>
 ### Model capability detection by regex name matching
 
 `src/smolagents/models.py:418-438` @ e8b988d
 
-`src/smolagents/models.py:418-438` — **Model capability detection by regex name matching.** `supports_stop_parameter()` regex-matches model names (`o3*`, `o4*`, `gpt-5*`, `grok-*`) to conditionally include/exclude stop sequences, enabling provider-agnostic capability queries without a registry.
+`src/smolagents/models.py:418-438` — Model capability detection by regex name matching. `supports_stop_parameter()` regex-matches model names (`o3*`, `o4*`, `gpt-5*`, `grok-*`) to conditionally include/exclude stop sequences, enabling provider-agnostic capability queries without a registry.
 
 ## Open threads / weak spots
 
@@ -395,7 +395,7 @@
 
 `src/smolagents/tool_validation.py:160-161` @ e8b988d
 
-`src/smolagents/tool_validation.py:160-161` — Tool validation requires `__init__` parameters to have defaults but does not enforce that class attributes are initialized by those defaults; class attribute may be declared but never actually set, creating gotchas for tool reuse across sessions.
+`src/smolagents/tool_validation.py:160-161` — Tool validation requires `init` parameters to have defaults but does not enforce that class attributes are initialized by those defaults; class attribute may be declared but never actually set, creating gotchas for tool reuse across sessions.
 
 <a id="g13-f055"></a>
 ### _create_kernel_http logs error_details (including request body) without truncation on non-201 status. Large tool defi…
@@ -416,7 +416,7 @@
 
 `src/smolagents/mcp_client.py:92-101` @ e8b988d
 
-`src/smolagents/mcp_client.py:92-101` — `FutureWarning` for `structured_output` default change fires only once per process at `MCPClient.__init__`; users who don't see the first instantiation output may miss the version dependency for v1.25.
+`src/smolagents/mcp_client.py:92-101` — `FutureWarning` for `structured_output` default change fires only once per process at `MCPClient.init`; users who don't see the first instantiation output may miss the version dependency for v1.25.
 
 <a id="g13-f058"></a>
 ### return_full_code() concatenates all code actions with "\n\n" separator without verifying they form valid Python or de…
@@ -430,7 +430,7 @@
 
 `src/smolagents/gradio_ui.py:435-450` @ e8b988d
 
-`src/smolagents/gradio_ui.py:435-450` — Gradio compatibility check uses `gr.__version__.startswith("5")` to toggle `type="messages"` kwarg. Brittle string-based version detection with no explicit version range or deprecation warning for breaking changes between Gradio 5 and 6.
+`src/smolagents/gradio_ui.py:435-450` — Gradio compatibility check uses `gr.version.startswith("5")` to toggle `type="messages"` kwarg. Brittle string-based version detection with no explicit version range or deprecation warning for breaking changes between Gradio 5 and 6.
 
 <a id="g13-f060"></a>
 ### InferenceClientModel structured outputs silently fail or are rejected for providers other than Cerebras/Fireworks; no…
@@ -458,7 +458,7 @@
 
 `src/smolagents/serialization.py:239-245` @ e8b988d
 
-`src/smolagents/serialization.py:239-245` — Dataclass deserialization returns a dict with `__dataclass__` and `__module__` keys instead of reconstructing the class; class is not available in remote context, so round-trip fidelity is partial.
+`src/smolagents/serialization.py:239-245` — Dataclass deserialization returns a dict with `dataclass` and `module` keys instead of reconstructing the class; class is not available in remote context, so round-trip fidelity is partial.
 
 <a id="g13-f064"></a>
 ### TODO

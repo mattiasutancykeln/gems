@@ -323,154 +323,154 @@
 
 `external/agents/Biology-Agent/skills/mfa-pipeline-orchestrator/SKILL.md:15-16` @ ea77ec1
 
-`external/agents/Biology-Agent/skills/mfa-pipeline-orchestrator/SKILL.md:15-16` + `external/agents/stat_research_agent/skills/stat-research-orchestrator/SKILL.md:38-54` — **Resumable checkpoint pattern**: write `progress/<ID>/stepN_*.md` with PASS/FAIL before invoking the next sub-agent; check the file's status before any step to skip already-completed work. Two independent domain pipelines converge on the same pattern, making it domain-general for any multi-step agent workflow.
+`external/agents/Biology-Agent/skills/mfa-pipeline-orchestrator/SKILL.md:15-16` + `external/agents/stat_research_agent/skills/stat-research-orchestrator/SKILL.md:38-54` — Resumable checkpoint pattern: write `progress/<ID>/stepN_*.md` with PASS/FAIL before invoking the next sub-agent; check the file's status before any step to skip already-completed work. Two independent domain pipelines converge on the same pattern, making it domain-general for any multi-step agent workflow.
 
 <a id="g19-f045"></a>
 ### (trigger-keywords, applicable-stages, priority) routing triple
 
 `researchclaw/skills/builtin/experiment/meta-analysis/SKILL.md:6-8` @ ea77ec1
 
-`researchclaw/skills/builtin/experiment/meta-analysis/SKILL.md:6-8` + `researchclaw/skills/builtin/experiment/systematic-review/SKILL.md:6-8` — **`(trigger-keywords, applicable-stages, priority)` routing triple**: keywords select candidate skills, stage number filters to the current pipeline position, priority breaks ties. Any research-pipeline orchestrator can adopt this schema without code changes.
+`researchclaw/skills/builtin/experiment/meta-analysis/SKILL.md:6-8` + `researchclaw/skills/builtin/experiment/systematic-review/SKILL.md:6-8` — `(trigger-keywords, applicable-stages, priority)` routing triple: keywords select candidate skills, stage number filters to the current pipeline position, priority breaks ties. Any research-pipeline orchestrator can adopt this schema without code changes.
 
 <a id="g19-f046"></a>
 ### Claim traceability chain
 
 `external/agents/stat_research_agent/skills/stat-result-validator/SKILL.md:117-122` @ ea77ec1
 
-`external/agents/stat_research_agent/skills/stat-result-validator/SKILL.md:117-122` — **Claim traceability chain**: every final claim must trace through `formulation -> method -> theory -> experiment -> comparison`. This linear audit chain is reusable for any research-output validation scenario.
+`external/agents/stat_research_agent/skills/stat-result-validator/SKILL.md:117-122` — Claim traceability chain: every final claim must trace through `formulation -> method -> theory -> experiment -> comparison`. This linear audit chain is reusable for any research-output validation scenario.
 
 <a id="g19-f047"></a>
 ### Three-tier fallback
 
 `researchclaw/agents/figure_agent/planner.py:295-319` @ ea77ec1
 
-`researchclaw/agents/figure_agent/planner.py:295-319` — **Three-tier fallback** after LLM plan generation: (1) use LLM output if non-empty, (2) apply `_fallback_plan()` from the domain matrix if LLM returns nothing, (3) `_augment_plan()` to reach minimum figure count. Each tier is a separate method, making the chain independently testable.
+`researchclaw/agents/figure_agent/planner.py:295-319` — Three-tier fallback after LLM plan generation: (1) use LLM output if non-empty, (2) apply `_fallback_plan()` from the domain matrix if LLM returns nothing, (3) `_augment_plan()` to reach minimum figure count. Each tier is a separate method, making the chain independently testable.
 
 <a id="g19-f048"></a>
 ### Fork-and-merge dual-backend
 
 `researchclaw/agents/figure_agent/orchestrator.py:231-263` @ ea77ec1
 
-`researchclaw/agents/figure_agent/orchestrator.py:231-263` — **Fork-and-merge dual-backend**: Decision agent output is split into `code_figures` (routed to matplotlib/CodeGen) and `image_figures` (routed to Nano Banana/Gemini), with graceful degradation when Nano Banana is disabled. The shape is portable to any pipeline with two backend options.
+`researchclaw/agents/figure_agent/orchestrator.py:231-263` — Fork-and-merge dual-backend: Decision agent output is split into `code_figures` (routed to matplotlib/CodeGen) and `image_figures` (routed to Nano Banana/Gemini), with graceful degradation when Nano Banana is disabled. The shape is portable to any pipeline with two backend options.
 
 <a id="g19-f049"></a>
 ### Optional artifact persistence helper
 
 `researchclaw/agents/benchmark_agent/orchestrator.py:201-213` @ ea77ec1
 
-`researchclaw/agents/benchmark_agent/orchestrator.py:201-213` + `researchclaw/agents/figure_agent/orchestrator.py:182-194` — **Optional artifact persistence helper**: identical `_save_artifact(name, data)` in both orchestrators writes JSON or text to a per-stage directory if provided, silently no-ops otherwise. Clean pattern for optional persistence without cluttering pipeline logic.
+`researchclaw/agents/benchmark_agent/orchestrator.py:201-213` + `researchclaw/agents/figure_agent/orchestrator.py:182-194` — Optional artifact persistence helper: identical `_save_artifact(name, data)` in both orchestrators writes JSON or text to a per-stage directory if provided, silently no-ops otherwise. Clean pattern for optional persistence without cluttering pipeline logic.
 
 <a id="g19-f050"></a>
 ### Canonical experiment directory layout
 
 `external/agents/stat_research_agent/skills/statistical-experimental-evaluation/SKILL.md:36-45` @ ea77ec1
 
-`external/agents/stat_research_agent/skills/statistical-experimental-evaluation/SKILL.md:36-45` — **Canonical experiment directory layout** (`config.yaml`, `src/`, `results/metrics.json`, `results/run_manifest.json`, `results/comparison_summary.md`, `results/claim_verdicts.json`, `report/paper.md`, `README.md`) provides a reproducible artifact contract that validators can check by directory scan.
+`external/agents/stat_research_agent/skills/statistical-experimental-evaluation/SKILL.md:36-45` — Canonical experiment directory layout (`config.yaml`, `src/`, `results/metrics.json`, `results/run_manifest.json`, `results/comparison_summary.md`, `results/claim_verdicts.json`, `report/paper.md`, `README.md`) provides a reproducible artifact contract that validators can check by directory scan.
 
 <a id="g19-f051"></a>
 ### Structured baseline taxonomy
 
 `external/agents/stat_research_agent/skills/statistical-method-design/SKILL.md:37-44` @ ea77ec1
 
-`external/agents/stat_research_agent/skills/statistical-method-design/SKILL.md:37-44` — **Structured baseline taxonomy** (classical, naive/unadjusted, oracle/idealized, robust variant, ablation of key feature) prevents cherry-picked comparisons; portable to any evaluation skill that needs mandatory baselines.
+`external/agents/stat_research_agent/skills/statistical-method-design/SKILL.md:37-44` — Structured baseline taxonomy (classical, naive/unadjusted, oracle/idealized, robust variant, ablation of key feature) prevents cherry-picked comparisons; portable to any evaluation skill that needs mandatory baselines.
 
 <a id="g19-f052"></a>
 ### 10-field method proposal schema
 
 `external/agents/stat_research_agent/skills/statistical-method-design/SKILL.md:22-33` @ ea77ec1
 
-`external/agents/stat_research_agent/skills/statistical-method-design/SKILL.md:22-33` — **10-field method proposal schema** (Name, Problem, Formula/Algorithm, Inputs/Outputs, Tuning parameters, Required assumptions, Diagnostics, Expected failure modes, Computational cost, Relation to baselines) is a complete reusable template for structured method documentation in any technical skill.
+`external/agents/stat_research_agent/skills/statistical-method-design/SKILL.md:22-33` — 10-field method proposal schema (Name, Problem, Formula/Algorithm, Inputs/Outputs, Tuning parameters, Required assumptions, Diagnostics, Expected failure modes, Computational cost, Relation to baselines) is a complete reusable template for structured method documentation in any technical skill.
 
 <a id="g19-f053"></a>
 ### Cross-domain analogy table
 
 `external/agents/Biology-Agent/skills/README.md:43-51` @ ea77ec1
 
-`external/agents/Biology-Agent/skills/README.md:43-51` — **Cross-domain analogy table** mapping ColliderAgent stages (LaTeX Lagrangian, FeynRules, MadGraph, MadAnalysis) to FBA-Agent stages (stoichiometric matrix, COBRApy Model, FBA, FVA + knockouts); a reusable pattern for adapting an existing agent pipeline to a new scientific domain by identifying structural equivalents.
+`external/agents/Biology-Agent/skills/README.md:43-51` — Cross-domain analogy table mapping ColliderAgent stages (LaTeX Lagrangian, FeynRules, MadGraph, MadAnalysis) to FBA-Agent stages (stoichiometric matrix, COBRApy Model, FBA, FVA + knockouts); a reusable pattern for adapting an existing agent pipeline to a new scientific domain by identifying structural equivalents.
 
 <a id="g19-f054"></a>
 ### Safe default autonomous topic
 
 `external/agents/Biology-Agent/skills/metabolic-study-planner/SKILL.md:231-242` @ ea77ec1
 
-`external/agents/Biology-Agent/skills/metabolic-study-planner/SKILL.md:231-242` — **Safe default autonomous topic**: "Recommended First Autonomous Topic" section provides a concrete fallback prompt for zero-input runs. Porting this pattern to other domain agents would prevent blank-slate failures in unattended loops.
+`external/agents/Biology-Agent/skills/metabolic-study-planner/SKILL.md:231-242` — Safe default autonomous topic: "Recommended First Autonomous Topic" section provides a concrete fallback prompt for zero-input runs. Porting this pattern to other domain agents would prevent blank-slate failures in unattended loops.
 
 <a id="g19-f055"></a>
 ### Five-function modular builder
 
 `external/agents/Biology-Agent/skills/gsmm-builder/templates/minimal_model.py:28-258` @ ea77ec1
 
-`external/agents/Biology-Agent/skills/gsmm-builder/templates/minimal_model.py:28-258` — **Five-function modular builder** (`build_metabolites` -> `build_reactions` -> `build_model` -> `validate_and_run` -> `export_model`) with inline mass-balance check and CSV export; the separation between assembly and validation is a portable scaffold for any domain that constructs computational models programmatically.
+`external/agents/Biology-Agent/skills/gsmm-builder/templates/minimal_model.py:28-258` — Five-function modular builder (`build_metabolites` -> `build_reactions` -> `build_model` -> `validate_and_run` -> `export_model`) with inline mass-balance check and CSV export; the separation between assembly and validation is a portable scaffold for any domain that constructs computational models programmatically.
 
 <a id="g19-f056"></a>
 ### Exclusive-resource assignment pattern
 
 `external/agents/Biology-Agent/skills/fba-simulator/SKILL.md:174-200` @ ea77ec1
 
-`external/agents/Biology-Agent/skills/fba-simulator/SKILL.md:174-200` — **Exclusive-resource assignment pattern**: carbon source swap loop uses `with model:` to close all carbon exchanges before opening the target one, preventing accidental co-uptake artefacts. Reusable for any constraint model with mutually exclusive resource assignment.
+`external/agents/Biology-Agent/skills/fba-simulator/SKILL.md:174-200` — Exclusive-resource assignment pattern: carbon source swap loop uses `with model:` to close all carbon exchanges before opening the target one, preventing accidental co-uptake artefacts. Reusable for any constraint model with mutually exclusive resource assignment.
 
 <a id="g19-f057"></a>
 ### Transparent cost accounting
 
 `researchclaw/agents/benchmark_agent/orchestrator.py:238-239` @ ea77ec1
 
-`researchclaw/agents/benchmark_agent/orchestrator.py:238-239` — **Transparent cost accounting**: `self._accumulate(result)` is called after every sub-agent step, aggregating `total_llm_calls` and `total_tokens` into the orchestrator so the final plan carries end-to-end cost without the caller instrumenting anything.
+`researchclaw/agents/benchmark_agent/orchestrator.py:238-239` — Transparent cost accounting: `self._accumulate(result)` is called after every sub-agent step, aggregating `total_llm_calls` and `total_tokens` into the orchestrator so the final plan carries end-to-end cost without the caller instrumenting anything.
 
 <a id="g19-f058"></a>
 ### Cache-first lookup
 
 `researchclaw/agents/code_searcher/agent.py:153-157` @ ea77ec1
 
-`researchclaw/agents/code_searcher/agent.py:153-157` — **Cache-first lookup** keyed on `(domain_id, topic)` before any GitHub API call; only caches if `patterns.has_content`, preventing empty-result pollution. Simple but effective rate-limit guard.
+`researchclaw/agents/code_searcher/agent.py:153-157` — Cache-first lookup keyed on `(domain_id, topic)` before any GitHub API call; only caches if `patterns.has_content`, preventing empty-result pollution. Simple but effective rate-limit guard.
 
 <a id="g19-f059"></a>
 ### _CHART_TYPE_MATRIX domain heuristics
 
 `researchclaw/agents/figure_agent/planner.py:26-82` @ ea77ec1
 
-`researchclaw/agents/figure_agent/planner.py:26-82` — **`_CHART_TYPE_MATRIX` domain heuristics**: domain -> list of chart specs plus `_DOMAIN_KEYWORDS` (domain -> keyword list) implement a static decision aid: keyword scoring picks a domain, the matrix suggests chart types, both are injected into the LLM prompt. Decouples heuristics from model calls.
+`researchclaw/agents/figure_agent/planner.py:26-82` — `_CHART_TYPE_MATRIX` domain heuristics: domain -> list of chart specs plus `_DOMAIN_KEYWORDS` (domain -> keyword list) implement a static decision aid: keyword scoring picks a domain, the matrix suggests chart types, both are injected into the LLM prompt. Decouples heuristics from model calls.
 
 <a id="g19-f060"></a>
 ### Architecture selection by scale
 
 `researchclaw/skills/builtin/domain/cv-classification/SKILL.md:14-18` @ ea77ec1
 
-`researchclaw/skills/builtin/domain/cv-classification/SKILL.md:14-18` — **Architecture selection by scale** (small/medium/large with concrete model names per tier) gives the agent a decision tree instead of an unbounded model zoo; portable to any domain with tiered model complexity.
+`researchclaw/skills/builtin/domain/cv-classification/SKILL.md:14-18` — Architecture selection by scale (small/medium/large with concrete model names per tier) gives the agent a decision tree instead of an unbounded model zoo; portable to any domain with tiered model complexity.
 
 <a id="g19-f061"></a>
 ### "Menu + recipe" skill structure
 
 `researchclaw/skills/builtin/domain/nlp-alignment/SKILL.md:14-19` @ ea77ec1
 
-`researchclaw/skills/builtin/domain/nlp-alignment/SKILL.md:14-19` — **"Menu + recipe" skill structure**: list multiple method families before giving recipes (RLHF -> DPO -> GRPO -> SFT), then provide per-method hyperparameter blocks. Reusable for any skill covering a family of related algorithms.
+`researchclaw/skills/builtin/domain/nlp-alignment/SKILL.md:14-19` — "Menu + recipe" skill structure: list multiple method families before giving recipes (RLHF -> DPO -> GRPO -> SFT), then provide per-method hyperparameter blocks. Reusable for any skill covering a family of related algorithms.
 
 <a id="g19-f062"></a>
 ### Ablation design constraint block
 
 `researchclaw/skills/builtin/experiment/experimental-design/SKILL.md:18-21` @ ea77ec1
 
-`researchclaw/skills/builtin/experiment/experimental-design/SKILL.md:18-21` — **Ablation design constraint block** ("remove one component at a time, each ablation must be meaningfully different from baseline") is a portable controlled-variable rule injectable into any experimental-planning skill or system prompt.
+`researchclaw/skills/builtin/experiment/experimental-design/SKILL.md:18-21` — Ablation design constraint block ("remove one component at a time, each ablation must be meaningfully different from baseline") is a portable controlled-variable rule injectable into any experimental-planning skill or system prompt.
 
 <a id="g19-f063"></a>
 ### "Common pitfalls" portable appendix
 
 `researchclaw/skills/builtin/domain/rl-policy-optimization/SKILL.md:34-38` @ ea77ec1
 
-`researchclaw/skills/builtin/domain/rl-policy-optimization/SKILL.md:34-38` — **"Common pitfalls" portable appendix**: naming seed sensitivity and hyperparameter sensitivity with concrete guidance (5+ seeds, small sweep) is an anti-pattern block applicable to any stochastic training skill.
+`researchclaw/skills/builtin/domain/rl-policy-optimization/SKILL.md:34-38` — "Common pitfalls" portable appendix: naming seed sensitivity and hyperparameter sensitivity with concrete guidance (5+ seeds, small sweep) is an anti-pattern block applicable to any stochastic training skill.
 
 <a id="g19-f064"></a>
 ### Composable medium definition dicts
 
 `external/agents/Biology-Agent/skills/gsmm-builder/references/cobra_reference.md:64-109` @ ea77ec1
 
-`external/agents/Biology-Agent/skills/gsmm-builder/references/cobra_reference.md:64-109` — **Composable medium definition dicts** (`M9_GLUCOSE_AEROBIC`, `M9_GLUCOSE_ANAEROBIC` built with `**M9_GLUCOSE_AEROBIC` plus a single override); the composable override pattern is applicable to any domain agent needing parameterised condition sets.
+`external/agents/Biology-Agent/skills/gsmm-builder/references/cobra_reference.md:64-109` — Composable medium definition dicts (`M9_GLUCOSE_AEROBIC`, `M9_GLUCOSE_ANAEROBIC` built with `**M9_GLUCOSE_AEROBIC` plus a single override); the composable override pattern is applicable to any domain agent needing parameterised condition sets.
 
 <a id="g19-f065"></a>
 ### Domain-conventions table
 
 `external/agents/Biology-Agent/skills/gsmm-builder/SKILL.md:142-154` @ ea77ec1
 
-`external/agents/Biology-Agent/skills/gsmm-builder/SKILL.md:142-154` — **Domain-conventions table** (metabolite ID format, compartment codes, exchange prefix, bound sign conventions) is a compact, machine-readable onboarding surface for any domain agent that needs consistent naming.
+`external/agents/Biology-Agent/skills/gsmm-builder/SKILL.md:142-154` — Domain-conventions table (metabolite ID format, compartment codes, exchange prefix, bound sign conventions) is a compact, machine-readable onboarding surface for any domain agent that needs consistent naming.
 
 ## Open threads / weak spots
 
@@ -479,14 +479,14 @@
 
 `researchclaw/agents/figure_agent/orchestrator.py:428-436` @ ea77ec1
 
-`researchclaw/agents/figure_agent/orchestrator.py:428-436` + `researchclaw/agents/figure_agent/planner.py:415-418` — **BUG-37 at two sites**: `figure_id` returned by the LLM may be a list; `orchestrator.py` takes `str(_fid[0])` while `planner.py` guards `chart_type` with `isinstance(..., str)`. Two separate sites for the same malformed-output class indicate the LLM output schema is not validated on ingestion.
+`researchclaw/agents/figure_agent/orchestrator.py:428-436` + `researchclaw/agents/figure_agent/planner.py:415-418` — BUG-37 at two sites: `figure_id` returned by the LLM may be a list; `orchestrator.py` takes `str(_fid[0])` while `planner.py` guards `chart_type` with `isinstance(..., str)`. Two separate sites for the same malformed-output class indicate the LLM output schema is not validated on ingestion.
 
 <a id="g19-f067"></a>
 ### BUG-36
 
 `researchclaw/agents/figure_agent/planner.py:311-312` @ ea77ec1
 
-`researchclaw/agents/figure_agent/planner.py:311-312` — **BUG-36**: LLM may return `figures` as a list of strings instead of dicts; the fix is a post-hoc `isinstance` filter that silently discards non-dict entries with no warning logged.
+`researchclaw/agents/figure_agent/planner.py:311-312` — BUG-36: LLM may return `figures` as a list of strings instead of dicts; the fix is a post-hoc `isinstance` filter that silently discards non-dict entries with no warning logged.
 
 <a id="g19-f068"></a>
 ### "FVA hangs" is documented as a known failure mode with advice to reduce processes or set loopless=False , but no time…
@@ -514,7 +514,7 @@
 
 `researchclaw/agents/figure_agent/orchestrator.py:155-159` @ ea77ec1
 
-`researchclaw/agents/figure_agent/orchestrator.py:155-159` — **BUG-60**: `use_docker` is coerced from `None` to `False`, indicating the auto-detect path is not yet plumbed through to CodeGen; container-aware paths are never generated even when Docker is available.
+`researchclaw/agents/figure_agent/orchestrator.py:155-159` — BUG-60: `use_docker` is coerced from `None` to `False`, indicating the auto-detect path is not yet plumbed through to CodeGen; container-aware paths are never generated even when Docker is available.
 
 <a id="g19-f072"></a>
 ### enable_web_search
@@ -619,5 +619,5 @@
 
 `researchclaw/agents/code_searcher/agent.py:181-183` @ ea77ec1
 
-`researchclaw/agents/code_searcher/agent.py:181-183` — The `stars >= 10` quality threshold is hardcoded and not exposed in `CodeSearchAgent.__init__` parameters, making it impossible for callers to lower the bar for niche research topics with fewer starred repos.
+`researchclaw/agents/code_searcher/agent.py:181-183` — The `stars >= 10` quality threshold is hardcoded and not exposed in `CodeSearchAgent.init` parameters, making it impossible for callers to lower the bar for niche research topics with fewer starred repos.
 

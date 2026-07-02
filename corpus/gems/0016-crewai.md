@@ -260,112 +260,112 @@
 
 `crew_agent_executor.py:706-764` @ da8fe8c
 
-`crew_agent_executor.py:706-764` — **Parallel tool execution scaffold with finality checks**: `ThreadPoolExecutor` batch with `contextvars.copy_context().run()` preserving async-local state, fallback to sequential on first result with `result_as_answer`, post-batch reasoning-prompt injection for LLM reflection. Drop-in pattern for any multi-tool agent loop.
+`crew_agent_executor.py:706-764` — Parallel tool execution scaffold with finality checks: `ThreadPoolExecutor` batch with `contextvars.copy_context().run()` preserving async-local state, fallback to sequential on first result with `result_as_answer`, post-batch reasoning-prompt injection for LLM reflection. Drop-in pattern for any multi-tool agent loop.
 
 <a id="g16-f036"></a>
 ### Delegation execution contract
 
 `tools/agent_tools/base_agent_tools.py:46-125` @ da8fe8c
 
-`tools/agent_tools/base_agent_tools.py:46-125` — **Delegation execution contract**: accepts (agent_name, task description, context), performs case-insensitive role matching, catches agent-lookup and execution errors, returns string result or error message. Orchestration-agnostic; portable to other multi-agent frameworks.
+`tools/agent_tools/base_agent_tools.py:46-125` — Delegation execution contract: accepts (agent_name, task description, context), performs case-insensitive role matching, catches agent-lookup and execution errors, returns string result or error message. Orchestration-agnostic; portable to other multi-agent frameworks.
 
 <a id="g16-f037"></a>
 ### Catch-all validation wrapper returning (bool, Any) tuple
 
 `llm_guardrail.py:98-119` @ da8fe8c
 
-`llm_guardrail.py:98-119` — **Catch-all validation wrapper returning `(bool, Any)` tuple**: guardrails always succeed (never throw), returning `(False, error_string)` on exception; orchestrators can chain validations without try-catch nesting.
+`llm_guardrail.py:98-119` — Catch-all validation wrapper returning `(bool, Any)` tuple: guardrails always succeed (never throw), returning `(False, error_string)` on exception; orchestrators can chain validations without try-catch nesting.
 
 <a id="g16-f038"></a>
 ### Per-index retry tracking
 
 `task.py:1257-1307` @ da8fe8c
 
-`task.py:1257-1307` — **Per-index retry tracking**: guardrails in an array retain independent retry state via `dict[index] -> count`; on failure, re-execute agent with error context as conversation turn, not full restart.
+`task.py:1257-1307` — Per-index retry tracking: guardrails in an array retain independent retry state via `dict[index] -> count`; on failure, re-execute agent with error context as conversation turn, not full restart.
 
 <a id="g16-f039"></a>
 ### Checkpoint + context restoration
 
 `crew.py:402-425` @ da8fe8c
 
-`crew.py:402-425` — **Checkpoint + context restoration**: `from_checkpoint()` loads `RuntimeState`, re-applies `ExecutionContext` via `apply_execution_context()`, re-links agent executors to checkpoint state.
+`crew.py:402-425` — Checkpoint + context restoration: `from_checkpoint()` loads `RuntimeState`, re-applies `ExecutionContext` via `apply_execution_context()`, re-links agent executors to checkpoint state.
 
 <a id="g16-f040"></a>
 ### Async/sync task interleaving
 
 `crew.py:1335-1362` @ da8fe8c
 
-`crew.py:1335-1362` — **Async/sync task interleaving**: collect async tasks, block on sync task, flush futures, repeat; enables tail-async while preserving context order with `(task, asyncio.Task, task_index)` triples.
+`crew.py:1335-1362` — Async/sync task interleaving: collect async tasks, block on sync task, flush futures, repeat; enables tail-async while preserving context order with `(task, asyncio.Task, task_index)` triples.
 
 <a id="g16-f041"></a>
 ### Tool deduplication on inject
 
 `crew.py:1670-1688` @ da8fe8c
 
-`crew.py:1670-1688` — **Tool deduplication on inject**: `_merge_tools()` maps by `sanitize_tool_name()`, filters existing by key membership, appends new; avoids duplicate tool names across delegation/platform/MCP/memory/file sources.
+`crew.py:1670-1688` — Tool deduplication on inject: `_merge_tools()` maps by `sanitize_tool_name()`, filters existing by key membership, appends new; avoids duplicate tool names across delegation/platform/MCP/memory/file sources.
 
 <a id="g16-f042"></a>
 ### A2A delegation adapter
 
 `lite_agent.py:157-172` @ da8fe8c
 
-`lite_agent.py:157-172` — **A2A delegation adapter**: wraps kickoff in fake `Task`, delegates via framework's task A2A machinery, returns result; isolates A2A protocol from core loop.
+`lite_agent.py:157-172` — A2A delegation adapter: wraps kickoff in fake `Task`, delegates via framework's task A2A machinery, returns result; isolates A2A protocol from core loop.
 
 <a id="g16-f043"></a>
 ### Name sanitization pipeline
 
 `tools/agent_tools/base_agent_tools.py:20-35` @ da8fe8c
 
-`tools/agent_tools/base_agent_tools.py:20-35` — **Name sanitization pipeline**: normalizes whitespace, converts to lowercase, removes quotes in a single reusable method; apply to any schema field where LLM-produced identifiers need fuzzy matching.
+`tools/agent_tools/base_agent_tools.py:20-35` — Name sanitization pipeline: normalizes whitespace, converts to lowercase, removes quotes in a single reusable method; apply to any schema field where LLM-produced identifiers need fuzzy matching.
 
 <a id="g16-f044"></a>
 ### Skipped task placeholder
 
 `conditional_task.py:57-68` @ da8fe8c
 
-`conditional_task.py:57-68` — **Skipped task placeholder**: when a conditional branch is not taken, returns minimal `TaskOutput` with empty raw and matching agent/format rather than `None`; ensures downstream consumers see a uniform task result type.
+`conditional_task.py:57-68` — Skipped task placeholder: when a conditional branch is not taken, returns minimal `TaskOutput` with empty raw and matching agent/format rather than `None`; ensures downstream consumers see a uniform task result type.
 
 <a id="g16-f045"></a>
 ### Coroutine executor dispatch pattern
 
 `llm_guardrail.py:24-36` @ da8fe8c
 
-`llm_guardrail.py:24-36` — **Coroutine executor dispatch pattern**: check for running loop, spawn thread pool with context vars copied, submit `asyncio.run()` inside; reusable for delegating async calls from sync orchestrator boundaries.
+`llm_guardrail.py:24-36` — Coroutine executor dispatch pattern: check for running loop, spawn thread pool with context vars copied, submit `asyncio.run()` inside; reusable for delegating async calls from sync orchestrator boundaries.
 
 <a id="g16-f046"></a>
 ### Computed result properties for filtering
 
 `lite_agent_output.py:89-102` @ da8fe8c
 
-`lite_agent_output.py:89-102` — **Computed result properties for filtering**: `completed_todos`, `failed_todos`, and `had_plan` are properties rather than cached fields; orchestrators can inspect execution success without extra serialization fields.
+`lite_agent_output.py:89-102` — Computed result properties for filtering: `completed_todos`, `failed_todos`, and `had_plan` are properties rather than cached fields; orchestrators can inspect execution success without extra serialization fields.
 
 <a id="g16-f047"></a>
 ### Event scope reconstruction after checkpoint restore
 
 `base_agent.py:405-442` @ da8fe8c
 
-`base_agent.py:405-442` — **Event scope reconstruction after checkpoint restore**: rebuilds stack of (event_id, event_type) tuples from checkpoint, re-establishes emission counter and `last_event_id` for tracing continuity.
+`base_agent.py:405-442` — Event scope reconstruction after checkpoint restore: rebuilds stack of (event_id, event_type) tuples from checkpoint, re-establishes emission counter and `last_event_id` for tracing continuity.
 
 <a id="g16-f048"></a>
 ### Three-mode prompt rendering
 
 `prompts.py:150-181` @ da8fe8c
 
-`prompts.py:150-181` — **Three-mode prompt rendering**: system-template mode (custom system+user templates), standard flat mode, or system-prompt mode (system/user split from slices) based on template presence.
+`prompts.py:150-181` — Three-mode prompt rendering: system-template mode (custom system+user templates), standard flat mode, or system-prompt mode (system/user split from slices) based on template presence.
 
 <a id="g16-f049"></a>
 ### Fingerprint context injection
 
 `crew_agent_executor.py:399-426` @ da8fe8c
 
-`crew_agent_executor.py:399-426` — **Fingerprint context injection**: security config fingerprint bundled with tool execution for audit/compliance, passed through tool execution boundary.
+`crew_agent_executor.py:399-426` — Fingerprint context injection: security config fingerprint bundled with tool execution for audit/compliance, passed through tool execution boundary.
 
 <a id="g16-f050"></a>
 ### Post-execution summary injection via model validator
 
 `task_output.py:50-59` @ da8fe8c
 
-`task_output.py:50-59` — **Post-execution summary injection via model validator**: summary auto-derived from description on validation rather than computed at task definition, keeping output contract lightweight.
+`task_output.py:50-59` — Post-execution summary injection via model validator: summary auto-derived from description on validation rather than computed at task definition, keeping output contract lightweight.
 
 ## Open threads / weak spots
 

@@ -95,7 +95,7 @@
 
 `biomni/tool/lab_automation.py:30-43` @ 400c1f3
 
-`biomni/tool/lab_automation.py:30-43` — PyLabRobot docs are fetched from a **pinned commit SHA** (`106aef9c8699…`), not `main`, so the agent's grounding context is frozen and reproducible regardless of upstream changes.
+`biomni/tool/lab_automation.py:30-43` — PyLabRobot docs are fetched from a pinned commit SHA (`106aef9c8699…`), not `main`, so the agent's grounding context is frozen and reproducible regardless of upstream changes.
 
 <a id="g6-f013"></a>
 ### basic.ipynb is sorted first within liquid-handling docs ( key=0 if endswith("basic.ipynb") else 1 ), ensuring the mos…
@@ -172,7 +172,7 @@
 
 `biomni/agent/__init__.py:L1` @ 400c1f3
 
-`biomni/agent/__init__.py:L1` — The agent package surface is deliberately thin: only `A1` is re-exported, insulating downstream callers from internal class proliferation and making the agent surface easy to version.
+`biomni/agent/init.py:L1` — The agent package surface is deliberately thin: only `A1` is re-exported, insulating downstream callers from internal class proliferation and making the agent surface easy to version.
 
 <a id="g6-f024"></a>
 ### CNVkit discovery walks PATH -> biomni_e1 conda env -> bio_env_py310 -> error , so the tool self-locates in managed envir…
@@ -365,206 +365,206 @@
 
 `biomni/agent/react.py:L90-L152` @ 400c1f3
 
-`biomni/agent/react.py:L90-L152` — **Multiprocess timeout wrapper factory**: wraps any callable to run in a `Process`+`Queue`, with SIGTERM then SIGKILL escalation; returns a plain error string on timeout so the agent loop continues cleanly. Portable to any tool-executing agent.
+`biomni/agent/react.py:L90-L152` — Multiprocess timeout wrapper factory: wraps any callable to run in a `Process`+`Queue`, with SIGTERM then SIGKILL escalation; returns a plain error string on timeout so the agent loop continues cleanly. Portable to any tool-executing agent.
 
 <a id="g6-f051"></a>
 ### Dynamic MCP tool registration
 
 `biomni/agent/a1.py:L350-L587` @ 400c1f3
 
-`biomni/agent/a1.py:L350-L587` — **Dynamic MCP tool registration**: YAML config drives discovery -> auto-generated `inputSchema`-based schemas -> synthetic `types.ModuleType` per server -> registered in both `tool_registry` and `module2api`. Full lifecycle with enable/disable and automatic schema inference.
+`biomni/agent/a1.py:L350-L587` — Dynamic MCP tool registration: YAML config drives discovery -> auto-generated `inputSchema`-based schemas -> synthetic `types.ModuleType` per server -> registered in both `tool_registry` and `module2api`. Full lifecycle with enable/disable and automatic schema inference.
 
 <a id="g6-f052"></a>
 ### Self-critic test-time scaling node
 
 `biomni/agent/a1.py:L1580-L1604` @ 400c1f3
 
-`biomni/agent/a1.py:L1580-L1604` — **Self-critic test-time scaling node**: after a `<solution>` is produced, injects LLM-generated feedback as a `HumanMessage` and routes back to `generate` up to `test_time_scale_round` times, decoupled from the main graph via a separate node.
+`biomni/agent/a1.py:L1580-L1604` — Self-critic test-time scaling node: after a `<solution>` is produced, injects LLM-generated feedback as a `HumanMessage` and routes back to `generate` up to `test_time_scale_round` times, decoupled from the main graph via a separate node.
 
 <a id="g6-f053"></a>
 ### Parse-error recovery loop
 
 `biomni/agent/a1.py:L1440-L1468` @ 400c1f3
 
-`biomni/agent/a1.py:L1440-L1468` — **Parse-error recovery loop**: detects missing tags, injects a corrective `HumanMessage`, and retries generation; after 2 failures it hard-terminates rather than looping forever: `if error_count >= 2: state["next_step"] = "end"`.
+`biomni/agent/a1.py:L1440-L1468` — Parse-error recovery loop: detects missing tags, injects a corrective `HumanMessage`, and retries generation; after 2 failures it hard-terminates rather than looping forever: `if error_count >= 2: state["next_step"] = "end"`.
 
 <a id="g6-f054"></a>
 ### Persistent REPL namespace
 
 `biomni/tool/support_tools.py:23-31` @ 400c1f3
 
-`biomni/tool/support_tools.py:23-31` — **Persistent REPL namespace**: pass a single module-level dict as the `globals` argument to `exec()`. Any agent orchestrating multi-step code generation can adopt this to avoid re-running setup between steps.
+`biomni/tool/support_tools.py:23-31` — Persistent REPL namespace: pass a single module-level dict as the `globals` argument to `exec()`. Any agent orchestrating multi-step code generation can adopt this to avoid re-running setup between steps.
 
 <a id="g6-f055"></a>
 ### Headless plot capture via monkey-patching
 
 `biomni/tool/support_tools.py:81-126` @ 400c1f3
 
-`biomni/tool/support_tools.py:81-126` — **Headless plot capture via monkey-patching**: patch `plt.show`/`plt.savefig` once with a `_biomni_patched` guard, capture figures to base64 in the wrapper. Directly portable to any LLM code-execution sandbox.
+`biomni/tool/support_tools.py:81-126` — Headless plot capture via monkey-patching: patch `plt.show`/`plt.savefig` once with a `_biomni_patched` guard, capture figures to base64 in the wrapper. Directly portable to any LLM code-execution sandbox.
 
 <a id="g6-f056"></a>
 ### Execution result correlator
 
 `biomni/agent/a1.py:L1541-L1548` @ 400c1f3
 
-`biomni/agent/a1.py:L1541-L1548` — **Execution result correlator**: each `<execute>` block stores a dict with `triggering_message` + base64 images + timestamp, enabling after-the-fact association of plots to the exact agent step that produced them.
+`biomni/agent/a1.py:L1541-L1548` — Execution result correlator: each `<execute>` block stores a dict with `triggering_message` + base64 images + timestamp, enabling after-the-fact association of plots to the exact agent step that produced them.
 
 <a id="g6-f057"></a>
 ### Map-then-consolidate extraction
 
 `biomni/agent/env_collection.py:L147-L164` @ 400c1f3
 
-`biomni/agent/env_collection.py:L147-L164` — **Map-then-consolidate extraction**: text is split into chunks, each processed independently, then a second LLM call merges all chunk outputs—standard pattern for long-document extraction fitting within context limits.
+`biomni/agent/env_collection.py:L147-L164` — Map-then-consolidate extraction: text is split into chunks, each processed independently, then a second LLM call merges all chunk outputs—standard pattern for long-document extraction fitting within context limits.
 
 <a id="g6-f058"></a>
 ### MCP sync wrapper
 
 `biomni/agent/a1.py:L415-L444` @ 400c1f3
 
-`biomni/agent/a1.py:L415-L444` — **MCP sync wrapper**: `nest_asyncio.apply()` + `asyncio.run()` with fallback to `loop.create_task()` when a running loop is detected, making async MCP tools callable synchronously from a sync agent environment.
+`biomni/agent/a1.py:L415-L444` — MCP sync wrapper: `nest_asyncio.apply()` + `asyncio.run()` with fallback to `loop.create_task()` when a running loop is detected, making async MCP tools callable synchronously from a sync agent environment.
 
 <a id="g6-f059"></a>
 ### GraphQL template-as-schema
 
 `biomni/tool/schema_db/gnomad.pkl:L2-L68` @ 400c1f3
 
-`biomni/tool/schema_db/gnomad.pkl:L2-L68` — **GraphQL template-as-schema**: store a canonical working query as the schema artifact for GraphQL APIs. The model edits gene symbol and dataset fields in the template rather than generating a query cold. Generalizes to any GraphQL API where schema introspection is expensive or unreliable.
+`biomni/tool/schema_db/gnomad.pkl:L2-L68` — GraphQL template-as-schema: store a canonical working query as the schema artifact for GraphQL APIs. The model edits gene symbol and dataset fields in the template rather than generating a query cold. Generalizes to any GraphQL API where schema introspection is expensive or unreliable.
 
 <a id="g6-f060"></a>
 ### Schema-as-pickle pattern
 
-`biomni/tool/schema_db/*.pkl:L1` — **Schema-as-pickle pattern**: structured API metadata is serialized and shipped alongside the tool code rather than fetched at runtime. Makes schemas versionable, diffable (via re-serialization), and loadable with a single `pickle.load`.
+`biomni/tool/schema_db/*.pkl:L1` — Schema-as-pickle pattern: structured API metadata is serialized and shipped alongside the tool code rather than fetched at runtime. Makes schemas versionable, diffable (via re-serialization), and loadable with a single `pickle.load`.
 
 <a id="g6-f061"></a>
 ### Backend-swap injection for simulation
 
 `biomni/tool/lab_automation.py:429-490` @ 400c1f3
 
-`biomni/tool/lab_automation.py:429-490` — **Backend-swap injection for simulation**: `_modify_script_for_testing` replaces `STARBackend()` with `LiquidHandlerChatterboxBackend()` via string substitution, then inserts tracking setup between imports and first function definition by scanning boundary tokens. Portable for sandboxing hardware calls in LLM-generated code.
+`biomni/tool/lab_automation.py:429-490` — Backend-swap injection for simulation: `_modify_script_for_testing` replaces `STARBackend()` with `LiquidHandlerChatterboxBackend()` via string substitution, then inserts tracking setup between imports and first function definition by scanning boundary tokens. Portable for sandboxing hardware calls in LLM-generated code.
 
 <a id="g6-f062"></a>
 ### Thread-based timeout with clean temp-file teardown
 
 `biomni/tool/lab_automation.py:493-547` @ 400c1f3
 
-`biomni/tool/lab_automation.py:493-547` — **Thread-based timeout with clean temp-file teardown**: script written to `NamedTemporaryFile`, run in a `threading.Thread` with `join(timeout=N)`, temp file always unlinked in `finally`. Clean pattern for safely executing LLM-generated scripts with bounded wall-clock time.
+`biomni/tool/lab_automation.py:493-547` — Thread-based timeout with clean temp-file teardown: script written to `NamedTemporaryFile`, run in a `threading.Thread` with `join(timeout=N)`, temp file always unlinked in `finally`. Clean pattern for safely executing LLM-generated scripts with bounded wall-clock time.
 
 <a id="g6-f063"></a>
 ### Keyword-priority section assembler
 
 `biomni/tool/lab_automation.py:158-206` @ 400c1f3
 
-`biomni/tool/lab_automation.py:158-206` — **Keyword-priority section assembler**: maps section headings to keyword lists and does a first-match scan over fetched docs, then appends unmatched docs at the end. "Curated-order + remainder" pattern for assembling any RAG context window where section ordering matters.
+`biomni/tool/lab_automation.py:158-206` — Keyword-priority section assembler: maps section headings to keyword lists and does a first-match scan over fetched docs, then appends unmatched docs at the end. "Curated-order + remainder" pattern for assembling any RAG context window where section ordering matters.
 
 <a id="g6-f064"></a>
 ### Progressive query simplification on retry
 
 `biomni/tool/literature.py:L164-173` @ 400c1f3
 
-`biomni/tool/literature.py:L164-173` — **Progressive query simplification on retry**: remove one term per attempt, sleep between retries. Generalizes to any text-search API that fails on over-specified queries.
+`biomni/tool/literature.py:L164-173` — Progressive query simplification on retry: remove one term per attempt, sleep between retries. Generalizes to any text-search API that fails on over-specified queries.
 
 <a id="g6-f065"></a>
 ### Jitter + exponential backoff
 
 `biomni/tool/literature.py:L269-298` @ 400c1f3
 
-`biomni/tool/literature.py:L269-298` — **Jitter + exponential backoff**: random initial jitter (`random.randint(1, 10)`) combined with exponential backoff (`delay *= 2`) across `max_retries` attempts; avoids thundering-herd on rate-limited external APIs.
+`biomni/tool/literature.py:L269-298` — Jitter + exponential backoff: random initial jitter (`random.randint(1, 10)`) combined with exponential backoff (`delay *= 2`) across `max_retries` attempts; avoids thundering-herd on rate-limited external APIs.
 
 <a id="g6-f066"></a>
 ### Semantic HTML extraction
 
 `biomni/tool/literature.py:L324-329` @ 400c1f3
 
-`biomni/tool/literature.py:L324-329` — **Semantic HTML extraction**: `main -> article -> body` fallback chain, then strip `script/style/nav/header/footer/aside/iframe` before paragraph extraction. Portable web-scraping signal-to-noise pattern.
+`biomni/tool/literature.py:L324-329` — Semantic HTML extraction: `main -> article -> body` fallback chain, then strip `script/style/nav/header/footer/aside/iframe` before paragraph extraction. Portable web-scraping signal-to-noise pattern.
 
 <a id="g6-f067"></a>
 ### Lazy model download with structured fallback
 
 `biomni/tool/bioimaging.py:L278-425` @ 400c1f3
 
-`biomni/tool/bioimaging.py:L278-425` — **Lazy model download with structured fallback**: check PATH -> probe conda envs via subprocess -> auto-download with browser headers -> verify weight file presence. Reusable for any tool requiring large pretrained weights that may not be pre-installed.
+`biomni/tool/bioimaging.py:L278-425` — Lazy model download with structured fallback: check PATH -> probe conda envs via subprocess -> auto-download with browser headers -> verify weight file presence. Reusable for any tool requiring large pretrained weights that may not be pre-installed.
 
 <a id="g6-f068"></a>
 ### Normalized Hill-function ODE framework
 
 `biomni/tool/systems_biology.py:460-551` @ 400c1f3
 
-`biomni/tool/systems_biology.py:460-551` — **Normalized Hill-function ODE framework**: generic `(regulator, target)`-keyed param dict and a single `hill_function(x, n, ec50)` shared by all activator/inhibitor edges. Network topology drives which params are consulted at runtime—clean separation of structure from kinetics.
+`biomni/tool/systems_biology.py:460-551` — Normalized Hill-function ODE framework: generic `(regulator, target)`-keyed param dict and a single `hill_function(x, n, ec50)` shared by all activator/inhibitor edges. Network topology drives which params are consulted at runtime—clean separation of structure from kinetics.
 
 <a id="g6-f069"></a>
 ### Multi-model fit + best-by-R² selection with mechanism interpretation
 
 `biomni/tool/bioengineering.py:L658-887` @ 400c1f3
 
-`biomni/tool/bioengineering.py:L658-887` — **Multi-model fit + best-by-R² selection with mechanism interpretation**: fit zero-order, first-order, Higuchi, and Korsmeyer-Peppas models, rank by R², then derive a mechanistic label from the winner's identity and parameter values. Generic pattern for hypothesis ranking over a fixed model family.
+`biomni/tool/bioengineering.py:L658-887` — Multi-model fit + best-by-R² selection with mechanism interpretation: fit zero-order, first-order, Higuchi, and Korsmeyer-Peppas models, rank by R², then derive a mechanistic label from the winner's identity and parameter values. Generic pattern for hypothesis ranking over a fixed model family.
 
 <a id="g6-f070"></a>
 ### Structured error returns with suggestion field
 
 `biomni/tool/support_tools.py:278-388` @ 400c1f3
 
-`biomni/tool/support_tools.py:278-388` — **Structured error returns with suggestion field**: every failure path returns `{"success": False, "error": "...", "suggestion": "..."}`. Agents can read the `suggestion` field and self-correct without exception-handling logic.
+`biomni/tool/support_tools.py:278-388` — Structured error returns with suggestion field: every failure path returns `{"success": False, "error": "...", "suggestion": "..."}`. Agents can read the `suggestion` field and self-correct without exception-handling logic.
 
 <a id="g6-f071"></a>
 ### Multi-source credential resolution + dual-level error handling
 
 `biomni/tool/protocols.py:L24-26` @ 400c1f3
 
-`biomni/tool/protocols.py:L24-26` / `biomni/tool/protocols.py:L84-91` — **Multi-source credential resolution + dual-level error handling**: `env1 or env2 or config.attr` for secrets; HTTP errors via `raise_for_status()` (exception path) and application-level errors via `status_code != 0` (dict path) with consistent normalized return shape.
+`biomni/tool/protocols.py:L24-26` / `biomni/tool/protocols.py:L84-91` — Multi-source credential resolution + dual-level error handling: `env1 or env2 or config.attr` for secrets; HTTP errors via `raise_for_status()` (exception path) and application-level errors via `status_code != 0` (dict path) with consistent normalized return shape.
 
 <a id="g6-f072"></a>
 ### Uniform typed manifest schema
 
-All `tool_description/*.py` files — **Uniform typed manifest schema**: `{description, name, required_parameters, optional_parameters}` with per-parameter `{default, description, name, type}` enables dynamic tool registration and prompt generation from a single source of truth.
+All `tool_description/*.py` files — Uniform typed manifest schema: `{description, name, required_parameters, optional_parameters}` with per-parameter `{default, description, name, type}` enables dynamic tool registration and prompt generation from a single source of truth.
 
 <a id="g6-f073"></a>
 ### Proxy HRD scoring with documented upgrade path
 
 `biomni/tool/cancer_biology.py:L1113-1200` @ 400c1f3
 
-`biomni/tool/cancer_biology.py:L1113-1200` — **Proxy HRD scoring with documented upgrade path**: LST-like events + HRD-LOH-like events as proxy metrics, with explicit note to replace with scarHRD for clinical use. Pattern for "good enough" metrics that document their own upgrade path.
+`biomni/tool/cancer_biology.py:L1113-1200` — Proxy HRD scoring with documented upgrade path: LST-like events + HRD-LOH-like events as proxy metrics, with explicit note to replace with scarHRD for clinical use. Pattern for "good enough" metrics that document their own upgrade path.
 
 <a id="g6-f074"></a>
 ### Sequence lineage assignment via Hamming clustering
 
 `biomni/tool/bioengineering.py:L474-504` @ 400c1f3
 
-`biomni/tool/bioengineering.py:L474-504` — **Sequence lineage assignment via Hamming clustering**: compute pairwise Hamming distance, convert to condensed form, apply average linkage, cut at fixed distance. Reusable for any short-sequence grouping task (barcodes, UMIs, guides).
+`biomni/tool/bioengineering.py:L474-504` — Sequence lineage assignment via Hamming clustering: compute pairwise Hamming distance, convert to condensed form, apply average linkage, cut at fixed distance. Reusable for any short-sequence grouping task (barcodes, UMIs, guides).
 
 <a id="g6-f075"></a>
 ### Run-length region extraction
 
 `biomni/tool/biophysics.py:62-83` @ 400c1f3
 
-`biomni/tool/biophysics.py:62-83` — **Run-length region extraction**: consecutive positions above threshold accumulated into `current_region` lists and flushed only when a gap appears or sequence ends, with `len > 1` minimum to filter isolated spikes. Compact and correct idiom for any sequence segmentation task.
+`biomni/tool/biophysics.py:62-83` — Run-length region extraction: consecutive positions above threshold accumulated into `current_region` lists and flushed only when a gap appears or sequence ends, with `len > 1` minimum to filter isolated spikes. Compact and correct idiom for any sequence segmentation task.
 
 <a id="g6-f076"></a>
 ### Two-level entry-type registry
 
 `biomni/tool/schema_db/geo.pkl:L18-L31` @ 400c1f3
 
-`biomni/tool/schema_db/geo.pkl:L18-L31` — **Two-level entry-type registry**: `"GEO Series" -> "gse"`, database name -> Entrez db string in a single dict. Store human-readable label -> API identifier mappings in schema payloads so the model works with natural-language labels while the tool layer resolves them to API tokens.
+`biomni/tool/schema_db/geo.pkl:L18-L31` — Two-level entry-type registry: `"GEO Series" -> "gse"`, database name -> Entrez db string in a single dict. Store human-readable label -> API identifier mappings in schema payloads so the model works with natural-language labels while the tool layer resolves them to API tokens.
 
 <a id="g6-f077"></a>
 ### Module docstring as output-format contract
 
 `biomni/tool/glycoengineering.py:1-6` @ 400c1f3
 
-`biomni/tool/glycoengineering.py:1-6` / `biomni/tool/glycoengineering.py:97-112` — **Module docstring as output-format contract**: declare the output format ("research-log style strings") at the module level; individual tools follow the pattern: heading -> metadata line -> capped candidate list -> referral to authoritative external tool.
+`biomni/tool/glycoengineering.py:1-6` / `biomni/tool/glycoengineering.py:97-112` — Module docstring as output-format contract: declare the output format ("research-log style strings") at the module level; individual tools follow the pattern: heading -> metadata line -> capped candidate list -> referral to authoritative external tool.
 
 <a id="g6-f078"></a>
 ### Commercial-mode license filter
 
 `biomni/agent/a1.py:L876-L896` @ 400c1f3
 
-`biomni/agent/a1.py:L876-L896` — **Commercial-mode license filter**: metadata field (`-` emoji or "Non-Commercial" string) in know-how documents is checked at configure time, not query time—cheap, deterministic, no LLM involvement.
+`biomni/agent/a1.py:L876-L896` — Commercial-mode license filter: metadata field (`-` emoji or "Non-Commercial" string) in know-how documents is checked at configure time, not query time—cheap, deterministic, no LLM involvement.
 
 <a id="g6-f079"></a>
 ### Deprecated-but-supported dual input path
 
 `biomni/tool/biochemistry.py:L700-752` @ 400c1f3
 
-`biomni/tool/biochemistry.py:L700-752` — **Deprecated-but-supported dual input path**: accepts both a file path (preferred) and a legacy DataFrame with an explicit deprecation warning, enabling callers to migrate without immediate breakage.
+`biomni/tool/biochemistry.py:L700-752` — Deprecated-but-supported dual input path: accepts both a file path (preferred) and a legacy DataFrame with an explicit deprecation warning, enabling callers to migrate without immediate breakage.
 
 ## Open threads / weak spots
 

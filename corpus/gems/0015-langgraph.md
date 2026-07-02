@@ -144,7 +144,7 @@
 
 `libs/langgraph/langgraph/func/__init__.py:516-620` @ d57a74f
 
-`libs/langgraph/langgraph/func/__init__.py:516-620` — `entrypoint` decorator compiles a function into a Pregel graph with a single node. Supports `checkpointer`, `store`, `context_schema`, `cache`, `retry_policy`, and `timeout`. `entrypoint.final` decouples return value from checkpointed state, enabling checkpoint to accumulate across runs while caller sees only current output.
+`libs/langgraph/langgraph/func/init.py:516-620` — `entrypoint` decorator compiles a function into a Pregel graph with a single node. Supports `checkpointer`, `store`, `context_schema`, `cache`, `retry_policy`, and `timeout`. `entrypoint.final` decouples return value from checkpointed state, enabling checkpoint to accumulate across runs while caller sees only current output.
 
 <a id="g15-f020"></a>
 ### Checkpoint write delegation
@@ -216,7 +216,7 @@
 
 `libs/langgraph/langgraph/pregel/_executor.py:47-91` @ d57a74f
 
-`libs/langgraph/langgraph/pregel/_executor.py:47-91` — `BackgroundExecutor` and `AsyncBackgroundExecutor` wrap task submission with done callbacks. On `__exit__`, cancel tasks with `__cancel_on_exit__=True`, wait for all to finish, and re-raise first exception marked `__reraise_on_exit__=True`. Per-task escalation controlled by caller.
+`libs/langgraph/langgraph/pregel/_executor.py:47-91` — `BackgroundExecutor` and `AsyncBackgroundExecutor` wrap task submission with done callbacks. On `exit`, cancel tasks with `cancel_on_exit=True`, wait for all to finish, and re-raise first exception marked `reraise_on_exit=True`. Per-task escalation controlled by caller.
 
 <a id="g15-f030"></a>
 ### StreamWriter is a no-op when stream_mode != "custom" but can be injected into nodes to emit user-defined events, enab…
@@ -260,112 +260,112 @@
 
 `libs/langgraph/langgraph/pregel/_runner.py:700-782` @ d57a74f
 
-**Recursive task scheduling with future chaining** (`libs/langgraph/langgraph/pregel/_runner.py:700-782`): nodes invoke `call(func, *args)` which schedules a new task via callback; the task's future is chained via `chain_future(fut, destination)` so the node's caller waits for the child. Allows nodes to orchestrate sub-flows without explicit await syntax or loop unrolling.
+Recursive task scheduling with future chaining (`libs/langgraph/langgraph/pregel/_runner.py:700-782`): nodes invoke `call(func, *args)` which schedules a new task via callback; the task's future is chained via `chain_future(fut, destination)` so the node's caller waits for the child. Allows nodes to orchestrate sub-flows without explicit await syntax or loop unrolling.
 
 <a id="g15-f036"></a>
 ### Deferred-state reads with write overlay
 
 `libs/langgraph/langgraph/pregel/_algo.py:725-736` @ d57a74f
 
-**Deferred-state reads with write overlay** (`libs/langgraph/langgraph/pregel/_algo.py:725-736`): inject a CONFIG_KEY_READ callback that reads committed state and overlays unsaved writes from the current task. Avoids pre-materializing state snapshots; conditional edges see their own writes without a snapshot copy.
+Deferred-state reads with write overlay (`libs/langgraph/langgraph/pregel/_algo.py:725-736`): inject a CONFIG_KEY_READ callback that reads committed state and overlays unsaved writes from the current task. Avoids pre-materializing state snapshots; conditional edges see their own writes without a snapshot copy.
 
 <a id="g15-f037"></a>
 ### Deterministic task IDs for replay
 
 `libs/langgraph/langgraph/pregel/_algo.py:524-605` @ d57a74f
 
-**Deterministic task IDs for replay** (`libs/langgraph/langgraph/pregel/_algo.py:524-605`): task IDs are hashed from (checkpoint_id, namespace, step, node_name, channel_triggers, path_parts), not random UUIDs. Makes task IDs reproducible given a checkpoint, enabling replay-based debugging without explicit logs.
+Deterministic task IDs for replay (`libs/langgraph/langgraph/pregel/_algo.py:524-605`): task IDs are hashed from (checkpoint_id, namespace, step, node_name, channel_triggers, path_parts), not random UUIDs. Makes task IDs reproducible given a checkpoint, enabling replay-based debugging without explicit logs.
 
 <a id="g15-f038"></a>
 ### Send-based fan-out delegation
 
 `libs/langgraph/langgraph/types.py:664-709` @ d57a74f
 
-**Send-based fan-out delegation** (`libs/langgraph/langgraph/types.py:664-709`): `Send` allows a node to emit multiple child tasks in a single step, each with independent timeout policy, and the graph collects results before proceeding. Simpler than explicit child process creation and fits a declarative model.
+Send-based fan-out delegation (`libs/langgraph/langgraph/types.py:664-709`): `Send` allows a node to emit multiple child tasks in a single step, each with independent timeout policy, and the graph collects results before proceeding. Simpler than explicit child process creation and fits a declarative model.
 
 <a id="g15-f039"></a>
 ### Callback-driven write persistence ordering
 
 `libs/langgraph/langgraph/pregel/_runner.py:114-133` @ d57a74f
 
-**Callback-driven write persistence ordering** (`libs/langgraph/langgraph/pregel/_runner.py:114-133`, `574-613`): futures register done_callback that calls `commit()`, which appends writes and invokes `put_writes`. Ordering: execution -> callback -> persistence -> stream notification. Avoids explicit queue polling.
+Callback-driven write persistence ordering (`libs/langgraph/langgraph/pregel/_runner.py:114-133`, `574-613`): futures register done_callback that calls `commit()`, which appends writes and invokes `put_writes`. Ordering: execution -> callback -> persistence -> stream notification. Avoids explicit queue polling.
 
 <a id="g15-f040"></a>
 ### Semaphore-gated concurrency without queues
 
 `libs/langgraph/langgraph/pregel/_executor.py:135-141` @ d57a74f
 
-**Semaphore-gated concurrency without queues** (`libs/langgraph/langgraph/pregel/_executor.py:135-141`): semaphore stored in context manager, each submitted coroutine wrapped with `gated(semaphore, coro)`. Semaphore itself is the backpressure point; lighter than work-stealing queues for graph orchestration.
+Semaphore-gated concurrency without queues (`libs/langgraph/langgraph/pregel/_executor.py:135-141`): semaphore stored in context manager, each submitted coroutine wrapped with `gated(semaphore, coro)`. Semaphore itself is the backpressure point; lighter than work-stealing queues for graph orchestration.
 
 <a id="g15-f041"></a>
 ### Scope-chained scratchpad for nested contexts
 
 `libs/langgraph/langgraph/pregel/_algo.py:1280-1345` @ d57a74f
 
-**Scope-chained scratchpad for nested contexts** (`libs/langgraph/langgraph/pregel/_algo.py:1280-1345`): each task gets a `PregelScratchpad` that delegates `get_null_resume` to parent scratchpad, forming a scope chain. Nested tasks can read parent resume values while maintaining task-local call/interrupt counts.
+Scope-chained scratchpad for nested contexts (`libs/langgraph/langgraph/pregel/_algo.py:1280-1345`): each task gets a `PregelScratchpad` that delegates `get_null_resume` to parent scratchpad, forming a scope chain. Nested tasks can read parent resume values while maintaining task-local call/interrupt counts.
 
 <a id="g15-f042"></a>
 ### Topic channel as send buffer / backpressure
 
 `libs/langgraph/langgraph/channels/topic.py:77-85` @ d57a74f
 
-**Topic channel as send buffer / backpressure** (`libs/langgraph/langgraph/channels/topic.py:77-85`, `libs/langgraph/langgraph/pregel/_algo.py:442-466`): Send objects enqueued into a TASKS topic channel. Each superstep PUSH tasks consume the topic, create `PregelExecutableTask` per Send, and execute. Topic drains on non-accumulate, giving natural superstep-level backpressure.
+Topic channel as send buffer / backpressure (`libs/langgraph/langgraph/channels/topic.py:77-85`, `libs/langgraph/langgraph/pregel/_algo.py:442-466`): Send objects enqueued into a TASKS topic channel. Each superstep PUSH tasks consume the topic, create `PregelExecutableTask` per Send, and execute. Topic drains on non-accumulate, giving natural superstep-level backpressure.
 
 <a id="g15-f043"></a>
 ### Two-phase visibility for handoff
 
 `libs/langgraph/langgraph/channels/last_value.py:81-151` @ d57a74f
 
-**Two-phase visibility for handoff** (`libs/langgraph/langgraph/channels/last_value.py:81-151`): write -> finish -> consume separates state mutation from child visibility, enabling structured parent-child handoff without race conditions.
+Two-phase visibility for handoff (`libs/langgraph/langgraph/channels/last_value.py:81-151`): write -> finish -> consume separates state mutation from child visibility, enabling structured parent-child handoff without race conditions.
 
 <a id="g15-f044"></a>
 ### State snapshot as parent visibility window
 
 `libs/langgraph/langgraph/types.py:643-661` @ d57a74f
 
-**State snapshot as parent visibility window** (`libs/langgraph/langgraph/types.py:643-661`): `StateSnapshot` includes `next`, `tasks`, `parent_config`, and `interrupts`, giving a coordinator a full picture of pending child tasks without opening child internal state.
+State snapshot as parent visibility window (`libs/langgraph/langgraph/types.py:643-661`): `StateSnapshot` includes `next`, `tasks`, `parent_config`, and `interrupts`, giving a coordinator a full picture of pending child tasks without opening child internal state.
 
 <a id="g15-f045"></a>
 ### Implicit graph termination via channel versioning
 
 `libs/langgraph/langgraph/pregel/_algo.py:335-342` @ d57a74f
 
-**Implicit graph termination via channel versioning** (`libs/langgraph/langgraph/pregel/_algo.py:335-342`): after each superstep, if no task triggered any channel, graph finishes all channels and considers execution complete. No explicit termination signals or final-node markers.
+Implicit graph termination via channel versioning (`libs/langgraph/langgraph/pregel/_algo.py:335-342`): after each superstep, if no task triggered any channel, graph finishes all channels and considers execution complete. No explicit termination signals or final-node markers.
 
 <a id="g15-f046"></a>
 ### Multi-node join via NamedBarrierValue
 
 `libs/langgraph/langgraph/graph/state.py:1537-1611` @ d57a74f
 
-**Multi-node join via NamedBarrierValue** (`libs/langgraph/langgraph/graph/state.py:1537-1611`): `NamedBarrierValue(Set[str], set_of_start_nodes)` triggers only when all named starts have written, preventing spurious triggers if one start completes multiple times per superstep.
+Multi-node join via NamedBarrierValue (`libs/langgraph/langgraph/graph/state.py:1537-1611`): `NamedBarrierValue(Set[str], set_of_start_nodes)` triggers only when all named starts have written, preventing spurious triggers if one start completes multiple times per superstep.
 
 <a id="g15-f047"></a>
 ### Error handler scheduling in-band
 
 `libs/langgraph/langgraph/pregel/_runner.py:205-233` @ d57a74f
 
-**Error handler scheduling in-band** (`libs/langgraph/langgraph/pregel/_runner.py:205-233`, `297-324`): when a task fails and has a mapped error handler node, `schedule_error_handler(task, exc)` is called to get a new handler task and add it to the same tick. Handler is scheduled dynamically, not pre-planned, enabling stack-like error recovery chains.
+Error handler scheduling in-band (`libs/langgraph/langgraph/pregel/_runner.py:205-233`, `297-324`): when a task fails and has a mapped error handler node, `schedule_error_handler(task, exc)` is called to get a new handler task and add it to the same tick. Handler is scheduled dynamically, not pre-planned, enabling stack-like error recovery chains.
 
 <a id="g15-f048"></a>
 ### Decoupled timeout policies
 
 `libs/langgraph/langgraph/types.py:449-512` @ d57a74f
 
-**Decoupled timeout policies** (`libs/langgraph/langgraph/types.py:449-512`): wall-clock and idle timeouts are separate with different refresh semantics. Heartbeat signaling allows long-running tasks to avoid premature idle timeout without blocking.
+Decoupled timeout policies (`libs/langgraph/langgraph/types.py:449-512`): wall-clock and idle timeouts are separate with different refresh semantics. Heartbeat signaling allows long-running tasks to avoid premature idle timeout without blocking.
 
 <a id="g15-f049"></a>
 ### Cooperative drain signaling
 
 `libs/langgraph/langgraph/runtime.py:79-104` @ d57a74f
 
-**Cooperative drain signaling** (`libs/langgraph/langgraph/runtime.py:79-104`, `libs/langgraph/langgraph/errors.py:54-64`): `RunControl.request_drain()` sets a flag; graph checks at superstep boundaries and raises `GraphDrained`. Avoids forced cancellation, allows current checkpoint to be saved.
+Cooperative drain signaling (`libs/langgraph/langgraph/runtime.py:79-104`, `libs/langgraph/langgraph/errors.py:54-64`): `RunControl.request_drain()` sets a flag; graph checks at superstep boundaries and raises `GraphDrained`. Avoids forced cancellation, allows current checkpoint to be saved.
 
 <a id="g15-f050"></a>
 ### entrypoint.final to decouple return/checkpoint
 
 `libs/langgraph/langgraph/func/__init__.py:475-514` @ d57a74f
 
-**`entrypoint.final` to decouple return/checkpoint** (`libs/langgraph/langgraph/func/__init__.py:475-514`): allows a workflow to return one value to the caller and save a different value to the checkpoint. Enables checkpoint to accumulate state (e.g., run summary) while the caller sees only current output.
+`entrypoint.final` to decouple return/checkpoint (`libs/langgraph/langgraph/func/init.py:475-514`): allows a workflow to return one value to the caller and save a different value to the checkpoint. Enables checkpoint to accumulate state (e.g., run summary) while the caller sees only current output.
 
 ## Open threads / weak spots
 
@@ -430,7 +430,7 @@
 
 `libs/langgraph/langgraph/pregel/_algo.py:635-652` @ d57a74f
 
-`libs/langgraph/langgraph/pregel/_algo.py:635-652` — `prepare_single_task` catches exceptions during `_proc_input` but adds `__notes__` only on Python 3.11+. Pre-3.11 failures produce no structured backtrace identifying the task or step.
+`libs/langgraph/langgraph/pregel/_algo.py:635-652` — `prepare_single_task` catches exceptions during `_proc_input` but adds `notes` only on Python 3.11+. Pre-3.11 failures produce no structured backtrace identifying the task or step.
 
 <a id="g15-f060"></a>
 ### Implicit termination check updated_channels.isdisjoint(trigger_to_nodes) assumes trigger_to_nodes is complete. Nodes …
@@ -444,7 +444,7 @@
 
 `libs/langgraph/langgraph/types.py:793-806` @ d57a74f
 
-`libs/langgraph/langgraph/types.py:793-806` — `Command._update_as_tuples()` fallback to `__root__` tuple if `get_cached_annotated_keys()` returns `None` may silently mask user type errors when the update type is unexpected.
+`libs/langgraph/langgraph/types.py:793-806` — `Command._update_as_tuples()` fallback to `root` tuple if `get_cached_annotated_keys()` returns `None` may silently mask user type errors when the update type is unexpected.
 
 <a id="g15-f062"></a>
 ### TaskPayload.triggers is a flat list of channel name strings. When a task is triggered by multiple channels, order may…
@@ -458,7 +458,7 @@
 
 `libs/langgraph/langgraph/func/__init__.py:237-246` @ d57a74f
 
-`libs/langgraph/langgraph/func/__init__.py:237-246` — Timeout policy is only supported for async tasks; sync tasks raise `sync_timeout_unsupported()`. No workaround documented for sync tasks that need idle timeout.
+`libs/langgraph/langgraph/func/init.py:237-246` — Timeout policy is only supported for async tasks; sync tasks raise `sync_timeout_unsupported()`. No workaround documented for sync tasks that need idle timeout.
 
 <a id="g15-f064"></a>
 ### No timeout or backoff strategy in the update loop; repeated failed operator applications (e.g., type mismatch) silent…

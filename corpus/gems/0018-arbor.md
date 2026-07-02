@@ -67,7 +67,7 @@
 
 `src/core/tools/__init__.py:58-59` @ 964b846
 
-`src/core/tools/__init__.py:58-59` — `ExecutorTool` is added to the tool list only when a `parent_agent` is explicitly passed, preventing child agents from gaining sub-agent spawning capability unless the orchestrator intentionally grants it.
+`src/core/tools/init.py:58-59` — `ExecutorTool` is added to the tool list only when a `parent_agent` is explicitly passed, preventing child agents from gaining sub-agent spawning capability unless the orchestrator intentionally grants it.
 
 <a id="g18-f009"></a>
 ### Child config deep-copies the parent's llm / timeout / context subgroups wholesale but hard-overrides auto_git=False ,…
@@ -137,7 +137,7 @@
 
 `src/core/tools/glob_tool.py:63-74` @ 964b846
 
-`src/core/tools/glob_tool.py:63-74` — Glob results drop hidden/VCS directories (`{".git", ".svn", ".hg", "node_modules", "__pycache__", ".venv", "venv"}`), filter to files-only, then sort newest-first before capping at 100, reducing noise for LLM consumers without configuration.
+`src/core/tools/glob_tool.py:63-74` — Glob results drop hidden/VCS directories (`{".git", ".svn", ".hg", "node_modules", "pycache", ".venv", "venv"}`), filter to files-only, then sort newest-first before capping at 100, reducing noise for LLM consumers without configuration.
 
 ## Skills, prompts, tools
 
@@ -381,7 +381,7 @@ Other takes: [gem #9](0009-scienceclaw.md#g9-f007), [gem #10](0010-autogen.md#g1
 
 `src/core/tools/__init__.py:19-59` @ 964b846
 
-`src/core/tools/__init__.py:19-59` — `get_all_tools()` factory reads all timeout/limit config from `AgentConfig` with inline numeric defaults. Callers that don't pass a config get sensible defaults without constructing the full config object.
+`src/core/tools/init.py:19-59` — `get_all_tools()` factory reads all timeout/limit config from `AgentConfig` with inline numeric defaults. Callers that don't pass a config get sensible defaults without constructing the full config object.
 
 <a id="g18-f053"></a>
 ### Post-execution telemetry
@@ -500,7 +500,7 @@ Other takes: [gem #9](0009-scienceclaw.md#g9-f007), [gem #10](0010-autogen.md#g1
 
 `src/core/tools/web/keyless_visit.py:92-93` @ 964b846
 
-`src/core/tools/web/keyless_visit.py:92-93` — `JinaVisitTool.__init__` calls `Tool.__init__` directly, bypassing `WebVisitTool.__init__`. Any initialization logic added to `WebVisitTool.__init__` in future (new attributes, resource setup) will silently not apply to `JinaVisitTool` instances.
+`src/core/tools/web/keyless_visit.py:92-93` — `JinaVisitTool.init` calls `Tool.init` directly, bypassing `WebVisitTool.init`. Any initialization logic added to `WebVisitTool.init` in future (new attributes, resource setup) will silently not apply to `JinaVisitTool` instances.
 
 <a id="g18-f070"></a>
 ### ResumeExecutor checks node.code_ref is None and returns an error, but a partially-committed branch (code_ref exists, …

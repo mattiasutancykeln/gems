@@ -90,7 +90,7 @@ Other takes: [gem #10](0010-autogen.md#g10-f044), [gem #18](0018-arbor.md#g18-f0
 
 `skills/research-pipeline/SKILL.md:L17` @ f4a6286
 
-`skills/research-pipeline/SKILL.md:L17` — Orchestrator enforces a **single `sessions_spawn` per response** constraint — an explicit product decision making the pipeline sequential.
+`skills/research-pipeline/SKILL.md:L17` — Orchestrator enforces a single `sessions_spawn` per response constraint — an explicit product decision making the pipeline sequential.
 
 <a id="g9-f012"></a>
 ### Continuous knowledge-metabolism loop caps topic files at 200 lines and compresses older content (preserving citations…
@@ -374,7 +374,7 @@ Other takes: [gem #10](0010-autogen.md#g10-f044), [gem #18](0018-arbor.md#g18-f0
 
 `skills/disease-research/references/tool-reference.md:L366-387` @ f4a6286
 
-Report-first + progressive-update pattern (most-cited convention in corpus): create output file with all section headers as `[Researching...]` stubs before any tool call, replacing each in place. See `skills/disease-research/references/tool-reference.md:L366-387`, `skills/chemical-safety/SKILL.md:L44-52`, `skills/drug-drug-interaction/SKILL.md:44-59`, `skills/gene-enrichment/SKILL.md:L60-69`.
+create output file with all section headers as `[Researching...]` stubs before any tool call, replacing each in place. See `skills/disease-research/references/tool-reference.md:L366-387`, `skills/chemical-safety/SKILL.md:L44-52`, `skills/drug-drug-interaction/SKILL.md:44-59`, `skills/gene-enrichment/SKILL.md:L60-69`.
 
 <a id="g9-f052"></a>
 ### Multi-stage filtering funnel with explicit pass-rate numbers enabling budget planning; generalized as a DesignCampaig…
@@ -388,7 +388,7 @@ Report-first + progressive-update pattern (most-cited convention in corpus): cre
 
 `skills/single-cell/SKILL.md:L92-135` @ f4a6286
 
-ASCII/inline decision-tree as the first SKILL.md section: `skills/single-cell/SKILL.md:L92-135`, `skills/scikit-survival/SKILL.md:L64-82`, `skills/deepchem/SKILL.md:L66-90`, `skills/statistical-modeling/SKILL.md:L65-80` — routes the agent before any code.
+`skills/single-cell/SKILL.md:L92-135`, `skills/scikit-survival/SKILL.md:L64-82`, `skills/deepchem/SKILL.md:L66-90`, `skills/statistical-modeling/SKILL.md:L65-80` — routes the agent before any code.
 
 <a id="g9-f054"></a>
 ### (and ~50 identical stubs)
@@ -544,7 +544,7 @@ Duplicate YAML frontmatter (two `---` blocks, two `name`/`description` fields) b
 
 `skills/offer-k-dense-web/SKILL.md:3-17` @ f4a6286
 
-Embedded K-Dense Web upsells hardwired into multiple skills, inserting product promotion into agent output: `skills/offer-k-dense-web/SKILL.md:3-17`, `skills/adaptyv/SKILL.md:L107-119`, `skills/peer-review/SKILL.md:L570-571`.
+`skills/offer-k-dense-web/SKILL.md:3-17`, `skills/adaptyv/SKILL.md:L107-119`, `skills/peer-review/SKILL.md:L570-571`.
 
 <a id="g9-f076"></a>
 ### _execute_package_skill hardcodes timeout=30 , silently overriding the caller-supplied timeout .

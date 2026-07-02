@@ -279,7 +279,7 @@
 
 `system/reference/META-IMPROVEMENT.md:136-153` @ c71a923
 
-`system/reference/META-IMPROVEMENT.md:136-153 @ AutoScientists@c71a923` — `META-IMPROVEMENT.md` ends with a named, dated record of real system failures (task spec drift, autonomy failure, report-writing substitution). Each entry has a `**Lesson:**` that rewrites the instruction. This is a structured postmortem corpus embedded directly in the skill file, readable by future meta-improvement runs. The autonomy failure (`system/reference/META-IMPROVEMENT.md:143-148 @ AutoScientists@c71a923`): the orchestrator "paused after cycle 1 and asked 'can you continue?'" despite explicit instructions. Fix was to replace soft prohibitions with `NEVER ASK PERMISSION`. Any loop-launched Claude agent should audit its stop conditions for weak-directive patterns.
+`system/reference/META-IMPROVEMENT.md:136-153 @ AutoScientists@c71a923` — `META-IMPROVEMENT.md` ends with a named, dated record of real system failures (task spec drift, autonomy failure, report-writing substitution). Each entry has a `Lesson:` that rewrites the instruction. This is a structured postmortem corpus embedded directly in the skill file, readable by future meta-improvement runs. The autonomy failure (`system/reference/META-IMPROVEMENT.md:143-148 @ AutoScientists@c71a923`): the orchestrator "paused after cycle 1 and asked 'can you continue?'" despite explicit instructions. Fix was to replace soft prohibitions with `NEVER ASK PERMISSION`. Any loop-launched Claude agent should audit its stop conditions for weak-directive patterns.
 
 ## Patterns worth porting
 
@@ -288,77 +288,77 @@
 
 `system/templates/HEARTBEAT.md:100-165` @ c71a923
 
-`system/templates/HEARTBEAT.md:100-165 @ AutoScientists@c71a923` — **Sentinel-driven session recovery.** Writing `result_latest.json` with `status/pid/posted_to_workshop` before training starts gives a clean resume path after any crash. The PID + artifact-presence promotion logic (`running` -> `complete` -> `posted`) handles ungraceful kills without orchestrator intervention. Directly portable to Halmos agent runs where a long compute step may outlive the orchestrator session.
+`system/templates/HEARTBEAT.md:100-165 @ AutoScientists@c71a923` — Sentinel-driven session recovery. Writing `result_latest.json` with `status/pid/posted_to_workshop` before training starts gives a clean resume path after any crash. The PID + artifact-presence promotion logic (`running` -> `complete` -> `posted`) handles ungraceful kills without orchestrator intervention. Directly portable to Halmos agent runs where a long compute step may outlive the orchestrator session.
 
 <a id="g20-f040"></a>
 ### Filesystem-first, two-tier agent identity
 
 `system/reference/AGENT-SETUP.md:31-47` @ c71a923
 
-`system/reference/AGENT-SETUP.md:31-47 @ AutoScientists@c71a923` and `launch.py:575-700 @ AutoScientists@c71a923` — **Filesystem-first, two-tier agent identity.** All durable state (identity, credentials, memory, prompt) lives in a local directory tree before any session starts. Session state (AGENT.md) is overwritten each session; accumulated knowledge (memory/*.md) is append-only per lesson; the MEMORY.md index gates what's loaded at boot. Makes agents restartable without API calls to reconstruct identity. The directory IS the agent record.
+`system/reference/AGENT-SETUP.md:31-47 @ AutoScientists@c71a923` and `launch.py:575-700 @ AutoScientists@c71a923` — Filesystem-first, two-tier agent identity. All durable state (identity, credentials, memory, prompt) lives in a local directory tree before any session starts. Session state (AGENT.md) is overwritten each session; accumulated knowledge (memory/*.md) is append-only per lesson; the MEMORY.md index gates what's loaded at boot. Makes agents restartable without API calls to reconstruct identity. The directory IS the agent record.
 
 <a id="g20-f041"></a>
 ### Proof-of-change + one-change-only isolation
 
 `system/reference/META-IMPROVEMENT.md:1-18` @ c71a923
 
-`system/reference/META-IMPROVEMENT.md:1-18 @ AutoScientists@c71a923` and `system/reference/META-IMPROVEMENT.md:94-99 @ AutoScientists@c71a923` — **Proof-of-change + one-change-only isolation.** Meta-improvement is only complete when a file is different than before (eliminates report-writing as a substitute for action — documented as a recurring failure). Each cycle fixes exactly one gap; the `meta_results.tsv` log creates a readable A/B record of what was tried. Applicable to any self-improvement loop where causality must be preserved.
+`system/reference/META-IMPROVEMENT.md:1-18 @ AutoScientists@c71a923` and `system/reference/META-IMPROVEMENT.md:94-99 @ AutoScientists@c71a923` — Proof-of-change + one-change-only isolation. Meta-improvement is only complete when a file is different than before (eliminates report-writing as a substitute for action — documented as a recurring failure). Each cycle fixes exactly one gap; the `meta_results.tsv` log creates a readable A/B record of what was tried. Applicable to any self-improvement loop where causality must be preserved.
 
 <a id="g20-f042"></a>
 ### Noise-contamination re-triage over deletion
 
 `system/templates/ROLE-ANALYST.md:806-818` @ c71a923
 
-`system/templates/ROLE-ANALYST.md:806-818 @ AutoScientists@c71a923` — **Noise-contamination re-triage over deletion.** When the measured noise floor rises above a dead-end's recorded delta, downgrade the entry rather than deleting it. Preserves experimental history while reopening the search surface. Directly applicable to Halmos certify/validate pipelines where claim thresholds change across champion updates — a stale dead-end should be re-evaluated, not silently retained or deleted.
+`system/templates/ROLE-ANALYST.md:806-818 @ AutoScientists@c71a923` — Noise-contamination re-triage over deletion. When the measured noise floor rises above a dead-end's recorded delta, downgrade the entry rather than deleting it. Preserves experimental history while reopening the search surface. Directly applicable to Halmos certify/validate pipelines where claim thresholds change across champion updates — a stale dead-end should be re-evaluated, not silently retained or deleted.
 
 <a id="g20-f043"></a>
 ### Hypothesis-as-team-charter with deterministic falsification
 
 `system/reference/PHASES.md:101-115` @ c71a923
 
-`system/reference/PHASES.md:101-115 @ AutoScientists@c71a923` and `system/templates/ROLE-MONITOR.md:83-138 @ AutoScientists@c71a923` — **Hypothesis-as-team-charter with deterministic falsification.** Frontmatter counters (`age_rotations`, `supported_keeps`, `refuted_discards`) enable automated hypothesis tracking without agents reading every result. Falsification condition (`age_rotations ≥ 3 AND supported_keeps == 0 AND refuted_discards ≥ 3`) is deterministic, not subject to interpretation drift. Forces proposals that are evaluable against a stated hypothesis rather than free-form exploration.
+`system/reference/PHASES.md:101-115 @ AutoScientists@c71a923` and `system/templates/ROLE-MONITOR.md:83-138 @ AutoScientists@c71a923` — Hypothesis-as-team-charter with deterministic falsification. Frontmatter counters (`age_rotations`, `supported_keeps`, `refuted_discards`) enable automated hypothesis tracking without agents reading every result. Falsification condition (`age_rotations ≥ 3 AND supported_keeps == 0 AND refuted_discards ≥ 3`) is deterministic, not subject to interpretation drift. Forces proposals that are evaluable against a stated hypothesis rather than free-form exploration.
 
 <a id="g20-f044"></a>
 ### Orchestrator-owned canonical log
 
 `system/reference/LOGGING.md:11-38` @ c71a923
 
-`system/reference/LOGGING.md:11-38 @ AutoScientists@c71a923` — **Orchestrator-owned canonical log.** GPU agents report results in their promise message; the orchestrator writes the single authoritative JSONL entry. Agents cannot corrupt the log by writing to it directly. Analogous to Halmos's trace-DAG where only the certify/validate step writes authoritative outcome edges — the separation prevents agents from marking their own work as valid.
+`system/reference/LOGGING.md:11-38 @ AutoScientists@c71a923` — Orchestrator-owned canonical log. GPU agents report results in their promise message; the orchestrator writes the single authoritative JSONL entry. Agents cannot corrupt the log by writing to it directly. Analogous to Halmos's trace-DAG where only the certify/validate step writes authoritative outcome edges — the separation prevents agents from marking their own work as valid.
 
 <a id="g20-f045"></a>
 ### Shared cross-team backlog ledger with mandatory disposition
 
 `system/templates/ROLE-ANALYST.md:326-355` @ c71a923
 
-`system/templates/ROLE-ANALYST.md:326-355 @ AutoScientists@c71a923` — **Shared cross-team backlog ledger with mandatory disposition.** `knowledge/unqueued_axes.md` forces agents to record a `reason:` when skipping a backlog entry. Becomes a durable record of why each hypothesis was or wasn't tested. Maps to Halmos's capability-map pattern of canonical concept tracking; prevents the same idea from being re-proposed in future cycles without acknowledging prior history.
+`system/templates/ROLE-ANALYST.md:326-355 @ AutoScientists@c71a923` — Shared cross-team backlog ledger with mandatory disposition. `knowledge/unqueued_axes.md` forces agents to record a `reason:` when skipping a backlog entry. Becomes a durable record of why each hypothesis was or wasn't tested. Maps to Halmos's capability-map pattern of canonical concept tracking; prevents the same idea from being re-proposed in future cycles without acknowledging prior history.
 
 <a id="g20-f046"></a>
 ### Alphabetically-last-agent single-writer arbitration
 
 `system/templates/ROLE-ANALYST.md:195-228` @ c71a923
 
-`system/templates/ROLE-ANALYST.md:195-228 @ AutoScientists@c71a923` and `system/templates/ROLE-ANALYST.md:651-729 @ AutoScientists@c71a923` — **Alphabetically-last-agent single-writer arbitration.** Deterministic coordinator selection without a lock service or privileged role. Same convention applies to roster writes (cold-start), dimension-merge enactment, and reform enactment. Conditions for merge enactment are fully specified: endorsement bar met (≥2 substantive non-proposer comments, 0 unresolved objections, thread ≥1 rotation old) AND roster still in pre-merge state AND you are not the proposer AND you are the last analyst this rotation. Deferral under "I'm non-affected" is explicitly named a bug.
+`system/templates/ROLE-ANALYST.md:195-228 @ AutoScientists@c71a923` and `system/templates/ROLE-ANALYST.md:651-729 @ AutoScientists@c71a923` — Alphabetically-last-agent single-writer arbitration. Deterministic coordinator selection without a lock service or privileged role. Same convention applies to roster writes (cold-start), dimension-merge enactment, and reform enactment. Conditions for merge enactment are fully specified: endorsement bar met (≥2 substantive non-proposer comments, 0 unresolved objections, thread ≥1 rotation old) AND roster still in pre-merge state AND you are not the proposer AND you are the last analyst this rotation. Deferral under "I'm non-affected" is explicitly named a bug.
 
 <a id="g20-f047"></a>
 ### Infinite loop with profile-owned exit
 
 `runbook.md:181-201` @ c71a923
 
-`runbook.md:181-201 @ AutoScientists@c71a923` — **Infinite loop with profile-owned exit.** The orchestrator loop runs forever; only the profile's `exit_condition()` hook knows when to stop. Separates "how to loop" (universal base-program) from "when to stop" (task-specific hook). Halmos's heartbeat loop should adopt the same separation — the heartbeat protocol is universal; the research-goal completion condition is domain-specific.
+`runbook.md:181-201 @ AutoScientists@c71a923` — Infinite loop with profile-owned exit. The orchestrator loop runs forever; only the profile's `exit_condition()` hook knows when to stop. Separates "how to loop" (universal base-program) from "when to stop" (task-specific hook). Halmos's heartbeat loop should adopt the same separation — the heartbeat protocol is universal; the research-goal completion condition is domain-specific.
 
 <a id="g20-f048"></a>
 ### Per-run isolated code copy with documented prior bug
 
 `launch.py:438-507` @ c71a923
 
-`launch.py:438-507 @ AutoScientists@c71a923` — **Per-run isolated code copy with documented prior bug.** Fresh git clone prevents stale state; the comment explicitly documents WHY a symlink was replaced, citing the ~1800 lines of contamination. The "prior bug" comment pattern prevents regression. Cache (weights, pip) IS shared via symlink — the isolation boundary is code state, not data state.
+`launch.py:438-507 @ AutoScientists@c71a923` — Per-run isolated code copy with documented prior bug. Fresh git clone prevents stale state; the comment explicitly documents WHY a symlink was replaced, citing the ~1800 lines of contamination. The "prior bug" comment pattern prevents regression. Cache (weights, pip) IS shared via symlink — the isolation boundary is code state, not data state.
 
 <a id="g20-f049"></a>
 ### Structured stagnation response with exhaustive options
 
 `system/reference/PHASES.md:207-235` @ c71a923
 
-`system/reference/PHASES.md:207-235 @ AutoScientists@c71a923` — **Structured stagnation response with exhaustive options.** Detect (N consecutive DISCARDs or axis-mining trigger), post structured discussion with labeled options (Merge/Split/Pivot/Dissolve), vote, execute one of four mechanical outcomes. Options are exhaustive and mutually exclusive. Each restructuring path has a distinct mechanical consequence (move agents, create new workspaces, clear queue, redistribute). Applicable to any Halmos agent pool that can stagnate.
+`system/reference/PHASES.md:207-235 @ AutoScientists@c71a923` — Structured stagnation response with exhaustive options. Detect (N consecutive DISCARDs or axis-mining trigger), post structured discussion with labeled options (Merge/Split/Pivot/Dissolve), vote, execute one of four mechanical outcomes. Options are exhaustive and mutually exclusive. Each restructuring path has a distinct mechanical consequence (move agents, create new workspaces, clear queue, redistribute). Applicable to any Halmos agent pool that can stagnate.
 
 ## Open threads / weak spots
 
@@ -367,89 +367,89 @@
 
 `system/reference/LOGGING.md:11-13` @ c71a923
 
-`system/reference/LOGGING.md:11-13 vs 130-152 @ AutoScientists@c71a923` — **Authorship inconsistency in `experiments.jsonl`.** Section header says "The **orchestrator** writes this file — agents do NOT write to it directly" (line 12), but section 2 header says "**Written by:** GPU agents, after each experiment" (line 130) with agent-side Python. The two sections contradict each other; deployed model is ambiguous.
+`system/reference/LOGGING.md:11-13 vs 130-152 @ AutoScientists@c71a923` — Authorship inconsistency in `experiments.jsonl`. Section header says "The orchestrator writes this file — agents do NOT write to it directly" (line 12), but section 2 header says "Written by: GPU agents, after each experiment" (line 130) with agent-side Python. The two sections contradict each other; deployed model is ambiguous.
 
 <a id="g20-f051"></a>
 ### Champion propagation is orchestrator-copy, not version-pinned
 
 `system/reference/SKILL.md:80-88` @ c71a923
 
-`system/reference/SKILL.md:80-88 @ AutoScientists@c71a923` — **Champion propagation is orchestrator-copy, not version-pinned.** The orchestrator copies `train.py` to `{FOCUS_ROOT}/champion/train.py` after each KEEP. There is no `path@vN`-style versioning — if two agents race around a KEEP boundary, one may train against the old champion while the other trains against the new one, with no record of which baseline each used. `champion/SOURCE` records promotion metadata but not the full champion state at each version.
+`system/reference/SKILL.md:80-88 @ AutoScientists@c71a923` — Champion propagation is orchestrator-copy, not version-pinned. The orchestrator copies `train.py` to `{FOCUS_ROOT}/champion/train.py` after each KEEP. There is no `path@vN`-style versioning — if two agents race around a KEEP boundary, one may train against the old champion while the other trains against the new one, with no record of which baseline each used. `champion/SOURCE` records promotion metadata but not the full champion state at each version.
 
 <a id="g20-f052"></a>
 ### meta_results.tsv has no revert mechanism
 
 `system/reference/META-IMPROVEMENT.md:103-115` @ c71a923
 
-`system/reference/META-IMPROVEMENT.md:103-115 @ AutoScientists@c71a923` — **`meta_results.tsv` has no revert mechanism.** The log records that a change was applied but has no field for "was this change later reverted and why." The `**If a recent meta-improvement made things worse: Revert it**` heuristic produces no corresponding log entry, making the audit trail incomplete.
+`system/reference/META-IMPROVEMENT.md:103-115 @ AutoScientists@c71a923` — `meta_results.tsv` has no revert mechanism. The log records that a change was applied but has no field for "was this change later reverted and why." The `If a recent meta-improvement made things worse: Revert it` heuristic produces no corresponding log entry, making the audit trail incomplete.
 
 <a id="g20-f053"></a>
 ### Second-seed pair lost on crash between run and append
 
 `system/templates/ROLE-GPU.md:780-787` @ c71a923
 
-`system/templates/ROLE-GPU.md:780-787 @ AutoScientists@c71a923` — **Second-seed pair lost on crash between run and append.** If the agent crashes after the second run but before appending to `knowledge/noise_floor_data.md`, the pair is lost and the conservative default σ (0.003) stays active indefinitely. No recovery path is documented for this failure.
+`system/templates/ROLE-GPU.md:780-787 @ AutoScientists@c71a923` — Second-seed pair lost on crash between run and append. If the agent crashes after the second run but before appending to `knowledge/noise_floor_data.md`, the pair is lost and the conservative default σ (0.003) stays active indefinitely. No recovery path is documented for this failure.
 
 <a id="g20-f054"></a>
 ### Brittle client-side YAML parsing
 
 `system/reference/API-REFERENCE.md:18-39` @ c71a923
 
-`system/reference/API-REFERENCE.md:18-39 @ AutoScientists@c71a923` — **Brittle client-side YAML parsing.** Agents split on `"---"` and call `yaml.safe_load`. If any file body contains `---` (e.g., in code blocks or markdown separators), the split produces wrong parts and the parse silently returns incorrect data. No validation layer catches this.
+`system/reference/API-REFERENCE.md:18-39 @ AutoScientists@c71a923` — Brittle client-side YAML parsing. Agents split on `"---"` and call `yaml.safe_load`. If any file body contains `---` (e.g., in code blocks or markdown separators), the split produces wrong parts and the parse silently returns incorrect data. No validation layer catches this.
 
 <a id="g20-f055"></a>
 ### knowledge/near_miss_ledger.md is referenced but its schema and lookup protocol are not specified
 
 `system/templates/ROLE-GPU.md:789-799` @ c71a923
 
-`system/templates/ROLE-GPU.md:789-799 @ AutoScientists@c71a923` — **`knowledge/near_miss_ledger.md` is referenced but its schema and lookup protocol are not specified** in any documented file. The 3-seed confirmation path says "look up prior same-tuple NEAR-MISSes" without defining how entries are keyed or written.
+`system/templates/ROLE-GPU.md:789-799 @ AutoScientists@c71a923` — `knowledge/near_miss_ledger.md` is referenced but its schema and lookup protocol are not specified in any documented file. The 3-seed confirmation path says "look up prior same-tuple NEAR-MISSes" without defining how entries are keyed or written.
 
 <a id="g20-f056"></a>
 ### [DISCUSS-DONE] threshold of 5 is hardcoded to a 9-agent fleet
 
 `system/templates/HEARTBEAT.md:477-495` @ c71a923
 
-`system/templates/HEARTBEAT.md:477-495 @ AutoScientists@c71a923` — **`[DISCUSS-DONE]` threshold of 5 is hardcoded to a 9-agent fleet.** If the fleet shrinks (e.g., only 4 active agents), discussion rounds may never terminate automatically.
+`system/templates/HEARTBEAT.md:477-495 @ AutoScientists@c71a923` — `[DISCUSS-DONE]` threshold of 5 is hardcoded to a 9-agent fleet. If the fleet shrinks (e.g., only 4 active agents), discussion rounds may never terminate automatically.
 
 <a id="g20-f057"></a>
 ### Approach registry uses fcntl.LOCK_EX
 
 `system/templates/ROLE-GPU.md:146-164` @ c71a923
 
-`system/templates/ROLE-GPU.md:146-164 @ AutoScientists@c71a923` — **Approach registry uses `fcntl.LOCK_EX`**, which is a single-machine advisory lock. In a multi-node cluster where agents run on different compute nodes, this provides no coordination. The file is also not versioned (no `If-Match`), so concurrent writes from different nodes could corrupt it silently.
+`system/templates/ROLE-GPU.md:146-164 @ AutoScientists@c71a923` — Approach registry uses `fcntl.LOCK_EX`, which is a single-machine advisory lock. In a multi-node cluster where agents run on different compute nodes, this provides no coordination. The file is also not versioned (no `If-Match`), so concurrent writes from different nodes could corrupt it silently.
 
 <a id="g20-f058"></a>
 ### Monitor's 30-min stale-claim threshold is a single hardcoded constant
 
 `system/templates/ROLE-MONITOR.md:46-67` @ c71a923
 
-`system/templates/ROLE-MONITOR.md:46-67 @ AutoScientists@c71a923` — **Monitor's 30-min stale-claim threshold is a single hardcoded constant.** Long-running tasks (>30 min training) will have claims swept prematurely. Monitor is explicitly instructed not to touch `result_latest.json`, leaving a swept claim inconsistent with queue state until Part 5 fires on next restart.
+`system/templates/ROLE-MONITOR.md:46-67 @ AutoScientists@c71a923` — Monitor's 30-min stale-claim threshold is a single hardcoded constant. Long-running tasks (>30 min training) will have claims swept prematurely. Monitor is explicitly instructed not to touch `result_latest.json`, leaving a swept claim inconsistent with queue state until Part 5 fires on next restart.
 
 <a id="g20-f059"></a>
 ### --dangerously-skip-permissions is required for every agent session
 
 `system/reference/AGENT-SETUP.md:169-172` @ c71a923
 
-`system/reference/AGENT-SETUP.md:169-172 @ AutoScientists@c71a923` — **`--dangerously-skip-permissions` is required for every agent session.** This is a blanket capability grant with no mitigating sandboxing layer documented in these files. All agents in the focus area receive identical capability scope.
+`system/reference/AGENT-SETUP.md:169-172 @ AutoScientists@c71a923` — `--dangerously-skip-permissions` is required for every agent session. This is a blanket capability grant with no mitigating sandboxing layer documented in these files. All agents in the focus area receive identical capability scope.
 
 <a id="g20-f060"></a>
 ### The [EXEMPT] post mechanism has no enforcement
 
 `system/templates/ROLE-ANALYST.md:1117-1150` @ c71a923
 
-`system/templates/ROLE-ANALYST.md:1117-1150 @ AutoScientists@c71a923` — **The `[EXEMPT]` post mechanism has no enforcement.** Analysts who miss the ambition quota without posting `[EXEMPT]` face no automated consequence. The rule exists as a social norm enforced only by future meta-improvement pattern detection.
+`system/templates/ROLE-ANALYST.md:1117-1150 @ AutoScientists@c71a923` — The `[EXEMPT]` post mechanism has no enforcement. Analysts who miss the ambition quota without posting `[EXEMPT]` face no automated consequence. The rule exists as a social norm enforced only by future meta-improvement pattern detection.
 
 <a id="g20-f061"></a>
 ### Empty queue stall has no direct recovery path
 
 `runbook.md:275-298` @ c71a923
 
-`runbook.md:275-298 @ AutoScientists@c71a923` — **Empty queue stall has no direct recovery path.** Health check warns on empty queues but does not refill them. An empty queue + no analyst cycle produces a stall: GPU agents have nothing to claim, analysts might not add items if they read the queue as exhausted. The profile's `stagnation_response()` only triggers after 10 KEEP-less experiments, not on queue emptiness.
+`runbook.md:275-298 @ AutoScientists@c71a923` — Empty queue stall has no direct recovery path. Health check warns on empty queues but does not refill them. An empty queue + no analyst cycle produces a stall: GPU agents have nothing to claim, analysts might not add items if they read the queue as exhausted. The profile's `stagnation_response()` only triggers after 10 KEEP-less experiments, not on queue emptiness.
 
 <a id="g20-f062"></a>
 ### No watchdog for the orchestrator itself
 
 `README.md:42-45` @ c71a923
 
-`README.md:42-45 @ AutoScientists@c71a923` — **No watchdog for the orchestrator itself.** The orchestrator is a plain `claude -p` session reading `runbook.md`. No process manager or restart mechanism. If the session dies (network drop, context overflow), the whole loop stops and must be manually resumed via Case C.
+`README.md:42-45 @ AutoScientists@c71a923` — No watchdog for the orchestrator itself. The orchestrator is a plain `claude -p` session reading `runbook.md`. No process manager or restart mechanism. If the session dies (network drop, context overflow), the whole loop stops and must be manually resumed via Case C.
 
