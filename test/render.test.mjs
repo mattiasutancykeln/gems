@@ -76,7 +76,7 @@ test("snippet truncates at word boundary with ellipsis", () => {
   assert.equal(snippet("short", 300), "short");
 });
 
-test("renderFacets: totals line, a topic with its count, a cluster label with its gem list, no emojis", () => {
+test("renderFacets: compact card - totals, filter dimensions with counts, no cluster/license dump, no emojis", () => {
   const facets = {
     topics: [{ value: "agent", count: 3 }, { value: "eval", count: 1 }],
     categories: [{ value: "pattern", count: 4 }],
@@ -88,20 +88,24 @@ test("renderFacets: totals line, a topic with its count, a cluster label with it
   };
   const md = renderFacets(facets);
   assert.match(md, /3 gems · 4 findings · 2 clusters/);
-  assert.match(md, /agent \(3\)/);
-  assert.match(md, /"budget-gated verification".*3 findings, gems #8, #20, #21/);
+  assert.match(md, /Filter gems_query \/ gems_ground/);
+  assert.match(md, /topics: agent \(3\), eval \(1\)/);
+  assert.match(md, /codeReuse: permissive \(4\)/);
+  // decluttered: no per-cluster dump, no license section
+  assert.doesNotMatch(md, /budget-gated verification/);
+  assert.doesNotMatch(md, /Licenses/);
   assert.doesNotMatch(md, /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u);
+  assert.ok(md.split("\n").length <= 12, `facets card should stay compact, got ${md.split("\n").length} lines`);
 });
 
-test("renderFacets: caps repos to top 20 and clusters to top 30, noting how many more", () => {
+test("renderFacets: caps the top-source-repos line and notes how many more", () => {
   const repos = Array.from({ length: 25 }, (_, i) => ({ value: `org/repo${i}`, count: 25 - i }));
-  const clusters = Array.from({ length: 35 }, (_, i) => ({ id: `c${i}`, label: `cluster ${i}`, size: 35 - i, gems: [i] }));
   const facets = {
     topics: [], categories: [], codeReuse: [], licenses: [],
-    repos, clusters,
+    repos, clusters: [],
     totals: { gems: 10, findings: 100, clusters: 35 },
   };
   const md = renderFacets(facets);
-  const moreMatches = md.match(/\.\.\. and 5 more/g);
-  assert.equal(moreMatches?.length, 2);
+  assert.match(md, /Top source repos: /);
+  assert.match(md, /\.\.\. and 17 more/);   // 25 repos - top 8 shown
 });

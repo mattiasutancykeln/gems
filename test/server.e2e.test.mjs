@@ -95,8 +95,8 @@ test("gems_facets summarizes the corpus vocabulary", async () => {
     const res = await client.callTool({ name: "gems_facets", arguments: {} });
     const text = res.content[0].text;
     assert.match(text, /2 gems · 3 findings · 2 clusters/);
+    assert.match(text, /Filter gems_query \/ gems_ground/);
     assert.match(text, /agent \(3\)/);
-    assert.match(text, /"claim queue".*2 findings, gems #1, #2/);
   } finally { await client.close(); }
 });
 
