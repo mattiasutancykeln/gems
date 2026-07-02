@@ -9,7 +9,8 @@
   "scripts": {
     "test": "node --test",
     "sync": "node scripts/sync-corpus.mjs",
-    "eval": "node scripts/eval-retrieval.mjs"
+    "eval": "node scripts/eval-retrieval.mjs",
+    "eval:uplift": "node scripts/eval-uplift.mjs --dry-run"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",

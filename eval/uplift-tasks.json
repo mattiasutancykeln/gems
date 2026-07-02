@@ -1,0 +1,74 @@
+[
+  {
+    "id": "in-run-loop",
+    "type": "implement",
+    "domain": "in",
+    "prompt": "Design a crash-resilient agent run loop that can resume mid-task after a process crash. Describe the checkpoint format, what state is persisted, and how work is re-picked on restart."
+  },
+  {
+    "id": "in-infinite-ingest",
+    "type": "brainstorm",
+    "domain": "in",
+    "prompt": "Give 5 distinct approaches to bounding an infinite ingestion loop that reads from a feed forever without unbounded memory growth. For each, note the failure mode it prevents."
+  },
+  {
+    "id": "in-claim-queue",
+    "type": "decide",
+    "domain": "in",
+    "prompt": "Optimistic file-locks versus a database for a multi-worker claim queue where parallel agents must claim tasks without duplicating work: which would you choose and why? State the decisive tradeoffs."
+  },
+  {
+    "id": "in-oracle-rescore",
+    "type": "write",
+    "domain": "in",
+    "prompt": "Explain the tradeoffs of re-running an oracle at scoring time instead of trusting agent-reported scores. When is the extra compute worth it, and what failure class does it close?"
+  },
+  {
+    "id": "in-dead-ends",
+    "type": "implement",
+    "domain": "in",
+    "prompt": "Implement a dead-end registry that stops a long-running agent from re-exploring directions that already failed. Describe the key, the store, and how a candidate direction is checked before work starts."
+  },
+  {
+    "id": "in-sandbox",
+    "type": "decide",
+    "domain": "in",
+    "prompt": "You must run untrusted model-generated code during an eval. Compare sandboxing options (subprocess limits, containers, WASM) and pick a default for a single-node research harness. Justify the choice."
+  },
+  {
+    "id": "in-tree-search",
+    "type": "brainstorm",
+    "domain": "in",
+    "prompt": "Propose ways to search over experiment configurations as a tree with checkpoints so promising branches can be resumed and dead branches pruned. Sketch the node state and the expansion policy."
+  },
+  {
+    "id": "in-handoff",
+    "type": "write",
+    "domain": "in",
+    "prompt": "Explain how to hand off a subtask from one agent to another agent so the receiver has enough context to continue, while restricting which tools the sub-agent may call."
+  },
+  {
+    "id": "off-debounce",
+    "type": "implement",
+    "domain": "off",
+    "prompt": "Implement a debounce function in TypeScript. It should delay invoking the callback until the input has stopped firing for a given wait, and support a trailing call."
+  },
+  {
+    "id": "off-center-div",
+    "type": "decide",
+    "domain": "off",
+    "prompt": "What is the cleanest way to center a div both horizontally and vertically with flexbox? Give the CSS and say why it is preferable to older techniques."
+  },
+  {
+    "id": "off-haiku",
+    "type": "write",
+    "domain": "off",
+    "prompt": "Write a haiku about the tide."
+  },
+  {
+    "id": "off-http-429",
+    "type": "brainstorm",
+    "domain": "off",
+    "prompt": "Explain HTTP status 429 and list several client-side strategies for handling it gracefully."
+  }
+]
