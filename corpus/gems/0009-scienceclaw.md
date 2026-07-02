@@ -62,8 +62,6 @@
 
 `core/skill_executor.py:80-85` — Lazy dependency installation: `execute_skill` calls `ensure_deps([skill_name])` at runtime before dispatch; failure is swallowed non-blocking.
 
-Other takes: [gem #10](0010-autogen.md#g10-f044), [gem #18](0018-arbor.md#g18-f028)
-
 <a id="g9-f008"></a>
 ### Composite rank score weights hard-coded
 
@@ -163,7 +161,7 @@ Other takes: [gem #10](0010-autogen.md#g10-f044), [gem #18](0018-arbor.md#g18-f0
 `skills/metabolomics-analysis/SKILL.md:L206-L212` — Four-level metabolite ID confidence system (L1 authentic standard MS+RT -> L4 unknown) mirroring Metabolomics Standards Initiative levels.
 
 <a id="g9-f022"></a>
-### Composite Feasibility Score (0–100)
+### Composite Feasibility Score (0–100): Patient Availability 30%, Endpoint Precedent 25%, Regulatory Clarity 20%, Compar…
 
 `skills/clinical-trial-design/SKILL.md:L30-L44` @ f4a6286
 
@@ -356,7 +354,7 @@ Other takes: [gem #10](0010-autogen.md#g10-f044), [gem #18](0018-arbor.md#g18-f0
 `core/skill_executor.py:167-196` — Graceful retry with reduced parameter set: on missing-argument failure, auto-retry with only `query`, `limit`, `format`.
 
 <a id="g9-f049"></a>
-### ToolUniverse runner pattern (single WORKFLOW constant + tu.load_tools() + tu.run({"name":...}) )
+### ToolUniverse runner pattern (single WORKFLOW constant + tu.load_tools() + tu.run({"name":...}) ): zero-boilerplate CL…
 
 `skills/epigenomics/scripts/run.py:L1-82` @ f4a6286
 
@@ -370,11 +368,11 @@ Other takes: [gem #10](0010-autogen.md#g10-f044), [gem #18](0018-arbor.md#g18-f0
 `skills/tooluniverse/scripts/tooluniverse_run.py:L77-87` / `skills/epigenomics/scripts/run.py:36-45` — `to_serializable()` recursive JSON-safe coercion (`str(obj)` fallback) as a universal guard before `json.dumps` on heterogeneous tool output.
 
 <a id="g9-f051"></a>
-### Report-first + progressive-update pattern (most-cited convention in corpus)
+### Report-first + progressive-update pattern (most-cited convention in corpus): create output file with all section head…
 
 `skills/disease-research/references/tool-reference.md:L366-387` @ f4a6286
 
-create output file with all section headers as `[Researching...]` stubs before any tool call, replacing each in place. See `skills/disease-research/references/tool-reference.md:L366-387`, `skills/chemical-safety/SKILL.md:L44-52`, `skills/drug-drug-interaction/SKILL.md:44-59`, `skills/gene-enrichment/SKILL.md:L60-69`.
+Report-first + progressive-update pattern (most-cited convention in corpus): create output file with all section headers as `[Researching...]` stubs before any tool call, replacing each in place. See `skills/disease-research/references/tool-reference.md:L366-387`, `skills/chemical-safety/SKILL.md:L44-52`, `skills/drug-drug-interaction/SKILL.md:44-59`, `skills/gene-enrichment/SKILL.md:L60-69`.
 
 <a id="g9-f052"></a>
 ### Multi-stage filtering funnel with explicit pass-rate numbers enabling budget planning; generalized as a DesignCampaig…
@@ -398,7 +396,7 @@ create output file with all section headers as `[Researching...]` stubs before a
 `skills/vaex/scripts/demo.py:17-24` (and ~50 identical stubs) — Zero-dependency stub demo template returning `{skill, status, description, note}`: pip-clean smoke test confirming skill registration without installing the underlying library. Adopt as the baseline scaffold for any new skill's `demo.py`.
 
 <a id="g9-f055"></a>
-### scale_factor = min(max_dim/width, max_dim/height)
+### scale_factor = min(max_dim/width, max_dim/height) : correct proportional scale-down for bounding vision-LLM token cost.
 
 `skills/document-skills/pdf/scripts/convert_pdf_to_images.py:14-20` @ f4a6286
 
@@ -519,7 +517,7 @@ Negative-prompt "When NOT To Use" guard at the top of every computation-only ski
 ## Open threads / weak spots
 
 <a id="g9-f072"></a>
-### Duplicate YAML frontmatter (two --- blocks, two name / description fields) breaks parsers reading only the first block
+### Duplicate YAML frontmatter (two --- blocks, two name / description fields) breaks parsers reading only the first bloc…
 
 `skills/gwas-snp-interpretation/SKILL.md:L1-11` @ f4a6286
 
@@ -540,11 +538,11 @@ Duplicate YAML frontmatter (two `---` blocks, two `name`/`description` fields) b
 ~50 stub `demo.py` / `query.py` files import nothing of the advertised library and make no HTTP calls — they pass CI while the library is entirely uninstalled, providing false confidence: `skills/anndata/scripts/demo.py:23-33`, `skills/ena-database/scripts/query.py:22-41` (+ hmdb/geo/gwas/clinvar). The `_demo.py` prefix at `skills/alphafold-database/scripts/_demo.py:1` is silently skipped by glob-based discovery.
 
 <a id="g9-f075"></a>
-### Embedded K-Dense Web upsells hardwired into multiple skills, inserting product promotion into agent output
+### Embedded K-Dense Web upsells hardwired into multiple skills, inserting product promotion into agent output: , , .
 
 `skills/offer-k-dense-web/SKILL.md:3-17` @ f4a6286
 
-`skills/offer-k-dense-web/SKILL.md:3-17`, `skills/adaptyv/SKILL.md:L107-119`, `skills/peer-review/SKILL.md:L570-571`.
+Embedded K-Dense Web upsells hardwired into multiple skills, inserting product promotion into agent output: `skills/offer-k-dense-web/SKILL.md:3-17`, `skills/adaptyv/SKILL.md:L107-119`, `skills/peer-review/SKILL.md:L570-571`.
 
 <a id="g9-f076"></a>
 ### _execute_package_skill hardcodes timeout=30 , silently overriding the caller-supplied timeout .

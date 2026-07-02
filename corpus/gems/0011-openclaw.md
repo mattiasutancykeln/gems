@@ -133,7 +133,7 @@
 `src/agents/subagent-run-timeout.ts:13-28` — Timer-safe deadline calculation: setTimeout bounds (32-bit signed int) checked separately from ms durations; Finite, Safe-Integer, and positive conditions validated independently. Deadline = `startedAt + durationMs`, falling back to `createdAt` if `startedAt` is absent.
 
 <a id="g11-f018"></a>
-### Output capture -> outcome -> delivery -> cleanup pipeline with signal-aware cancellation
+### Output capture -> outcome -> delivery -> cleanup pipeline with signal-aware cancellation: each stage is best-effort; err…
 
 `src/agents/subagent-announce.ts:233-260` @ c84e521
 
@@ -233,7 +233,7 @@
 `src/agents/tools/agents-list-tool.ts:35-112` — `agents_list` returns `requester` (requesting agent ID), `allowAny` (bool), and ordered `AgentListEntry` objects with `id`, `name`, `configured`, `model`, and `agentRuntime` metadata (including runtime source: env/agent/defaults/model/provider/implicit/session-key). Enables informed agent selection without hardcoding.
 
 <a id="g11-f032"></a>
-### Initial user message for a spawned subagent is a structured envelope
+### Initial user message for a spawned subagent is a structured envelope: [Subagent Context] block (depth/max depth/persi…
 
 `src/agents/subagent-initial-user-message.ts:7-30` @ c84e521
 
@@ -254,7 +254,7 @@
 `src/agents/subagent-spawn-accepted-note.ts:8-22` — Post-spawn notes are context-sensitive: "Auto-announce is push-based; do NOT poll" for runs, "thread-bound session stays active" for sessions; notes are suppressed for cron spawns.
 
 <a id="g11-f035"></a>
-### Three-branch reply instruction builder based on requester type
+### Three-branch reply instruction builder based on requester type: subagent requesters get "internal orchestration updat…
 
 `src/agents/subagent-announce.ts:87-99` @ c84e521
 
@@ -296,7 +296,7 @@
 `src/agents/subagent-registry.ts:1384-1432` — Steering and completion lease API: `leasePendingAgentSteeringItems()`, `ackPendingAgentSteeringItems()`, `releasePendingAgentSteeringItems()` provide a three-phase handshake for requester to claim, execute, and release steering work; state changes persisted after each phase.
 
 <a id="g11-f041"></a>
-### Resume messages sent via callGateway with inputProvenance metadata ( kind
+### Resume messages sent via callGateway with inputProvenance metadata ( kind: "inter_session" , sourceSessionKey from pa…
 
 `src/agents/subagent-orphan-recovery.ts:131-150` @ c84e521
 
@@ -403,7 +403,7 @@
 `src/agents/subagent-announce-delivery.ts:225-239` — Tiered exponential backoff schedules: transient delivery (5 s/10 s/20 s) vs. compaction steer (1 s/2 s/4 s/8 s), with test-mode fast schedules (8/16/32 ms). Loops clamp to remaining delivery timeout so retries do not overrun the deadline.
 
 <a id="g11-f056"></a>
-### Error-pattern matchers for transient vs. permanent delivery failures. Transient
+### Error-pattern matchers for transient vs. permanent delivery failures. Transient: unavailable, overloaded, network err…
 
 `src/agents/subagent-announce-delivery.ts:357-381` @ c84e521
 
@@ -650,7 +650,7 @@
 `src/agents/subagent-spawn.ts:248-276` — Scope-upgrade handshake on headless gateway clients: Admin-only methods are pinned to ADMIN_SCOPE to avoid mid-request pairing handshakes, but other methods may still trigger upgrades. Issue reference (#59428) is not visible in the codebase.
 
 <a id="g11-f091"></a>
-### onSubagentEnded context-engine hook is fire-and-forget best-effort
+### onSubagentEnded context-engine hook is fire-and-forget best-effort: timeout or failure silently logged but does not b…
 
 `src/agents/subagent-registry-lifecycle.ts:730-773` @ c84e521
 

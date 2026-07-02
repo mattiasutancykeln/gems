@@ -163,7 +163,7 @@
 `lite_agent.py:787-823` — System prompt template with conditional tool inclusion: `lite_agent_system_prompt_with_tools` includes tool schema and names; `lite_agent_system_prompt_without_tools` for tool-free agents; response format schema appended as JSON schema block.
 
 <a id="g16-f022"></a>
-### Agent loop ( _invoke_loop )
+### Agent loop ( _invoke_loop ): runs LLM, parses action/finish via process_llm_response() , executes tool via execute_to…
 
 `lite_agent.py:857-969` @ da8fe8c
 

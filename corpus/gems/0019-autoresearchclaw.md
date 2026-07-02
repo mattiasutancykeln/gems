@@ -205,7 +205,7 @@
 `external/agents/stat_research_agent/skills/statistical-experimental-evaluation/SKILL.md:51-66` — Row-oriented JSON evidence schema (`claim_id`, `method`, `baseline`, `condition`, `metric`, `value`, `status`) normalises experiment outputs into claim-mapped rows for automated validation.
 
 <a id="g19-f028"></a>
-### claim_verdicts.json requires dual-source traceability per verdict
+### claim_verdicts.json requires dual-source traceability per verdict: both theory_support (citing the proposition and as…
 
 `external/agents/stat_research_agent/skills/statistical-experimental-evaluation/SKILL.md:68-81` @ ea77ec1
 
@@ -261,7 +261,7 @@
 `external/agents/Biology-Agent/skills/fba-simulator/SKILL.md:233-244` — Canonical output file naming table (`fba_fluxes.csv`, `pfba_fluxes.csv`, `fva_result.csv`, etc.) with one file per simulation type; downstream skills read these exact names, making inter-skill hand-offs deterministic.
 
 <a id="g19-f036"></a>
-### CodeSearchResult.to_prompt_context() provides a single stable injection point
+### CodeSearchResult.to_prompt_context() provides a single stable injection point: upstream agents call this one method t…
 
 `researchclaw/agents/code_searcher/agent.py:43-47` @ ea77ec1
 

@@ -8,8 +8,7 @@ See also: [faceted index](corpus/INDEX.md) - browse by topic, source, category, 
 
 Patterns with multiple independent implementations across gems:
 
-- 3 takes on "Lazy dependency installation" - [#9](https://github.com/mattiasutancykeln/gems/issues/9), [#10](https://github.com/mattiasutancykeln/gems/issues/10), [#18](https://github.com/mattiasutancykeln/gems/issues/18)
-- 2 takes on "Debug print statements ( DEBUG" - [#6](https://github.com/mattiasutancykeln/gems/issues/6), [#8](https://github.com/mattiasutancykeln/gems/issues/8)
+- 2 takes on "Debug print statements left in production paths" - [#6](https://github.com/mattiasutancykeln/gems/issues/6), [#8](https://github.com/mattiasutancykeln/gems/issues/8)
 
 ## All gems
 

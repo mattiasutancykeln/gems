@@ -35,7 +35,7 @@
 `system/templates/HEARTBEAT.md:10-19 ` — Five-branch dispatch table executes before any work: Discussion, No-Team exit, Normal cycle, Resume-and-post, or Resume-waiting. Part 0 (Mode Selector) exits with an error if uncertain rather than freelancing. Part 6 (Always-Last) runs unconditionally at every exit. No branch is optional.
 
 <a id="g20-f004"></a>
-### result_latest.json is written before training starts ( status
+### result_latest.json is written before training starts ( status: running , pid: os.getpid() ), updated after ( status: …
 
 `system/templates/HEARTBEAT.md:100-165` @ c71a923
 
@@ -98,7 +98,7 @@
 `system/reference/API-REFERENCE.md:141-142 ` and `system/templates/ROLE-TEAM.md:119-122 ` — Optimistic concurrency via HTTP `If-Match: {version}` on file PUT; server returns 409 on conflict. PATCH is explicitly forbidden for `queue.md` because dotted-key PATCH on nested frontmatter (`claims.agent_1`) flattens `pending:` lists and corrupts the YAML. Queue mutations use read-modify-PUT exclusively.
 
 <a id="g20-f013"></a>
-### experiments.jsonl is the single authoritative JSONL log, orchestrator-owned. Fields
+### experiments.jsonl is the single authoritative JSONL log, orchestrator-owned. Fields: exp_id , agent , team , metric ,…
 
 `system/reference/LOGGING.md:11-38` @ c71a923
 
@@ -126,14 +126,14 @@
 `runbook.md:30-64 ` — Three-state orchestrator boot: (A) template with no `WORKSPACE_ID` -> run `launch.py` then proceed; (B) existing ablation -> read `teams/roster.md` to determine phase; (C) interruption resume -> read `logs/sessions.jsonl` + `logs/experiments.jsonl`, release stale claims, re-enter loop. Discriminant is `WORKSPACE_ID` existence plus roster content, not a separate state file.
 
 <a id="g20-f017"></a>
-### Haiku is explicitly prohibited for analyst agents. Failure mode reproduced 3/3 times in a 2026-05-26 run
+### Haiku is explicitly prohibited for analyst agents. Failure mode reproduced 3/3 times in a 2026-05-26 run: analysts ha…
 
 `runbook.md:137-143` @ c71a923
 
 `runbook.md:137-143 ` — Haiku is explicitly prohibited for analyst agents. Failure mode reproduced 3/3 times in a 2026-05-26 run: analysts hallucinate "no API available" and write local memory files claiming work is done without ever calling the workshop API. Sonnet/opus mandatory for analysts. The prohibition lives in the runbook as a markdown comment, not a programmatic gate.
 
 <a id="g20-f018"></a>
-### Fresh per-run git clone (not symlink) prevents stale state contamination. Documented prior bug
+### Fresh per-run git clone (not symlink) prevents stale state contamination. Documented prior bug: a shared symlinked re…
 
 `launch.py:438-507` @ c71a923
 
@@ -154,7 +154,7 @@
 `system/templates/ROLE-ANALYST.md:806-818 ` — Dead-end re-triage: when the empirically measured noise floor rises above a prior dead-end's recorded delta, downgrade (not delete) the entry to `NOISE-CONTAMINATED — axis remains open`. Preserves experimental history while restoring productive surface area.
 
 <a id="g20-f021"></a>
-### Noise floor σ accumulates passively from multi-seed gate runs. After n≥5 pairs a locked
+### Noise floor σ accumulates passively from multi-seed gate runs. After n≥5 pairs a locked: true flag in knowledge/noise…
 
 `system/templates/ROLE-ANALYST.md:273-318` @ c71a923
 
@@ -177,7 +177,7 @@
 `system/templates/HEARTBEAT.md:190-223 ` — Per-invocation read-state pattern: read `AGENT.md` (identity/focus/notes from last session), `MEMORY.md` index (selective), `task/TASK.md` (constraints). `HEARTBEAT.md` overrides any procedural rule in memory files; factual findings survive rule updates.
 
 <a id="g20-f024"></a>
-### Post-KEEP inductive reasoning protocol (required after any champion update)
+### Post-KEEP inductive reasoning protocol (required after any champion update): answer (1) what property made the KEEP w…
 
 `system/templates/ROLE-ANALYST.md:481-510` @ c71a923
 

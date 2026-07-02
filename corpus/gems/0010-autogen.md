@@ -126,7 +126,7 @@
 `python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_swarm_group_chat.py:82-98` — Swarm selection is declarative — it looks only for `HandoffMessage.target`, not a computed choice. Returns current speaker if no handoff found (L98). Cleanest delegation schema in the repo.
 
 <a id="g10-f017"></a>
-### TaskRunner.run() uses stateful continuation
+### TaskRunner.run() uses stateful continuation: if no task is provided, it resumes from prior state rather than erroring…
 
 `python/packages/autogen-agentchat/src/autogen_agentchat/base/_task.py:22-42` @ 027ecf0
 
@@ -226,7 +226,7 @@
 `python/packages/autogen-agentchat/src/autogen_agentchat/tools/_task_runner_tool.py:14-18` — Tool input schema is minimal: `TaskRunnerToolArgs` contains only a single `task: str` field. Enforces that child tasks are string-specified rather than structured; the child agent/team handles parsing and execution.
 
 <a id="g10-f031"></a>
-### Dual return-value modes via return_value_as_last_message . True
+### Dual return-value modes via return_value_as_last_message . True: only the final message. False: all non-user messages…
 
 `python/packages/autogen-agentchat/src/autogen_agentchat/tools/_task_runner_tool.py:54-66` @ 027ecf0
 
@@ -324,8 +324,6 @@ Serializable exception protocol (`python/packages/autogen-agentchat/src/autogen_
 `python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_chat_agent_container.py:53` @ 027ecf0
 
 Buffered message queues in worker agents (`python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_chat_agent_container.py:53,86-192`): Buffer incoming messages in event handlers (async, non-blocking), execute in RPC handler triggered by explicit request. Separates reception from execution, provides implicit backpressure, and allows the orchestrator to enforce ordering.
-
-Other takes: [gem #9](0009-scienceclaw.md#g9-f007), [gem #18](0018-arbor.md#g18-f028)
 
 <a id="g10-f045"></a>
 ### Agents/teams as tools (inversion pattern)

@@ -49,21 +49,21 @@
 `libs/langgraph/langgraph/pregel/_algo.py:232-345` — `apply_writes` applies a two-phase channel versioning model: consumes read-tracked channels (marking them "seen"), then updates channels and bumps versions. Implicit termination: if no triggered node is satisfied after writes, the graph quiesces without explicit sentinel channels.
 
 <a id="g15-f006"></a>
-### prepare_single_task (PULL path) injects three context layers via PregelExecutableTask.config.configurable
+### prepare_single_task (PULL path) injects three context layers via PregelExecutableTask.config.configurable : (1) CONFI…
 
 `libs/langgraph/langgraph/pregel/_algo.py:654-759` @ d57a74f
 
 `libs/langgraph/langgraph/pregel/_algo.py:654-759` — `prepare_single_task` (PULL path) injects three context layers via `PregelExecutableTask.config.configurable`: (1) CONFIG_KEY_SEND for buffered writes (thread-safe deque), (2) CONFIG_KEY_READ for local state with task writes overlaid, (3) CONFIG_KEY_SCRATCHPAD for call counters and resume values. Task receives no upfront state snapshot; local_read is called on demand, ensuring reads reflect only the task's own prior writes.
 
 <a id="g15-f007"></a>
-### Node defaults are materialized at compile time and applied per-node with explicit exclusions
+### Node defaults are materialized at compile time and applied per-node with explicit exclusions: error handlers are excl…
 
 `libs/langgraph/langgraph/graph/state.py:271-334` @ d57a74f
 
 `libs/langgraph/langgraph/graph/state.py:271-334` — Node defaults are materialized at compile time and applied per-node with explicit exclusions: error handlers are excluded from cache_policy and error_handler routing to prevent circular handler chains and unsafe caching of recovery paths. Three-phase default application: error_handler only for regular nodes, retry/timeout for all, cache only for regular nodes.
 
 <a id="g15-f008"></a>
-### Command class is the parent-visible completion/handoff contract
+### Command class is the parent-visible completion/handoff contract: carries optional state delta (update), resume values…
 
 `libs/langgraph/langgraph/types.py:758-808` @ d57a74f
 
@@ -105,7 +105,7 @@
 `libs/langgraph/langgraph/channels/last_value.py:81-151` — `LastValueAfterFinish` channel defers visibility until explicit `finish()` call, then clears on consume. Enables handoff sequencing: parent writes, child reads after finish signal, state clears for next step.
 
 <a id="g15-f014"></a>
-### Binary operator aggregation gates multiple Overwrite directives per superstep
+### Binary operator aggregation gates multiple Overwrite directives per superstep: only one allowed, others raise Invalid…
 
 `libs/langgraph/langgraph/channels/binop.py:115-130` @ d57a74f
 
@@ -119,7 +119,7 @@
 `libs/langgraph/langgraph/channels/last_value.py:56-67` — Channel update validates single-value-per-step constraint at channel level, rejecting concurrent updates with explicit error code `INVALID_CONCURRENT_GRAPH_UPDATE`.
 
 <a id="g15-f016"></a>
-### interrupt() is a resumable pause
+### interrupt() is a resumable pause: raises GraphInterrupt on first call, returns the provided value on resume. Scratchp…
 
 `libs/langgraph/langgraph/types.py:811-934` @ d57a74f
 
@@ -170,7 +170,7 @@
 `libs/langgraph/langgraph/pregel/_algo.py:155-185` — `should_interrupt` determines if the graph should pause based on `interrupt_nodes` list and whether channels have been updated since the last interrupt. Returns the subset of tasks that should trigger the pause. This is the hook for yield-at-node interrupts without baking pause logic into nodes.
 
 <a id="g15-f023"></a>
-### StateNode union covers 9 callable signatures inferred from runtime type inspection
+### StateNode union covers 9 callable signatures inferred from runtime type inspection: bare state, +config, +writer, +st…
 
 `libs/langgraph/langgraph/graph/_node.py:70-81` @ d57a74f
 
@@ -226,7 +226,7 @@
 `libs/langgraph/langgraph/types.py:136-139` — `StreamWriter` is a no-op when `stream_mode != "custom"` but can be injected into nodes to emit user-defined events, enabling progress signaling or structured observations without modifying graph schema.
 
 <a id="g15-f031"></a>
-### TaskPayload , TaskResultPayload , CheckpointTask encode task lifecycle
+### TaskPayload , TaskResultPayload , CheckpointTask encode task lifecycle: start/finish boundaries, error capture, inter…
 
 `libs/langgraph/langgraph/types.py:142-251` @ d57a74f
 
@@ -240,7 +240,7 @@
 `libs/langgraph/langgraph/graph/message.py:60-245` — `add_messages` implements UPSERT semantics by message ID with REMOVE_ALL_MESSAGES sentinel. `_messages_delta_reducer` batches writes and deduplicates by ID in a single pass for DeltaChannel streaming efficiency.
 
 <a id="g15-f033"></a>
-### default_retry_on() predicate implements platform-aware HTTP retry logic
+### default_retry_on() predicate implements platform-aware HTTP retry logic: retries 5xx and ConnectionError , rejects ap…
 
 `libs/langgraph/langgraph/_internal/_retry.py:1-29` @ d57a74f
 
@@ -475,7 +475,7 @@ Cooperative drain signaling (`libs/langgraph/langgraph/runtime.py:79-104`, `libs
 `libs/langgraph/langgraph/_internal/_retry.py:8-10` — `httpx.HTTPStatusError` and `requests.HTTPError` retry logic assumes `response.status_code` presence but does not guard against `None` for requests (only for httpx).
 
 <a id="g15-f066"></a>
-### Runtime.merge() uses simple OR fallback
+### Runtime.merge() uses simple OR fallback: if the other runtime has a non-None field, use it; else use self. No deep me…
 
 `libs/langgraph/langgraph/runtime.py:240-258` @ d57a74f
 

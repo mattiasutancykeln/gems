@@ -28,7 +28,7 @@
 `src/smolagents/agents.py:268-292` — `MultiStepAgent` orchestration contract: `managed_agents` list, `step_callbacks` registry keyed by `MemoryStep` class type, `planning_interval` for phased re-planning, and `final_answer_checks` validation gates. All four concerns are declared at construction time as distinct parameters, not mode flags.
 
 <a id="g13-f003"></a>
-### Managed agents are configured at parent init time with standardized input/output schemas
+### Managed agents are configured at parent init time with standardized input/output schemas: inputs = {task: string, add…
 
 `src/smolagents/agents.py:369-388` @ e8b988d
 
@@ -363,7 +363,7 @@
 ## Open threads / weak spots
 
 <a id="g13-f050"></a>
-### Remote code execution and managed agents are mutually exclusive
+### Remote code execution and managed agents are mutually exclusive: raises Exception if both present. No fallback, queui…
 
 `src/smolagents/agents.py:1608-1609` @ e8b988d
 

@@ -42,7 +42,7 @@
 `biomni/tool/support_tools.py:87-120` — `plt.show` and `plt.savefig` are monkey-patched once (guarded by `_biomni_patched` sentinel) to auto-capture figures to base64, removing the requirement for the agent to explicitly save plots in a headless environment.
 
 <a id="g6-f005"></a>
-### Incomplete XML tag auto-close before regex parsing prevents silent drops when the LLM truncates mid-tag
+### Incomplete XML tag auto-close before regex parsing prevents silent drops when the LLM truncates mid-tag: if "<execute…
 
 `biomni/agent/a1.py:L1415-L1420` @ 400c1f3
 
@@ -226,14 +226,14 @@
 `biomni/tool/literature.py:L218-267` / `biomni/tool/tool_description/literature.py:136-160` — `advanced_web_search_claude` is an LLM-calls-LLM surface: it spawns a nested Claude agent with `web_search_20250305`, caps the action budget via `max_uses`, and threads inline citations back into the return string. Agent-spawning as a first-class tool action.
 
 <a id="g6-f031"></a>
-### LLM decision rules are embedded directly in the entity_type parameter description
+### LLM decision rules are embedded directly in the entity_type parameter description: "MUST match actual entity type! Ch…
 
 `biomni/tool/tool_description/support_tools.py:58-63` @ 400c1f3
 
 `biomni/tool/tool_description/support_tools.py:58-63` / `biomni/tool/support_tools.py:250-255` — LLM decision rules are embedded directly in the `entity_type` parameter description: "MUST match actual entity type! Check user hints (e.g., 'files' means entity_type='file') or search results ('node_type' field)." A second `AGENT USAGE GUIDANCE` block in the docstring reinforces the same rule. Prompt engineering inside the schema.
 
 <a id="g6-f032"></a>
-### Chunk analysis prompt includes explicit anti-hallucination rules
+### Chunk analysis prompt includes explicit anti-hallucination rules: "return NO tasks" is preferred over including non-u…
 
 `biomni/agent/env_collection.py:L44-L79` @ 400c1f3
 
@@ -254,14 +254,14 @@
 `biomni/tool/lab_automation.py:209-223` — A hardcoded "Notes" block of known pitfalls (deprecated names, async rules, multi-channel tip format) is prepended before the fetched docs, ensuring known failure modes are salient before the model reads general documentation. System-prompt injection inside a tool.
 
 <a id="g6-f035"></a>
-### analyze_flow_cytometry_immunophenotyping accepts gating_strategy as {population
+### analyze_flow_cytometry_immunophenotyping accepts gating_strategy as {population: [(marker, operator, threshold)]}
 
 `biomni/tool/tool_description/cell_biology.py:118-129` @ 400c1f3
 
 `biomni/tool/tool_description/cell_biology.py:118-129` — `analyze_flow_cytometry_immunophenotyping` accepts `gating_strategy` as `{population: [(marker, operator, threshold)]}` — a declarative mini-DSL that an LLM can construct directly from natural-language cell population descriptions.
 
 <a id="g6-f036"></a>
-### simulate_protein_signaling_network encodes graph topology as {target
+### simulate_protein_signaling_network encodes graph topology as {target: [(regulator, ±1)]} and reaction params as {(reg…
 
 `biomni/tool/tool_description/systems_biology.py:114-148` @ 400c1f3
 
@@ -695,7 +695,7 @@ All `tool_description/*.py` files — Uniform typed manifest schema: `{descripti
 `biomni/tool/lab_automation.py:574-599` — Async `main()` detection spawns a second thread just to call `asyncio.run()` when an event loop is already running. Can deadlock if the outer loop holds locks the inner run needs.
 
 <a id="g6-f098"></a>
-### Debug print statements ( DEBUG
+### Debug print statements ( DEBUG: Using conversation state... ) left in production path of _get_messages_for_processing .
 
 `biomni/agent/a1.py:L2187` @ 400c1f3
 
@@ -725,7 +725,7 @@ Other takes: [gem #8](0008-ai-scientist-v2.md#g8-f077)
 `biomni/tool/tool_description/genomics.py:L549-551` — `n_samples_per_label=10` is listed as "(currently unused)"—dead schema parameter that silently does nothing, but may confuse LLM callers that try to act on it.
 
 <a id="g6-f102"></a>
-### query_chatnt lists question and sequence as required parameters but both have default
+### query_chatnt lists question and sequence as required parameters but both have default: "A" , a schema-generation bug …
 
 `biomni/tool/tool_description/systems_biology.py:230-233` @ 400c1f3
 

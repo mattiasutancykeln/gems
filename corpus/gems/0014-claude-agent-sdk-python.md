@@ -49,7 +49,7 @@
 `src/claude_agent_sdk/types.py:1812-1830` — Skills use context-filtering, not sandboxing: unlisted skills are hidden from model context and rejected by the Skill tool, but files remain accessible via Read/Bash. Secrets must not be stored in skill files.
 
 <a id="g14-f006"></a>
-### Session store mirroring decouples local-disk durability from external storage
+### Session store mirroring decouples local-disk durability from external storage: entries are appended locally first, th…
 
 `src/claude_agent_sdk/types.py:1905-1921` @ 7c37e34
 
@@ -328,7 +328,7 @@ Non-JSON lines mid-parse are discarded; lines not starting with `{` when buffer 
 ## Open threads / weak spots
 
 <a id="g14-f045"></a>
-### SDKControlRequest has 11+ variants with no fleet-level operations
+### SDKControlRequest has 11+ variants with no fleet-level operations: no cancel_all_children , get_fleet_status , or par…
 
 `src/claude_agent_sdk/types.py:2012-2027` @ 7c37e34
 

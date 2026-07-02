@@ -49,7 +49,7 @@
 `src/core/tools/skill.py:24` — Dual-source skill registry: package-level `<package>/skills/*.md` merged with per-project `.arbor/skills/*.md`, with the project directory taking precedence on name collision. Allows project-specific overrides without forking the package.
 
 <a id="g18-f006"></a>
-### drain_notifications() is a pull-based push model
+### drain_notifications() is a pull-based push model: background work accumulates notifications, and the agent drains the…
 
 `src/core/tools/base.py:37-45` @ 964b846
 
@@ -205,16 +205,14 @@
 `src/executor/prompts.py:20-47` — `build_system_prompt` builds from 9 named sections in a documented order; sections are filtered (`if s`) so optional sections (plugin preamble, budget policy) are cleanly omitted when absent.
 
 <a id="g18-f028"></a>
-### _related_work_annotation_section (executor mode)
+### _related_work_annotation_section (executor mode): two sub-modes
 
 `src/coordinator/prompts.py:680-785` @ 964b846
 
 `src/coordinator/prompts.py:680-785` — `_related_work_annotation_section` (executor mode): two sub-modes — background (non-blocking, concurrent with next IDEATE) and foreground (blocking). The `require_validated` gate admits only `done/merged` nodes with `score > trunk_score`, tying novelty-check cost to ideas that proved out.
 
-Other takes: [gem #9](0009-scienceclaw.md#g9-f007), [gem #10](0010-autogen.md#g10-f044)
-
 <a id="g18-f029"></a>
-### Tool description embeds LLM-facing behavioral contracts inline
+### Tool description embeds LLM-facing behavioral contracts inline: "MUST use the Read tool first", "NEVER create documen…
 
 `src/core/tools/file_write.py:14-29` @ 964b846
 
@@ -228,7 +226,7 @@ Other takes: [gem #9](0009-scienceclaw.md#g9-f007), [gem #10](0010-autogen.md#g1
 `src/core/tools/file_edit.py:70-93` — Edit tool description encodes the read-before-edit contract, the uniqueness requirement ("edit will FAIL if old_string is not unique"), and the `replace_all` escape hatch, all within the description the model reads at call time.
 
 <a id="g18-f031"></a>
-### Execute returns the skill body prefixed with a rendered Markdown header ( # Skill
+### Execute returns the skill body prefixed with a rendered Markdown header ( # Skill: {name} + _When to apply: ..._ ), c…
 
 `src/core/tools/skill.py:62-78` @ 964b846
 
@@ -279,7 +277,7 @@ Other takes: [gem #9](0009-scienceclaw.md#g9-f007), [gem #10](0010-autogen.md#g1
 ## Patterns worth porting
 
 <a id="g18-f038"></a>
-### Full executor lifecycle as a single _run_single_executor coroutine
+### Full executor lifecycle as a single _run_single_executor coroutine: validate -> create worktree -> snapshot protected p…
 
 `src/coordinator/tools/executor_run.py:460-688` @ 964b846
 
@@ -342,7 +340,7 @@ Other takes: [gem #9](0009-scienceclaw.md#g9-f007), [gem #10](0010-autogen.md#g1
 `src/coordinator/tools/_agent_recover.py:96-111` — `_normalize_url`: strips scheme, query string, trailing slashes, `www.`, and arxiv-style `v\d+` version suffixes for loose URL matching across citation and visit sets.
 
 <a id="g18-f047"></a>
-### HITL review gate ( _review_gate )
+### HITL review gate ( _review_gate ): in review / collaborative mode, pauses before spending compute; parses three respo…
 
 `src/coordinator/tools/executor_run.py:695-726` @ 964b846
 
@@ -391,7 +389,7 @@ Other takes: [gem #9](0009-scienceclaw.md#g9-f007), [gem #10](0010-autogen.md#g1
 `src/core/tools/executor_tool.py:127-134` — Post-execution telemetry: child turn count plus input/output tokens are logged at INFO level after every spawn, providing per-subtask budget attribution without requiring instrumentation in the child itself.
 
 <a id="g18-f054"></a>
-### Consistent path-guard check before any I/O ( check_path_allowed(path) ) returning a "BLOCKED
+### Consistent path-guard check before any I/O ( check_path_allowed(path) ) returning a "BLOCKED: ..." string, composable…
 
 `src/core/tools/glob_tool.py:44-50` @ 964b846
 
@@ -461,14 +459,14 @@ Other takes: [gem #9](0009-scienceclaw.md#g9-f007), [gem #10](0010-autogen.md#g1
 `src/coordinator/prompts.py:35-48` — `_ask_user_section` has two independent conditions for inclusion (`allow_agent_questions` OR `interaction_mode in ("direction", "collaborative")`). These can diverge if one is set without the other, enabling the `AskUser` tool without the interaction-mode protocol or vice versa.
 
 <a id="g18-f064"></a>
-### Binary file detection is skipped when mimetypes.guess_type returns None (unknown extension
+### Binary file detection is skipped when mimetypes.guess_type returns None (unknown extension: .go , .rs , .ts , etc. al…
 
 `src/core/tools/file_read.py:82-87` @ 964b846
 
 `src/core/tools/file_read.py:82-87` — Binary file detection is skipped when `mimetypes.guess_type` returns `None` (unknown extension: `.go`, `.rs`, `.ts`, etc. all return `None`). Files with unknown extensions are read as text unconditionally, so binary files with unusual extensions produce garbled output without warning.
 
 <a id="g18-f065"></a>
-### The trailing-whitespace fuzzy match (tier 3) uses file_stripped.find(search_stripped) then slices file_content[idx
+### The trailing-whitespace fuzzy match (tier 3) uses file_stripped.find(search_stripped) then slices file_content[idx: i…
 
 `src/core/tools/file_edit.py:56-65` @ 964b846
 
