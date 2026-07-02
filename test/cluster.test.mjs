@@ -62,6 +62,22 @@ test("two findings that both reduce to empty content tokens do not union-merge",
   assert.notEqual(out[0].clusterId, out[1].clusterId);
 });
 
+test("findings that share only a generic hyphenated term do not cluster", () => {
+  // Regression for a false cross-gem cluster produced by MinHash estimation
+  // noise: two findings about unrelated topics ("lazy dependency
+  // installation" vs "buffered message queues") that only overlap on the
+  // generic tokens "non" and "blocking" (from "non-blocking") must not be
+  // treated as near-duplicates under exact Jaccard.
+  const a = mk("g9-f007", 9, "Lazy dependency installation",
+    "the installer defers pulling optional packages until first use so startup stays fast and " +
+    "non-blocking for the common path");
+  const b = mk("g10-f044", 10, "Buffered message queues",
+    "outbound messages are appended to an in-memory buffer and flushed by a background worker so " +
+    "producers stay non-blocking under load");
+  const out = clusterFindings([a, b]);
+  assert.notEqual(out[0].clusterId, out[1].clusterId);
+});
+
 test("findings that differ only by a shared citation path do not cluster", () => {
   const a = mk("g1-f001", 1, "Retry budget exhaustion",
     "the worker gives up retrying after the budget is exhausted and logs a terminal failure " +

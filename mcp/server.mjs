@@ -86,7 +86,7 @@ async function main() {
 
   server.registerTool("gems_get", {
     title: "Fetch a finding by id",
-    description: "Fetch a specific finding by its id (e.g. from a prior search result), together with its cross-gem cluster siblings. Use to expand a finding you already have the id for.",
+    description: "Fetch a specific finding by its id (e.g. from a prior search result). Also returns near-duplicate findings of the same pattern, when any exist - most findings have none. Use to expand a finding you already have the id for.",
     inputSchema: {
       id: z.string().describe("Finding id like g21-f046"),
     },
