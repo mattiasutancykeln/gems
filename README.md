@@ -18,7 +18,7 @@ The design runner re-runs the TDC oracle on every candidate from the stream. Age
 Attribution: if you use this finding, credit the source repo: HelloWorldLTY/SciAgentArena (https://github.com/HelloWorldLTY/SciAgentArena).
 ```
 
-## Use it in 60 seconds
+## Use it in 60 seconds  \(^o^)/
 
 **Agents (Claude Code):**
 
@@ -48,7 +48,7 @@ add link -> stage:raw -> stage:summarized -> stage:extracted -> corpus/ -> MCP
 
 Issues are the capture surface; `corpus/` is the derived, committed, searchable form (finding-level JSONL + gem pages). CI re-syncs whenever a gem reaches `stage:extracted`, so every clone ships a fresh corpus and the MCP works offline with no API keys.
 
-## Contribute
+## Contribute  <(^_^<)
 
 Two rungs:
 
@@ -58,3 +58,5 @@ Two rungs:
 ## Why
 
 Ideas are cheap to lose and extraction is expensive to redo. gems keeps both: raw links cost nothing to capture, deep extractions are mined once at a pinned SHA and cited forever, and agents get to stand on that prior art instead of rediscovering it. Design rationale: [docs/design/2026-07-01-corpus-mcp-design.md](docs/design/2026-07-01-corpus-mcp-design.md).
+
+Stand on shoulders, not on rakes. \o/
