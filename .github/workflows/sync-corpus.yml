@@ -31,4 +31,7 @@ jobs:
           git add corpus/ CATALOG.md README.md
           git diff --cached --quiet && echo "corpus unchanged" && exit 0
           git commit -m "chore: sync corpus from issues"
-          git push
+          for i in 1 2 3; do
+            git pull --rebase --autostash origin ${{ github.ref_name }} && git push && break
+            echo "push attempt $i failed, retrying"; sleep 3
+          done

@@ -28,6 +28,14 @@ function makeCorpus() {
   return dir;
 }
 
+function makeEmptyCorpus() {
+  const dir = mkdtempSync(join(tmpdir(), "gems-corpus-empty-"));
+  mkdirSync(join(dir, "gems"), { recursive: true });
+  writeFileSync(join(dir, "gems.json"), JSON.stringify([]));
+  writeFileSync(join(dir, "findings.jsonl"), "");
+  return dir;
+}
+
 async function connect(corpusDir) {
   const transport = new StdioClientTransport({
     command: "node",
@@ -49,6 +57,14 @@ test("server exposes 3 tools and answers a query", async () => {
     assert.match(text, /Optimistic claim queue/);
     assert.match(text, /`src\/q\.ts:1-9` @ 1234567/);
     assert.match(text, /License: MIT \(permissive\)/);
+  } finally { await client.close(); }
+});
+
+test("empty findings.jsonl: server still starts and a query returns actionable empty-state text", async () => {
+  const client = await connect(makeEmptyCorpus());
+  try {
+    const res = await client.callTool({ name: "gems_query", arguments: { q: "anything" } });
+    assert.match(res.content[0].text, /No findings for/);
   } finally { await client.close(); }
 });
 

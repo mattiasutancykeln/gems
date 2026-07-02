@@ -36,6 +36,14 @@ test("style A bullet: inline citation, bold title", () => {
   assert.match(f.text, /30s grace window/);
 });
 
+test("style A bullet: text has no markdown emphasis and doesn't repeat the title", () => {
+  const { findings } = parseIssue(makeIssue());
+  const f = findings[0];
+  assert.ok(!f.text.includes("**"), `expected no ** in text, got: ${f.text}`);
+  assert.ok(!f.text.startsWith("Single-flight cache:"),
+    `expected leading duplicated title stripped, got: ${f.text}`);
+});
+
 test("style B bullet: trailing citation lines, multiple citations", () => {
   const { findings } = parseIssue(makeIssue());
   const f = findings[1];
@@ -43,6 +51,14 @@ test("style B bullet: trailing citation lines, multiple citations", () => {
   assert.equal(f.citation, "scorers/oracle_budget.py:147-153");
   assert.deepEqual(f.citations,
     ["scorers/oracle_budget.py:147-153", "scorers/oracle_budget.py:200-210"]);
+});
+
+test("style B bullet: text has no markdown emphasis and doesn't repeat the title", () => {
+  const { findings } = parseIssue(makeIssue());
+  const f = findings[1];
+  assert.ok(!f.text.includes("**"), `expected no ** in text, got: ${f.text}`);
+  assert.ok(!f.text.startsWith("Budget check runs first"),
+    `expected leading duplicated title stripped, got: ${f.text}`);
 });
 
 test("fallback: canonical sections in a deep-read comment", () => {

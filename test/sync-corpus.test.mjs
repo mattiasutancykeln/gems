@@ -108,7 +108,7 @@ test("strips upstream-quoted emoji from finding title/text before it reaches fin
   const findings = raw.trim().split("\n").map(JSON.parse);
   const cache = findings.find((f) => f.id === "g42-f001");
   assert.equal(cache.title, "Single-flight cache");
-  assert.match(cache.text, /Single-flight cache/);
+  assert.match(cache.text, /src\/cache\.ts:84-112/); // leading duplicated title is stripped from text
   assert.match(cache.text, /Dedupes concurrent fetches with a 30s grace window before re-fetch\./);
   assert.equal(cache.text.includes("\u{1F527}"), false);
 });

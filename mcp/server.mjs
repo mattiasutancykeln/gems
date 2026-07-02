@@ -30,7 +30,7 @@ async function main() {
     process.exit(1);
   }
   const gems = JSON.parse(readFileSync(gemsPath, "utf8"));
-  const findings = readFileSync(findingsPath, "utf8").trim().split("\n").map(JSON.parse);
+  const findings = readFileSync(findingsPath, "utf8").trim().split("\n").filter(Boolean).map(JSON.parse);
   const gemsByNumber = new Map(gems.map((g) => [g.number, g]));
   const retriever = createRetriever({ findings });
   const clusters = new Set(findings.map((f) => f.clusterId)).size;
