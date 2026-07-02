@@ -5,7 +5,7 @@
 | Source | https://github.com/mims-harvard/ToolUniverse |
 | Repo | https://github.com/mims-harvard/ToolUniverse @ `be6a89a3b8` |
 | Kind | - |
-| Topics | - |
+| Topics | agent, infra |
 | License | Apache-2.0 (permissive) |
 | Verdict | keep |
 | Findings | 5 |

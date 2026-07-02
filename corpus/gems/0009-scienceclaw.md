@@ -5,7 +5,7 @@
 | Source | https://github.com/lamm-mit/scienceclaw |
 | Repo | https://github.com/lamm-mit/scienceclaw @ `f4a628669d1bcf9702cf29d068716c02f1c9268f` |
 | Kind | - |
-| Topics | - |
+| Topics | agent, research |
 | License | Apache-2.0 (permissive) |
 | Verdict | keep |
 | Findings | 97 |
@@ -42,7 +42,7 @@
 `core/skill_executor.py:135-155` — CLI parameter serialisation: boolean flags emitted only when `True`, list values use `nargs="+"` style, dict values silently skipped, leading dashes stripped from parameter keys supplied by the LLM.
 
 <a id="g9-f005"></a>
-### / :58-65
+### :58-65
 
 `skills/epigenomics/scripts/run.py:18` @ f4a6286
 

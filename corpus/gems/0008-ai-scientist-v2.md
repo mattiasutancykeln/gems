@@ -5,7 +5,7 @@
 | Source | https://github.com/SakanaAI/AI-Scientist-v2 |
 | Repo | https://github.com/SakanaAI/AI-Scientist-v2 @ `96bd51617cfdbb494a9fc283af00fe090edfae48` |
 | Kind | - |
-| Topics | - |
+| Topics | agent, research |
 | License | none (forbidden) |
 | Verdict | promote |
 | Findings | 86 |

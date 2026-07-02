@@ -5,7 +5,7 @@
 | Source | https://github.com/OpenHands/OpenHands |
 | Repo | https://github.com/OpenHands/OpenHands |
 | Kind | - |
-| Topics | - |
+| Topics | agent |
 | License | none (forbidden) |
 | Verdict | promote |
 | Findings | 10 |

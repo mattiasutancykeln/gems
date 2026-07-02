@@ -2,7 +2,7 @@
 
 A mined, cited, searchable corpus of the best implementation patterns from open-source agent and research repos - queryable by your coding agent over MCP.
 
-<!-- stats:start -->**21 gems · 1264 findings · 1231 clusters** - MIT licensed<!-- stats:end -->
+<!-- stats:start -->**21 gems · 1264 findings · 1230 clusters** - MIT licensed<!-- stats:end -->
 
 Every finding is anchored to an exact `path:line-range @ sha` citation and carries a license flag so your agent knows whether it may copy code or only adopt the idea. Example hit, exactly as the MCP returns it:
 

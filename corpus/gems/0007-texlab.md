@@ -5,7 +5,7 @@
 | Source | https://github.com/latex-lsp/texlab |
 | Repo | https://github.com/latex-lsp/texlab |
 | Kind | - |
-| Topics | - |
+| Topics | infra |
 | License | GPL-3.0 (ideas-only) |
 | Verdict | keep |
 | Findings | 4 |

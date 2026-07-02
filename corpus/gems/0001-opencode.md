@@ -5,7 +5,7 @@
 | Source | https://github.com/sst/opencode |
 | Repo | https://github.com/sst/opencode @ `97e713e8aac75a0254c34d134f0608af5cb4935c` |
 | Kind | - |
-| Topics | - |
+| Topics | agent |
 | License | MIT (permissive) |
 | Verdict | keep |
 | Findings | 91 |

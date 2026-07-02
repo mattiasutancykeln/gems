@@ -84,7 +84,7 @@
 `llm_guardrail.py:24-36` — Thread pool injection of coroutines into sync contexts: when an async agent is called from synchronous orchestrator code, spawns a single-worker `ThreadPoolExecutor` and submits `asyncio.run()` inside, avoiding event-loop conflicts.
 
 <a id="g16-f011"></a>
-### , 598-607
+### 598-607
 
 `base_agent.py:587-596` @ da8fe8c
 
@@ -240,7 +240,7 @@
 `task_output.py:85-97` — Polymorphic output accessor: `to_dict()` prioritizes `json_dict` over `pydantic.model_dump()`, letting tasks declare preferred serialization while orchestrators always see a dict interface.
 
 <a id="g16-f033"></a>
-### , 255-257
+### 255-257
 
 `base_agent.py:251-254` @ da8fe8c
 

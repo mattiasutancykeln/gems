@@ -243,7 +243,7 @@ https://github.com/lamm-mit/scienceclaw - [gem #9](gems/0009-scienceclaw.md)
 - [Error recovery heuristic](gems/0009-scienceclaw.md#g9-f002) — gem #9 · impl-decision · `core/skill_executor.py:166-198`
 - [execute_skill_chain implements a linear DAG](gems/0009-scienceclaw.md#g9-f003) — gem #9 · impl-decision · `core/skill_executor.py:234-283`
 - [CLI parameter serialisation](gems/0009-scienceclaw.md#g9-f004) — gem #9 · impl-decision · `core/skill_executor.py:135-155`
-- [/ :58-65](gems/0009-scienceclaw.md#g9-f005) — gem #9 · impl-decision · `skills/epigenomics/scripts/run.py:18`
+- [:58-65](gems/0009-scienceclaw.md#g9-f005) — gem #9 · impl-decision · `skills/epigenomics/scripts/run.py:18`
 - [SLURM self-submission](gems/0009-scienceclaw.md#g9-f006) — gem #9 · impl-decision · `skills/uma/SKILL.md:197-223`
 - [Lazy dependency installation](gems/0009-scienceclaw.md#g9-f007) — gem #9 · impl-decision · `core/skill_executor.py:80-85`
 - [Composite rank score weights hard-coded](gems/0009-scienceclaw.md#g9-f008) — gem #9 · impl-decision · `skills/protein-qc/SKILL.md:L145-162`
@@ -897,7 +897,7 @@ https://github.com/crewAIInc/crewAI - [gem #16](gems/0016-crewai.md)
 - [A2A delegation adapter](gems/0016-crewai.md#g16-f008) — gem #16 · impl-decision · `lite_agent.py:108-180`
 - [Condition evaluation occurs in parent, not child](gems/0016-crewai.md#g16-f009) — gem #16 · impl-decision · `conditional_task.py:41-55`
 - [Thread pool injection of coroutines into sync contexts](gems/0016-crewai.md#g16-f010) — gem #16 · impl-decision · `llm_guardrail.py:24-36`
-- [, 598-607](gems/0016-crewai.md#g16-f011) — gem #16 · impl-decision · `base_agent.py:587-596`
+- [598-607](gems/0016-crewai.md#g16-f011) — gem #16 · impl-decision · `base_agent.py:587-596`
 - [Plan tracking via dependency DAG](gems/0016-crewai.md#g16-f012) — gem #16 · impl-decision · `lite_agent_output.py:50-81`
 - [Replan instrumentation](gems/0016-crewai.md#g16-f013) — gem #16 · impl-decision · `lite_agent_output.py:54-59`
 - [Plugin hook for output validation](gems/0016-crewai.md#g16-f014) — gem #16 · impl-decision · `tasks/hallucination_guardrail.py:95-96`
@@ -919,7 +919,7 @@ https://github.com/crewAIInc/crewAI - [gem #16](gems/0016-crewai.md)
 - [Response model injection](gems/0016-crewai.md#g16-f030) — gem #16 · skill-prompt-tool · `crew_agent_executor.py:357-367`
 - [Todo result schema flattens plan step into discrete fields ( step_number , description , tool_used , status , result …](gems/0016-crewai.md#g16-f031) — gem #16 · skill-prompt-tool · `lite_agent_output.py:13-28`
 - [Polymorphic output accessor](gems/0016-crewai.md#g16-f032) — gem #16 · skill-prompt-tool · `task_output.py:85-97`
-- [, 255-257](gems/0016-crewai.md#g16-f033) — gem #16 · skill-prompt-tool · `base_agent.py:251-254`
+- [255-257](gems/0016-crewai.md#g16-f033) — gem #16 · skill-prompt-tool · `base_agent.py:251-254`
 - [Memory scope binding via discriminator](gems/0016-crewai.md#g16-f034) — gem #16 · skill-prompt-tool · `base_agent.py:338-352`
 - [Parallel tool execution scaffold with finality checks](gems/0016-crewai.md#g16-f035) — gem #16 · pattern · `crew_agent_executor.py:706-764`
 - [Delegation execution contract](gems/0016-crewai.md#g16-f036) — gem #16 · pattern · `tools/agent_tools/base_agent_tools.py:46-125`
@@ -968,7 +968,7 @@ https://github.com/microsoft/autogen - [gem #10](gems/0010-autogen.md)
 - [Progress ledger is the core orchestration contract](gems/0010-autogen.md#g10-f002) — gem #10 · impl-decision · `python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_magentic_one/_magentic_one_orchestrator.py:300-450`
 - [Active speakers list tracks which agents are currently processing. Responses (agent or team) remove the respondent fr…](gems/0010-autogen.md#g10-f003) — gem #10 · impl-decision · `python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_base_group_chat_manager.py:152-156`
 - [AgentTool and TeamTool wrap agents/teams as callable tools for other agents. This inversion](gems/0010-autogen.md#g10-f004) — gem #10 · impl-decision · `python/packages/autogen-agentchat/src/autogen_agentchat/tools/_agent.py:20-83`
-- [,161-165](gems/0010-autogen.md#g10-f005) — gem #10 · impl-decision · `python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_chat_agent_container.py:53`
+- [161-165](gems/0010-autogen.md#g10-f005) — gem #10 · impl-decision · `python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_chat_agent_container.py:53`
 - [pause() and resume() are separate from reset() . reset() clears accumulated history; pause/resume are lifecycle signa…](gems/0010-autogen.md#g10-f006) — gem #10 · impl-decision · `python/packages/autogen-agentchat/src/autogen_agentchat/base/_team.py:28-44`
 - [Streaming and blocking modes share a single underlying run_stream() coroutine; run() collects all outputs. The interf…](gems/0010-autogen.md#g10-f007) — gem #10 · impl-decision · `python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_base_group_chat.py:247-564`
 - [Outer loop (facts+plan ledger) is re-entered via _reenter_outer_loop , which resets all agents (L265-270), clears the…](gems/0010-autogen.md#g10-f008) — gem #10 · impl-decision · `python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_magentic_one/_magentic_one_orchestrator.py:262-298`
@@ -1091,7 +1091,7 @@ https://github.com/langchain-ai/langgraph - [gem #15](gems/0015-langgraph.md)
 - [Decoupled timeout policies](gems/0015-langgraph.md#g15-f048) — gem #15 · pattern · `libs/langgraph/langgraph/types.py:449-512`
 - [Cooperative drain signaling](gems/0015-langgraph.md#g15-f049) — gem #15 · pattern · `libs/langgraph/langgraph/runtime.py:79-104`
 - [entrypoint.final to decouple return/checkpoint](gems/0015-langgraph.md#g15-f050) — gem #15 · pattern · `libs/langgraph/langgraph/func/__init__.py:475-514`
-- [, 1549 , 1803](gems/0015-langgraph.md#g15-f051) — gem #15 · weak-spot · `libs/langgraph/langgraph/pregel/_loop.py:585-590`
+- [1549 , 1803](gems/0015-langgraph.md#g15-f051) — gem #15 · weak-spot · `libs/langgraph/langgraph/pregel/_loop.py:585-590`
 - [_put_checkpoint_fut submitted via submit(self._checkpointer_put_after_previous, ...) without explicit null check, des…](gems/0015-langgraph.md#g15-f052) — gem #15 · weak-spot · `libs/langgraph/langgraph/pregel/_loop.py:1116-1189`
 - [Resume value matching in interrupt() relies on a linear counter ( scratchpad.interrupt_counter() ). If node logic is …](gems/0015-langgraph.md#g15-f053) — gem #15 · weak-spot · `libs/langgraph/langgraph/types.py:915-934`
 - [Topic.update() clears values before extending unless accumulate=True . If a consumer crashes between get() and step c…](gems/0015-langgraph.md#g15-f054) — gem #15 · weak-spot · `libs/langgraph/langgraph/channels/topic.py:77-85`
@@ -1181,43 +1181,43 @@ https://github.com/huggingface/smolagents - [gem #13](gems/0013-smolagents.md)
 
 https://github.com/mims-harvard/AutoScientists - [gem #20](gems/0020-autoscientists-self-organizing-agent-tea.md)
 
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f001) — gem #20 · impl-decision · `system/reference/SKILL.md:16-23`
-- [@ AutoScientists@c71a923 and @ AutoScientists@c71a923 and @ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f002) — gem #20 · impl-decision · `launch.py:643-678`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f003) — gem #20 · impl-decision · `system/templates/HEARTBEAT.md:10-19`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f004) — gem #20 · impl-decision · `system/templates/HEARTBEAT.md:100-165`
-- [@ AutoScientists@c71a923 and @ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f005) — gem #20 · impl-decision · `runbook.md:17-21`
-- [@ AutoScientists@c71a923 and @ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f006) — gem #20 · impl-decision · `system/reference/AGENT-SETUP.md:31-47`
-- [@ AutoScientists@c71a923 and @ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f007) — gem #20 · impl-decision · `system/reference/PHASES.md:101-115`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f008) — gem #20 · impl-decision · `system/templates/ROLE-GPU.md:741-815`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f009) — gem #20 · impl-decision · `system/templates/ROLE-GPU.md:78-98`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f010) — gem #20 · impl-decision · `system/templates/ROLE-GPU.md:916-927`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f011) — gem #20 · impl-decision · `system/templates/ROLE-GPU.md:499-511`
-- [@ AutoScientists@c71a923 and @ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f012) — gem #20 · impl-decision · `system/reference/API-REFERENCE.md:141-142`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f013) — gem #20 · impl-decision · `system/reference/LOGGING.md:11-38`
-- [@ AutoScientists@c71a923 and @ AutoScientists@c71a923 and @ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f014) — gem #20 · impl-decision · `system/reference/META-IMPROVEMENT.md:1-18`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f015) — gem #20 · impl-decision · `runbook.md:181-201`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f016) — gem #20 · impl-decision · `runbook.md:30-64`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f017) — gem #20 · impl-decision · `runbook.md:137-143`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f018) — gem #20 · impl-decision · `launch.py:438-507`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f019) — gem #20 · impl-decision · `system/templates/ROLE-GPU.md:146-164`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f020) — gem #20 · impl-decision · `system/templates/ROLE-ANALYST.md:806-818`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f021) — gem #20 · impl-decision · `system/templates/ROLE-ANALYST.md:273-318`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f022) — gem #20 · skill-prompt-tool · `system/reference/AGENT-SETUP.md:108-123`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f023) — gem #20 · skill-prompt-tool · `system/templates/HEARTBEAT.md:190-223`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f024) — gem #20 · skill-prompt-tool · `system/templates/ROLE-ANALYST.md:481-510`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f025) — gem #20 · skill-prompt-tool · `system/templates/ROLE-ANALYST.md:955-998`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f026) — gem #20 · skill-prompt-tool · `system/reference/API-REFERENCE.md:46-65`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f027) — gem #20 · skill-prompt-tool · `system/reference/API-REFERENCE.md:97-106`
-- [@ AutoScientists@c71a923 and @ AutoScientists@c71a923 and @ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f028) — gem #20 · skill-prompt-tool · `system/templates/HEARTBEAT.md:36-59`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f029) — gem #20 · skill-prompt-tool · `system/templates/ROLE-ANALYST.md:326-355`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f030) — gem #20 · skill-prompt-tool · `system/templates/ROLE-ANALYST.md:455-479`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f031) — gem #20 · skill-prompt-tool · `system/templates/ROLE-ANALYST.md:1075-1150`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f032) — gem #20 · skill-prompt-tool · `system/templates/ROLE-ANALYST.md:62-96`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f033) — gem #20 · skill-prompt-tool · `system/templates/ROLE-GPU.md:606-635`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f034) — gem #20 · skill-prompt-tool · `system/reference/META-IMPROVEMENT.md:29-38`
-- [@ AutoScientists@c71a923 and @ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f035) — gem #20 · skill-prompt-tool · `system/external-repo-setup/SKILL.md:1-8`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f036) — gem #20 · skill-prompt-tool · `system/templates/ROLE-GPU.md:685-724`
-- [@ AutoScientists@c71a923](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f037) — gem #20 · skill-prompt-tool · `system/templates/ROLE-GPU.md:444-452`
+- [Three-tier state split](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f001) — gem #20 · impl-decision · `system/reference/SKILL.md:16-23`
+- [HEARTBEAT.md is assembled once at launch by splicing system/templates/HEARTBEAT.md + role doc ( ROLE-GPU.md / ROLE-AN…](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f002) — gem #20 · impl-decision · `launch.py:643-678`
+- [Five-branch dispatch table executes before any work](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f003) — gem #20 · impl-decision · `system/templates/HEARTBEAT.md:10-19`
+- [result_latest.json is written before training starts ( status](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f004) — gem #20 · impl-decision · `system/templates/HEARTBEAT.md:100-165`
+- [The orchestrator is a hard-boundary pure coordinator](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f005) — gem #20 · impl-decision · `runbook.md:17-21`
+- [Two-tier persistent memory](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f006) — gem #20 · impl-decision · `system/reference/AGENT-SETUP.md:31-47`
+- [Teams are organized around falsifiable hypotheses, not axis partitions. Each strategy.md frontmatter records hypothes…](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f007) — gem #20 · impl-decision · `system/reference/PHASES.md:101-115`
+- [Multi-seed noise gate before champion promotion](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f008) — gem #20 · impl-decision · `system/templates/ROLE-GPU.md:741-815`
+- [Exactly-once shared baseline uses If-None-Match](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f009) — gem #20 · impl-decision · `system/templates/ROLE-GPU.md:78-98`
+- [Champion propagation uses temp-then-rename ( tmp.replace(dst) ) for atomic local file update, plus appending to champ…](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f010) — gem #20 · impl-decision · `system/templates/ROLE-GPU.md:916-927`
+- [Before training, verify train.py is NOT byte-identical to champion/train.py using filecmp.cmp . If identical, set dif…](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f011) — gem #20 · impl-decision · `system/templates/ROLE-GPU.md:499-511`
+- [Optimistic concurrency via HTTP If-Match](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f012) — gem #20 · impl-decision · `system/reference/API-REFERENCE.md:141-142`
+- [experiments.jsonl is the single authoritative JSONL log, orchestrator-owned. Fields](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f013) — gem #20 · impl-decision · `system/reference/LOGGING.md:11-38`
+- [Meta-improvement runs every 3 execution cycles and requires a file to change](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f014) — gem #20 · impl-decision · `system/reference/META-IMPROVEMENT.md:1-18`
+- [Execution loop is while True with no built-in termination. Twelve named profile hooks ( pre_cycle_check , discussion_…](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f015) — gem #20 · impl-decision · `runbook.md:181-201`
+- [Three-state orchestrator boot](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f016) — gem #20 · impl-decision · `runbook.md:30-64`
+- [Haiku is explicitly prohibited for analyst agents. Failure mode reproduced 3/3 times in a 2026-05-26 run](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f017) — gem #20 · impl-decision · `runbook.md:137-143`
+- [Fresh per-run git clone (not symlink) prevents stale state contamination. Documented prior bug](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f018) — gem #20 · impl-decision · `launch.py:438-507`
+- [Approach registry uses fcntl.LOCK_EX for atomic read-modify-write on a shared JSON file. Agents that find their appro…](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f019) — gem #20 · impl-decision · `system/templates/ROLE-GPU.md:146-164`
+- [Dead-end re-triage](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f020) — gem #20 · impl-decision · `system/templates/ROLE-ANALYST.md:806-818`
+- [Noise floor σ accumulates passively from multi-seed gate runs. After n≥5 pairs a locked](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f021) — gem #20 · impl-decision · `system/templates/ROLE-ANALYST.md:273-318`
+- [Boot sequence is 5 self-discovered steps](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f022) — gem #20 · skill-prompt-tool · `system/reference/AGENT-SETUP.md:108-123`
+- [Per-invocation read-state pattern](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f023) — gem #20 · skill-prompt-tool · `system/templates/HEARTBEAT.md:190-223`
+- [Post-KEEP inductive reasoning protocol (required after any champion update)](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f024) — gem #20 · skill-prompt-tool · `system/templates/ROLE-ANALYST.md:481-510`
+- [Empirical axis priors from logs/experiments.jsonl](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f025) — gem #20 · skill-prompt-tool · `system/templates/ROLE-ANALYST.md:955-998`
+- [Two discovery tools](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f026) — gem #20 · skill-prompt-tool · `system/reference/API-REFERENCE.md:46-65`
+- [Post creation includes notify_agents](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f027) — gem #20 · skill-prompt-tool · `system/reference/API-REFERENCE.md:97-106`
+- [Self-organizing discussion rounds](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f028) — gem #20 · skill-prompt-tool · `system/templates/HEARTBEAT.md:36-59`
+- [knowledge/unqueued_axes.md is a shared cross-team backlog ledger of every axis mentioned in [DISCUSSION] , [GAPS] , […](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f029) — gem #20 · skill-prompt-tool · `system/templates/ROLE-ANALYST.md:326-355`
+- [KEEP followup harvest](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f030) — gem #20 · skill-prompt-tool · `system/templates/ROLE-ANALYST.md:455-479`
+- [Ambition quota](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f031) — gem #20 · skill-prompt-tool · `system/templates/ROLE-ANALYST.md:1075-1150`
+- [Stagnation predicate](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f032) — gem #20 · skill-prompt-tool · `system/templates/ROLE-ANALYST.md:62-96`
+- [Training dynamics analysis required after every run](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f033) — gem #20 · skill-prompt-tool · `system/templates/ROLE-GPU.md:606-635`
+- [Meta-improvement evidence sources](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f034) — gem #20 · skill-prompt-tool · `system/reference/META-IMPROVEMENT.md:29-38`
+- [External-repo setup protocol addresses a named failure mode](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f035) — gem #20 · skill-prompt-tool · `system/external-repo-setup/SKILL.md:1-8`
+- [Atomic two-phase queue mutation](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f036) — gem #20 · skill-prompt-tool · `system/templates/ROLE-GPU.md:685-724`
+- [Target validation before training](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f037) — gem #20 · skill-prompt-tool · `system/templates/ROLE-GPU.md:444-452`
 - [Lesson](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f038) — gem #20 · skill-prompt-tool · `system/reference/META-IMPROVEMENT.md:136-153`
 - [Sentinel-driven session recovery](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f039) — gem #20 · pattern · `system/templates/HEARTBEAT.md:100-165`
 - [Filesystem-first, two-tier agent identity](gems/0020-autoscientists-self-organizing-agent-tea.md#g20-f040) — gem #20 · pattern · `system/reference/AGENT-SETUP.md:31-47`

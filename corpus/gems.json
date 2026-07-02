@@ -6,7 +6,9 @@
     "repo": "sst/opencode",
     "sha": "97e713e8aac75a0254c34d134f0608af5cb4935c",
     "source": null,
-    "topics": [],
+    "topics": [
+      "agent"
+    ],
     "verdict": "keep",
     "quality": "normal",
     "stage": "extracted",
@@ -21,7 +23,9 @@
     "repo": "OpenHands/OpenHands",
     "sha": null,
     "source": null,
-    "topics": [],
+    "topics": [
+      "agent"
+    ],
     "verdict": "promote",
     "quality": "normal",
     "stage": "extracted",
@@ -36,7 +40,10 @@
     "repo": "assafelovic/gpt-researcher",
     "sha": "92bfc0388c",
     "source": null,
-    "topics": [],
+    "topics": [
+      "agent",
+      "research"
+    ],
     "verdict": "keep",
     "quality": "normal",
     "stage": "extracted",
@@ -51,7 +58,9 @@
     "repo": "Imbad0202/academic-research-skills",
     "sha": null,
     "source": null,
-    "topics": [],
+    "topics": [
+      "research"
+    ],
     "verdict": "keep",
     "quality": "normal",
     "stage": "extracted",
@@ -66,7 +75,10 @@
     "repo": "mims-harvard/ToolUniverse",
     "sha": "be6a89a3b8",
     "source": null,
-    "topics": [],
+    "topics": [
+      "agent",
+      "infra"
+    ],
     "verdict": "keep",
     "quality": "normal",
     "stage": "extracted",
@@ -81,7 +93,10 @@
     "repo": "snap-stanford/Biomni",
     "sha": "400c1f366b96a35ca253e13c9b06c5076af41d65",
     "source": null,
-    "topics": [],
+    "topics": [
+      "agent",
+      "research"
+    ],
     "verdict": "keep",
     "quality": "normal",
     "stage": "extracted",
@@ -96,7 +111,9 @@
     "repo": "latex-lsp/texlab",
     "sha": null,
     "source": null,
-    "topics": [],
+    "topics": [
+      "infra"
+    ],
     "verdict": "keep",
     "quality": "normal",
     "stage": "extracted",
@@ -111,7 +128,10 @@
     "repo": "SakanaAI/AI-Scientist-v2",
     "sha": "96bd51617cfdbb494a9fc283af00fe090edfae48",
     "source": null,
-    "topics": [],
+    "topics": [
+      "agent",
+      "research"
+    ],
     "verdict": "promote",
     "quality": "normal",
     "stage": "extracted",
@@ -126,7 +146,10 @@
     "repo": "lamm-mit/scienceclaw",
     "sha": "f4a628669d1bcf9702cf29d068716c02f1c9268f",
     "source": null,
-    "topics": [],
+    "topics": [
+      "agent",
+      "research"
+    ],
     "verdict": "keep",
     "quality": "normal",
     "stage": "extracted",

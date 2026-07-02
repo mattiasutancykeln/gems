@@ -5,7 +5,7 @@
 | Source | https://github.com/assafelovic/gpt-researcher |
 | Repo | https://github.com/assafelovic/gpt-researcher @ `92bfc0388c` |
 | Kind | - |
-| Topics | - |
+| Topics | agent, research |
 | License | Apache-2.0 (permissive) |
 | Verdict | keep |
 | Findings | 10 |

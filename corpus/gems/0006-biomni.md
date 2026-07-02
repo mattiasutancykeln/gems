@@ -5,7 +5,7 @@
 | Source | https://github.com/snap-stanford/Biomni |
 | Repo | https://github.com/snap-stanford/Biomni @ `400c1f366b96a35ca253e13c9b06c5076af41d65` |
 | Kind | - |
-| Topics | - |
+| Topics | agent, research |
 | License | Apache-2.0 (permissive) |
 | Verdict | keep |
 | Findings | 110 |

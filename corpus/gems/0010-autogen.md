@@ -42,7 +42,7 @@
 `python/packages/autogen-agentchat/src/autogen_agentchat/tools/_agent.py:20-83` — `AgentTool` and `TeamTool` wrap agents/teams as callable tools for other agents. This inversion — child tasks as callable interfaces rather than direct invocation — enables composition without modification. Both enforce `parallel_tool_calls=False` (lines 25-30) due to agent state non-concurrency.
 
 <a id="g10-f005"></a>
-### ,161-165
+### 161-165
 
 `python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_chat_agent_container.py:53` @ 027ecf0
 

@@ -370,7 +370,7 @@ Cooperative drain signaling (`libs/langgraph/langgraph/runtime.py:79-104`, `libs
 ## Open threads / weak spots
 
 <a id="g15-f051"></a>
-### , 1549 , 1803
+### 1549 , 1803
 
 `libs/langgraph/langgraph/pregel/_loop.py:585-590` @ d57a74f
 

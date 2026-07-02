@@ -5,7 +5,7 @@
 | Source | https://github.com/Imbad0202/academic-research-skills/pulse |
 | Repo | https://github.com/Imbad0202/academic-research-skills |
 | Kind | - |
-| Topics | - |
+| Topics | research |
 | License | none (forbidden) |
 | Verdict | keep |
 | Findings | 6 |

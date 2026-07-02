@@ -17,15 +17,15 @@ Patterns with multiple independent implementations across gems:
 |---|---|---|---|---|---|---|
 | [#20](https://github.com/mattiasutancykeln/gems/issues/20) | [AutoScientists — self-organizing agent teams for long-running science](gems/0020-autoscientists-self-organizing-agent-tea.md) | paper | agent, research | 62 | none (forbidden) | promote |
 | [#21](https://github.com/mattiasutancykeln/gems/issues/21) | [SciAgentArena — benchmarking AI agents on scientific challenges across scales](gems/0021-sciagentarena-benchmarking-ai-agents-on.md) | paper | eval, research | 89 | none (forbidden) | keep |
-| [#1](https://github.com/mattiasutancykeln/gems/issues/1) | [opencode](gems/0001-opencode.md) | - | - | 91 | MIT (permissive) | keep |
-| [#2](https://github.com/mattiasutancykeln/gems/issues/2) | [OpenHands](gems/0002-openhands.md) | - | - | 10 | none (forbidden) | promote |
-| [#3](https://github.com/mattiasutancykeln/gems/issues/3) | [gpt-researcher](gems/0003-gpt-researcher.md) | - | - | 10 | Apache-2.0 (permissive) | keep |
-| [#4](https://github.com/mattiasutancykeln/gems/issues/4) | [pulse](gems/0004-pulse.md) | - | - | 6 | none (forbidden) | keep |
-| [#5](https://github.com/mattiasutancykeln/gems/issues/5) | [ToolUniverse](gems/0005-tooluniverse.md) | - | - | 5 | Apache-2.0 (permissive) | keep |
-| [#6](https://github.com/mattiasutancykeln/gems/issues/6) | [Biomni](gems/0006-biomni.md) | - | - | 110 | Apache-2.0 (permissive) | keep |
-| [#7](https://github.com/mattiasutancykeln/gems/issues/7) | [texlab](gems/0007-texlab.md) | - | - | 4 | GPL-3.0 (ideas-only) | keep |
-| [#8](https://github.com/mattiasutancykeln/gems/issues/8) | [AI-Scientist-v2](gems/0008-ai-scientist-v2.md) | - | - | 86 | none (forbidden) | promote |
-| [#9](https://github.com/mattiasutancykeln/gems/issues/9) | [scienceclaw](gems/0009-scienceclaw.md) | - | - | 97 | Apache-2.0 (permissive) | keep |
+| [#1](https://github.com/mattiasutancykeln/gems/issues/1) | [opencode](gems/0001-opencode.md) | - | agent | 91 | MIT (permissive) | keep |
+| [#2](https://github.com/mattiasutancykeln/gems/issues/2) | [OpenHands](gems/0002-openhands.md) | - | agent | 10 | none (forbidden) | promote |
+| [#3](https://github.com/mattiasutancykeln/gems/issues/3) | [gpt-researcher](gems/0003-gpt-researcher.md) | - | agent, research | 10 | Apache-2.0 (permissive) | keep |
+| [#4](https://github.com/mattiasutancykeln/gems/issues/4) | [pulse](gems/0004-pulse.md) | - | research | 6 | none (forbidden) | keep |
+| [#5](https://github.com/mattiasutancykeln/gems/issues/5) | [ToolUniverse](gems/0005-tooluniverse.md) | - | agent, infra | 5 | Apache-2.0 (permissive) | keep |
+| [#6](https://github.com/mattiasutancykeln/gems/issues/6) | [Biomni](gems/0006-biomni.md) | - | agent, research | 110 | Apache-2.0 (permissive) | keep |
+| [#7](https://github.com/mattiasutancykeln/gems/issues/7) | [texlab](gems/0007-texlab.md) | - | infra | 4 | GPL-3.0 (ideas-only) | keep |
+| [#8](https://github.com/mattiasutancykeln/gems/issues/8) | [AI-Scientist-v2](gems/0008-ai-scientist-v2.md) | - | agent, research | 86 | none (forbidden) | promote |
+| [#9](https://github.com/mattiasutancykeln/gems/issues/9) | [scienceclaw](gems/0009-scienceclaw.md) | - | agent, research | 97 | Apache-2.0 (permissive) | keep |
 | [#10](https://github.com/mattiasutancykeln/gems/issues/10) | [autogen](gems/0010-autogen.md) | repo | agent | 72 | CC-BY-4.0 (ideas-only) | - |
 | [#11](https://github.com/mattiasutancykeln/gems/issues/11) | [openclaw](gems/0011-openclaw.md) | repo | agent | 91 | none (forbidden) | - |
 | [#12](https://github.com/mattiasutancykeln/gems/issues/12) | [openai-agents-python](gems/0012-openai-agents-python.md) | repo | agent | 113 | MIT (permissive) | - |
