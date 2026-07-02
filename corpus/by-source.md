@@ -19,6 +19,7 @@ Findings are sharded to stay under the GitHub markdown render ceiling (see `over
 - [huggingface/smolagents](https://github.com/huggingface/smolagents) (64) -> [findings](by-source/huggingface-smolagents.md)
 - [mims-harvard/AutoScientists](https://github.com/mims-harvard/AutoScientists) (62) -> [findings](by-source/mims-harvard-AutoScientists.md)
 - [anthropics/claude-agent-sdk-python](https://github.com/anthropics/claude-agent-sdk-python) (57) -> [findings](by-source/anthropics-claude-agent-sdk-python.md)
+- [HKUDS/AI-Researcher](https://github.com/HKUDS/AI-Researcher) (32) -> [findings](by-source/HKUDS-AI-Researcher.md)
 - [latex-lsp/texlab](https://github.com/latex-lsp/texlab) (22) -> [findings](by-source/latex-lsp-texlab.md)
 - [assafelovic/gpt-researcher](https://github.com/assafelovic/gpt-researcher) (20) -> [findings](by-source/assafelovic-gpt-researcher.md)
 - [archestra-ai/archestra](https://github.com/archestra-ai/archestra) (18) -> [findings](by-source/archestra-ai-archestra.md)

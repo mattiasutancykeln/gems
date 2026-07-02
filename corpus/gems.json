@@ -850,7 +850,7 @@
     "title": "AI-Researcher",
     "url": "https://github.com/HKUDS/AI-Researcher",
     "repo": "HKUDS/AI-Researcher",
-    "sha": null,
+    "sha": "f9a6f8480860c193afff600eeffe3defcee8a978",
     "source": "repo",
     "topics": [
       "agent",
@@ -861,7 +861,7 @@
     "stage": "raw",
     "license": "none",
     "codeReuse": "forbidden",
-    "findingCount": 0
+    "findingCount": 32
   },
   {
     "number": 51,

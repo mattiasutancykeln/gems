@@ -35,8 +35,9 @@ Patterns with multiple independent implementations across gems:
 | [#17](https://github.com/mattiasutancykeln/gems/issues/17) | [archestra](gems/0017-archestra.md) | - | - | 18 | none (forbidden) | - |
 | [#18](https://github.com/mattiasutancykeln/gems/issues/18) | [Arbor](gems/0018-arbor.md) | repo | agent, research | 73 | Apache-2.0 (permissive) | - |
 | [#19](https://github.com/mattiasutancykeln/gems/issues/19) | [AutoResearchClaw](gems/0019-autoresearchclaw.md) | repo | agent, research | 86 | MIT (permissive) | - |
+| [#50](https://github.com/mattiasutancykeln/gems/issues/50) | [AI-Researcher](gems/0050-ai-researcher.md) | repo | agent, research | 32 | none (forbidden) | - |
 
-## Queued for extraction (34)
+## Queued for extraction (33)
 
 Captured gems not yet mined into findings:
 
@@ -68,7 +69,6 @@ Captured gems not yet mined into findings:
 - [#47](https://github.com/mattiasutancykeln/gems/issues/47) verifiers - PrimeIntellect-ai/verifiers (raw)
 - [#48](https://github.com/mattiasutancykeln/gems/issues/48) openevolve - algorithmicsuperintelligence/openevolve (raw)
 - [#49](https://github.com/mattiasutancykeln/gems/issues/49) Co-Scientist - Kaimen-Inc/Co-Scientist (raw)
-- [#50](https://github.com/mattiasutancykeln/gems/issues/50) AI-Researcher - HKUDS/AI-Researcher (raw)
 - [#51](https://github.com/mattiasutancykeln/gems/issues/51) ResearchGym - Anikethh/ResearchGym (raw)
 - [#52](https://github.com/mattiasutancykeln/gems/issues/52) CellVoyager - zou-group/CellVoyager (raw)
 - [#53](https://github.com/mattiasutancykeln/gems/issues/53) BioDiscoveryAgent - snap-stanford/BioDiscoveryAgent (raw)
