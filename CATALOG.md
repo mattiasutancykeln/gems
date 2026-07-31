@@ -16,6 +16,7 @@ Patterns with multiple independent implementations across gems:
 |---|---|---|---|---|---|---|
 | [#20](https://github.com/mattiasutancykeln/gems/issues/20) | [AutoScientists — self-organizing agent teams for long-running science](gems/0020-autoscientists-self-organizing-agent-tea.md) | paper | agent, research | 62 | none (forbidden) | promote |
 | [#21](https://github.com/mattiasutancykeln/gems/issues/21) | [SciAgentArena — benchmarking AI agents on scientific challenges across scales](gems/0021-sciagentarena-benchmarking-ai-agents-on.md) | paper | eval, research | 89 | none (forbidden) | keep |
+| [#58](https://github.com/mattiasutancykeln/gems/issues/58) | [Kimi K3 tech report — 2.8T open-weights MoE: agentic RL environments, million-token infra, XTML chat template](gems/0058-kimi-k3-tech-report-2-8t-open-weights-mo.md) | paper | agent, eval, infra, research | 139 | none (forbidden) | promote |
 | [#1](https://github.com/mattiasutancykeln/gems/issues/1) | [opencode](gems/0001-opencode.md) | - | agent | 91 | MIT (permissive) | keep |
 | [#2](https://github.com/mattiasutancykeln/gems/issues/2) | [OpenHands](gems/0002-openhands.md) | - | agent | 17 | none (forbidden) | promote |
 | [#3](https://github.com/mattiasutancykeln/gems/issues/3) | [gpt-researcher](gems/0003-gpt-researcher.md) | - | agent, research | 20 | Apache-2.0 (permissive) | keep |
@@ -37,7 +38,7 @@ Patterns with multiple independent implementations across gems:
 | [#19](https://github.com/mattiasutancykeln/gems/issues/19) | [AutoResearchClaw](gems/0019-autoresearchclaw.md) | repo | agent, research | 86 | MIT (permissive) | - |
 | [#56](https://github.com/mattiasutancykeln/gems/issues/56) | [The Last Human-Written Paper — Agent-Native Research Artifacts (ARA)](gems/0056-the-last-human-written-paper-agent-nativ.md) | paper | agent, research | 34 | none (forbidden) | - |
 
-## Queued for extraction (34)
+## Queued for extraction (35)
 
 Captured gems not yet mined into findings:
 
@@ -75,3 +76,4 @@ Captured gems not yet mined into findings:
 - [#53](https://github.com/mattiasutancykeln/gems/issues/53) BioDiscoveryAgent - snap-stanford/BioDiscoveryAgent (raw)
 - [#54](https://github.com/mattiasutancykeln/gems/issues/54) research-town - ulab-uiuc/research-town (raw)
 - [#55](https://github.com/mattiasutancykeln/gems/issues/55) k-dense-byok - K-Dense-AI/k-dense-byok (raw)
+- [#57](https://github.com/mattiasutancykeln/gems/issues/57) arxiv.org — 2506.19143 (raw)

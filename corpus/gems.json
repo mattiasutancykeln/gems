@@ -969,5 +969,40 @@
     "license": "none",
     "codeReuse": "forbidden",
     "findingCount": 34
+  },
+  {
+    "number": 57,
+    "title": "arxiv.org — 2506.19143",
+    "url": "https://arxiv.org/abs/2506.19143",
+    "repo": null,
+    "sha": null,
+    "source": null,
+    "topics": [],
+    "verdict": null,
+    "quality": "normal",
+    "stage": "raw",
+    "license": "none",
+    "codeReuse": "forbidden",
+    "findingCount": 0
+  },
+  {
+    "number": 58,
+    "title": "Kimi K3 tech report — 2.8T open-weights MoE: agentic RL environments, million-token infra, XTML chat template",
+    "url": "https://github.com/MoonshotAI/Kimi-K3/blob/main/k3_tech_report.pdf",
+    "repo": "MoonshotAI/Kimi-K3",
+    "sha": "7c5be95",
+    "source": "paper",
+    "topics": [
+      "agent",
+      "eval",
+      "infra",
+      "research"
+    ],
+    "verdict": "promote",
+    "quality": "high",
+    "stage": "extracted",
+    "license": "none",
+    "codeReuse": "forbidden",
+    "findingCount": 139
   }
 ]
